@@ -55,6 +55,8 @@ public partial class RulesWindow : Window
                 TestResultText.Text = "Running OCR...";
                 OcrProgress.Value = 0;
                 CancelOcrButton.IsEnabled = true;
+                Spinner.Visibility = Visibility.Visible;
+                StartSpinner();
                 _ocrCts = new System.Threading.CancellationTokenSource();
 
                 try
@@ -73,6 +75,8 @@ public partial class RulesWindow : Window
                 {
                     CancelOcrButton.IsEnabled = false;
                     _ocrCts = null;
+                    StopSpinner();
+                    Spinner.Visibility = Visibility.Collapsed;
                 }
             }
             else
@@ -94,6 +98,23 @@ public partial class RulesWindow : Window
     private void CancelOcr_Click(object sender, RoutedEventArgs e)
     {
         _ocrCts?.Cancel();
+    }
+
+    private void StartSpinner()
+    {
+        var animation = new System.Windows.Media.Animation.DoubleAnimation
+        {
+            From = 0,
+            To = 360,
+            Duration = TimeSpan.FromSeconds(1),
+            RepeatBehavior = System.Windows.Media.Animation.RepeatBehavior.Forever
+        };
+        SpinnerRotate.BeginAnimation(System.Windows.Media.RotateTransform.AngleProperty, animation);
+    }
+
+    private void StopSpinner()
+    {
+        SpinnerRotate.BeginAnimation(System.Windows.Media.RotateTransform.AngleProperty, null);
     }
 
     private void Save_Click(object sender, RoutedEventArgs e)

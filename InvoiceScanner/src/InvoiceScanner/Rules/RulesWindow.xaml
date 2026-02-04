@@ -37,6 +37,15 @@
                 <TextBox x:Name="OcrInputBox" Margin="0,6,0,10" AcceptsReturn="True" Height="120" Background="#0F1522" Foreground="#D7E0EA" BorderBrush="#1E2A3B" />
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
                     <ProgressBar x:Name="OcrProgress" Width="180" Height="12" Minimum="0" Maximum="100" Value="0" Foreground="#4F46E5" Background="#1E2A3B" />
+                    <Grid Width="18" Height="18" Margin="10,0,0,0" x:Name="Spinner" Visibility="Collapsed">
+                        <Ellipse Width="18" Height="18" Stroke="#7DD3FC" StrokeThickness="2" Opacity="0.25" />
+                        <Path Stroke="#7DD3FC" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              Data="M9,1 A8,8 0 0 1 17,9" >
+                            <Path.RenderTransform>
+                                <RotateTransform x:Name="SpinnerRotate" Angle="0" CenterX="9" CenterY="9" />
+                            </Path.RenderTransform>
+                        </Path>
+                    </Grid>
                     <Button x:Name="CancelOcrButton" Content="Cancel" Width="80" Height="26" Margin="10,0,0,0" Style="{StaticResource SecondaryButton}" Click="CancelOcr_Click" />
                     <TextBlock x:Name="TestResultText" Margin="12,0,0,0" Foreground="#7DD3FC" VerticalAlignment="Center" />
                 </StackPanel>
