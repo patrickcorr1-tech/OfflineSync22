@@ -41,6 +41,13 @@ public partial class MainWindow : Window
         }
     }
 
+    private void Rules_Click(object sender, RoutedEventArgs e)
+    {
+        var path = System.IO.Path.Combine(AppContext.BaseDirectory, "Rules", "rules.json");
+        var window = new Rules.RulesWindow(path) { Owner = this };
+        window.ShowDialog();
+    }
+
     private void Hide_Click(object sender, RoutedEventArgs e)
     {
         Hide();
