@@ -40,6 +40,12 @@ public class InvoiceParser
             return TextUtils.NormalizeDate(labeled.Groups[1].Value);
         }
 
+        var due = RegexPatterns.DueDateLabel.Match(clean);
+        if (due.Success)
+        {
+            return TextUtils.NormalizeDate(due.Groups[1].Value);
+        }
+
         var date = RegexPatterns.Date.Match(clean);
         if (date.Success) return TextUtils.NormalizeDate(date.Value);
 

@@ -24,6 +24,10 @@ public static class RegexPatterns
         @"invoice\s*date\s*[:\-]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}|\d{1,2}\s*[A-Za-z]{3,9}\s*\d{4})",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+    public static readonly Regex DueDateLabel = new(
+        @"due\s*date\s*[:\-]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}|\d{1,2}\s*[A-Za-z]{3,9}\s*\d{4})",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
     public static readonly Regex IgnoreWords = new(
         @"\b(invoice|tax|total|vat|date|amount|due|paid|balance|account|statement|bank|swift|iban|address)\b",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
