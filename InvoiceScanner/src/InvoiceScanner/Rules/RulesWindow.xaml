@@ -28,7 +28,8 @@
                 <TextBlock Text="Test OCR Text" Foreground="#9FB1C5" />
                 <TextBox x:Name="OcrInputBox" Margin="0,6,0,10" AcceptsReturn="True" Height="120" Background="#0F1522" Foreground="#D7E0EA" BorderBrush="#1E2A3B" />
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <Button Content="Test OCR" Width="110" Height="34" Style="{StaticResource SecondaryButton}" Click="TestOcr_Click" />
+                    <Button Content="Load OCR" Width="110" Height="34" Style="{StaticResource SecondaryButton}" Click="LoadOcr_Click" />
+                    <Button Content="Test OCR" Width="110" Height="34" Margin="8,0,0,0" Style="{StaticResource SecondaryButton}" Click="TestOcr_Click" />
                     <TextBlock x:Name="TestResultText" Margin="12,6,0,0" Foreground="#7DD3FC" />
                 </StackPanel>
             </StackPanel>

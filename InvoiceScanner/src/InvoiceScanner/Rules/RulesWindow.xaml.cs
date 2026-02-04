@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using InvoiceScanner.Core;
+using Microsoft.Win32;
 
 namespace InvoiceScanner.Rules;
 
@@ -35,6 +36,19 @@ public partial class RulesWindow : Window
             IgnoreWords = IgnoreWordsBox.Text.Split('\n').Select(s => s.Trim()).Where(s => s.Length > 0).ToList(),
             CompanySuffixes = CompanySuffixesBox.Text.Split('\n').Select(s => s.Trim()).Where(s => s.Length > 0).ToList()
         };
+    }
+
+    private void LoadOcr_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            OcrInputBox.Text = File.ReadAllText(dialog.FileName);
+        }
     }
 
     private void TestOcr_Click(object sender, RoutedEventArgs e)
