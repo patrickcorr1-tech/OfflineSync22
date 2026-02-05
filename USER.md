@@ -6,7 +6,7 @@
 - **What to call them:** Paddy
 - **Pronouns:** *(optional)*
 - **Timezone:** 
-- **Notes:** Prefers step-by-step support. Environment: Windows (primary) + macOS, Office 365, Mimecast, Watchguard firewall. Escalation: email logs to external help desk if unresolved. Escalation email: help@wentforthgroup.on.spiceworks.com. Authorized to send emails on his behalf.
+- **Notes:** Prefers step-by-step support. Environment: Windows (primary) + macOS, Office 365, Mimecast, Watchguard firewall. Escalation: email logs to external help desk if unresolved. Escalation email: help@wentforthgroup.on.spiceworks.com. Authorized to send emails on his behalf. Send from: patrickcorr4@gmail.com.
 
 ## Context
 
