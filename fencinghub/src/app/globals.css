@@ -43,6 +43,10 @@
   --r-md: 14px;
   --r-lg: 18px;
 
+  --state-hover: rgba(255, 255, 255, 0.04);
+  --state-active: rgba(255, 255, 255, 0.08);
+  --state-disabled: rgba(255, 255, 255, 0.25);
+
   /* Back-compat vars used in components */
   --text-primary: var(--text-0);
   --text-secondary: var(--text-1);
@@ -107,7 +111,8 @@ body {
 
 /* Global polish utilities */
 .glass {
-  background: var(--glass-bg);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)), var(--glass-bg);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--glass-blur));
 }
@@ -115,21 +120,48 @@ body {
 .interactive {
   transition:
     transform 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 180ms ease,
+    filter 180ms ease;
 }
 
 .interactive:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  filter: brightness(1.04);
 }
 
 .interactive:active {
   transform: translateY(0);
 }
 
+.tilt {
+  transform-style: preserve-3d;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.tilt:hover {
+  transform: translateY(-2px) rotateX(1deg) rotateY(-1deg);
+  box-shadow: var(--shadow-md);
+}
+
 .focus-ring:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive,
+  .tilt {
+    transition: none;
+  }
+  .interactive:hover,
+  .tilt:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+    filter: none;
+  }
 }
 
 /* Legacy utility class overrides */

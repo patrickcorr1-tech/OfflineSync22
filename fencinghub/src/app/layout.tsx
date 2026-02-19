@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import LivePresenceWidget from "@/components/LivePresenceWidget";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "FencingHub by StowAg",
@@ -24,6 +25,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         {children}
+        <Toaster theme="dark" position="bottom-right" />
         <LivePresenceWidget />
       </body>
     </html>
