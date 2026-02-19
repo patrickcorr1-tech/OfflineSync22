@@ -26,6 +26,11 @@
   --accent-contrast: hsl(222 47% 6%);
   --ring: hsl(190 95% 55%);
 
+  /* Legacy variable mappings */
+  --bg: var(--bg-0);
+  --slate-900: var(--text-0);
+  --slate-500: var(--text-2);
+
   --success: hsl(142 70% 45%);
   --warning: hsl(38 92% 50%);
   --danger: hsl(0 80% 58%);
