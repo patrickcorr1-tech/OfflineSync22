@@ -296,6 +296,15 @@ for select using (auth.uid() = user_id);
 create policy "notifications_update_self" on public.notifications
 for update using (auth.uid() = user_id);
 
+-- Co-browse sessions
+alter table public.cobrowse_sessions enable row level security;
+create policy "cobrowse_sessions_select" on public.cobrowse_sessions
+for select using (auth.role() = 'authenticated');
+create policy "cobrowse_sessions_insert" on public.cobrowse_sessions
+for insert with check (auth.role() = 'authenticated');
+create policy "cobrowse_sessions_update" on public.cobrowse_sessions
+for update using (auth.role() = 'authenticated');
+
 -- Snag photos
 create policy "snag_photos_select" on public.snag_photos
 for select using (

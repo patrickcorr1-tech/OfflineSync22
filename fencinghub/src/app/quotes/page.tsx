@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
 import { getSignedUrl } from "@/lib/storage";
 import DashboardShell from "@/components/DashboardShell";
+import CobrowseWidget from "@/components/CobrowseWidget";
 import { useProfile } from "@/lib/useProfile";
 import { canEdit } from "@/lib/roles";
 
@@ -223,6 +224,7 @@ export default function QuotesPage() {
 
   return (
     <DashboardShell title="Quotes" subtitle="Upload and manage customer quotes">
+      <CobrowseWidget label="Request help" />
       {!canEdit(profile?.role) && (
         <div className="card p-4 mb-4">
           <div className="section-title">Apply discount</div>
