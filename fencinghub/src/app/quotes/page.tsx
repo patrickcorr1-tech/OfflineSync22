@@ -27,6 +27,9 @@ export default function QuotesPage() {
   const [discountMsg, setDiscountMsg] = useState<string | null>(null);
   const [discountPdf, setDiscountPdf] = useState<string | null>(null);
   const [pendingDiscounts, setPendingDiscounts] = useState<any[]>([]);
+  const [approvedCompanies, setApprovedCompanies] = useState<any[]>([]);
+  const [companyOptions, setCompanyOptions] = useState<any[]>([]);
+  const [selectedCompany, setSelectedCompany] = useState<string>("");
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const load = async () => {
@@ -51,6 +54,18 @@ export default function QuotesPage() {
         .select("id, percent, status, quote_id, created_at")
         .order("created_at", { ascending: false });
       setPendingDiscounts((discounts || []).filter((d: any) => d.status === "pending"));
+
+      const { data: companies } = await supabase
+        .from("companies")
+        .select("id,name")
+        .order("name", { ascending: true });
+      setCompanyOptions(companies || []);
+
+      const { data: approved } = await supabase
+        .from("discount_approved_companies")
+        .select("id, company_id, companies(name)")
+        .order("created_at", { ascending: false });
+      setApprovedCompanies(approved || []);
       return;
     }
 
@@ -287,35 +302,102 @@ export default function QuotesPage() {
         </div>
       )}
 
-      {canEdit(profile?.role) && pendingDiscounts.length > 0 && (
+      {canEdit(profile?.role) && (
         <div className="card p-4 mb-4">
-          <div className="section-title">Discount requests</div>
-          <div className="mt-3 space-y-2 text-sm">
-            {pendingDiscounts.map((d) => (
-              <div
-                key={d.id}
-                className="flex items-center justify-between rounded-xl border border-white/10 p-3"
-              >
-                <div>
-                  <div className="text-sm">Quote {d.quote_id}</div>
-                  <div className="text-xs text-white/50">{d.percent}% requested</div>
-                </div>
+          <div className="section-title">Discount approvals</div>
+          <div className="mt-3 grid gap-3 md:grid-cols-2">
+            <div>
+              <div className="text-xs uppercase tracking-wide text-white/50">
+                Approved companies
+              </div>
+              <div className="mt-2 space-y-2 text-sm">
+                {approvedCompanies.length === 0 && (
+                  <div className="text-white/50 text-xs">No approved companies yet.</div>
+                )}
+                {approvedCompanies.map((c) => (
+                  <div
+                    key={c.id}
+                    className="flex items-center justify-between rounded-xl border border-white/10 p-3"
+                  >
+                    <div className="text-sm">{c.companies?.name || c.company_id}</div>
+                    <button
+                      className="btn-ghost"
+                      type="button"
+                      onClick={async () => {
+                        await supabase.from("discount_approved_companies").delete().eq("id", c.id);
+                        load();
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-white/50">Add company</div>
+              <div className="mt-2 flex items-center gap-2">
+                <select
+                  className="rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm w-full"
+                  value={selectedCompany}
+                  onChange={(e) => setSelectedCompany(e.target.value)}
+                >
+                  <option value="">Select company</option>
+                  {companyOptions.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
                 <button
                   className="btn-primary"
                   type="button"
                   onClick={async () => {
-                    await fetch("/api/quotes/discount/approve", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ discountId: d.id }),
-                    });
+                    if (!selectedCompany) return;
+                    await supabase
+                      .from("discount_approved_companies")
+                      .insert({ company_id: selectedCompany });
+                    setSelectedCompany("");
                     load();
                   }}
                 >
-                  Approve
+                  Add
                 </button>
               </div>
-            ))}
+              <div className="mt-6 text-xs uppercase tracking-wide text-white/50">
+                Pending requests
+              </div>
+              <div className="mt-2 space-y-2 text-sm">
+                {pendingDiscounts.length === 0 && (
+                  <div className="text-white/50 text-xs">No pending discount requests.</div>
+                )}
+                {pendingDiscounts.map((d) => (
+                  <div
+                    key={d.id}
+                    className="flex items-center justify-between rounded-xl border border-white/10 p-3"
+                  >
+                    <div>
+                      <div className="text-sm">Quote {d.quote_id}</div>
+                      <div className="text-xs text-white/50">{d.percent}% requested</div>
+                    </div>
+                    <button
+                      className="btn-primary"
+                      type="button"
+                      onClick={async () => {
+                        await fetch("/api/quotes/discount/approve", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ discountId: d.id }),
+                        });
+                        load();
+                      }}
+                    >
+                      Approve
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
