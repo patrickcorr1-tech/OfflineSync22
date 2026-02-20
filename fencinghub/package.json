@@ -12,20 +12,16 @@
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.97.0",
-    "@tanstack/react-table": "^8.21.3",
-    "archiver": "^7.0.1",
-    "cmdk": "^1.1.1",
+    "archiver": "^4.0.2",
     "dexie": "^4.3.0",
-    "framer-motion": "^12.34.2",
     "idb": "^8.0.0",
-    "lucide-react": "^0.575.0",
-    "next": "16.1.6",
+    "next": "^16.1.6",
     "nodemailer": "^8.0.1",
     "playwright": "^1.58.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "sonner": "^2.0.7",
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "pdf-lib": "^1.17.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.2",
