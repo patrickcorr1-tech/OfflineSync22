@@ -5,6 +5,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import NotificationsBell from "@/components/NotificationsBell";
 import OfflineStatusBar from "@/components/OfflineStatusBar";
+import PushSubscribe from "@/components/PushSubscribe";
 import { useProfile } from "@/lib/useProfile";
 
 export default function DashboardShell({
@@ -75,6 +76,19 @@ export default function DashboardShell({
               <Link href="/quotes" className="btn-ghost" onClick={() => setMobileOpen(false)}>
                 Quotes
               </Link>
+              {isCustomer && (
+                <>
+                  <Link href="/projects" className="btn-ghost" onClick={() => setMobileOpen(false)}>
+                    Request help (Projects)
+                  </Link>
+                  <Link href="/quotes" className="btn-ghost" onClick={() => setMobileOpen(false)}>
+                    Request help (Quotes)
+                  </Link>
+                  <div className="mt-2">
+                    <PushSubscribe />
+                  </div>
+                </>
+              )}
               {!isCustomer && <NotificationsBell />}
               <Link href="/logout" className="btn-ghost" onClick={() => setMobileOpen(false)}>
                 Sign out
