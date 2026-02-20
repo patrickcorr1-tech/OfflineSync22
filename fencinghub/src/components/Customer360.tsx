@@ -24,13 +24,14 @@ export default function Customer360({ projectId }: { projectId: string }) {
         )
         .eq("id", projectId)
         .single();
-      setProject(proj || null);
+      const company = Array.isArray(proj?.companies) ? proj.companies[0] : proj?.companies;
+      setProject(proj ? { ...proj, companies: company } : null);
 
-      if (proj?.companies?.id) {
+      if (company?.id) {
         const { data: contactRows } = await supabase
           .from("company_contacts")
           .select("id,full_name,email,phone,is_primary,role")
-          .eq("company_id", proj.companies.id)
+          .eq("company_id", company.id)
           .order("is_primary", { ascending: false })
           .order("created_at", { ascending: true });
         setContacts(contactRows || []);

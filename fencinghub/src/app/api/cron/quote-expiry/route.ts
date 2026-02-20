@@ -35,7 +35,8 @@ export async function POST() {
   const to = (staff || []).map((s: any) => s.email).filter(Boolean);
 
   for (const quote of quotes) {
-    const projectName = quote.projects?.name || "Project";
+    const project = Array.isArray(quote.projects) ? quote.projects[0] : quote.projects;
+    const projectName = project?.name || "Project";
     const subject = `Quote expiring soon — ${projectName}`;
     const html = `<p>Quote for <strong>${projectName}</strong> expires within 5 days.</p>`;
 

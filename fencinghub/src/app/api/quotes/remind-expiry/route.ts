@@ -36,14 +36,15 @@ export async function POST(req: NextRequest) {
     .single();
   if (!quote) return NextResponse.json({ error: "Quote not found" }, { status: 404 });
 
+  const project = Array.isArray(quote.projects) ? quote.projects[0] : quote.projects;
   const { data: customers } = await admin
     .from("profiles")
     .select("id")
-    .eq("company_id", quote.projects?.company_id || "")
+    .eq("company_id", project?.company_id || "")
     .eq("role", "customer");
 
   const title = "Quote expiring soon";
-  const body = `Your quote for ${quote.projects?.name || "your project"} is expiring soon.`;
+  const body = `Your quote for ${project?.name || "your project"} is expiring soon.`;
   const payload = {
     title,
     body,
