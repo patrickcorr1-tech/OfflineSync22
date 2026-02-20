@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import LivePresenceWidget from "@/components/LivePresenceWidget";
-import { Toaster } from "sonner";
+import OfflineSyncManager from "@/components/OfflineSyncManager";
 
 export const metadata: Metadata = {
   title: "FencingHub by StowAg",
@@ -14,18 +14,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&family=Sora:wght@500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
       </head>
       <body className="antialiased">
         {children}
-        <Toaster theme="dark" position="bottom-right" />
+        <OfflineSyncManager />
         <LivePresenceWidget />
       </body>
     </html>
