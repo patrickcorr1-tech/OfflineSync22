@@ -263,6 +263,23 @@ for all using (
   exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales','contractor'))
 );
 
+-- Checklist photos
+alter table public.project_checklist_photos enable row level security;
+create policy "project_checklist_photos_select" on public.project_checklist_photos
+for select using (
+  exists (select 1 from public.project_checklist_items ci join public.projects pr on pr.id = ci.project_id where ci.id = project_checklist_photos.checklist_item_id and (
+    exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales','contractor'))
+    or exists (select 1 from public.profiles p where p.id = auth.uid() and p.company_id = pr.company_id)
+  ))
+);
+create policy "project_checklist_photos_insert" on public.project_checklist_photos
+for insert with check (
+  exists (select 1 from public.project_checklist_items ci join public.projects pr on pr.id = ci.project_id where ci.id = project_checklist_photos.checklist_item_id and (
+    exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales','contractor'))
+    or exists (select 1 from public.profiles p where p.id = auth.uid() and p.company_id = pr.company_id)
+  ))
+);
+
 -- Customer callback requests
 alter table public.customer_callback_requests enable row level security;
 create policy "callback_requests_select" on public.customer_callback_requests
@@ -361,5 +378,47 @@ for insert with check (auth.uid() is not null);
 
 create policy "email_events_select_admin" on public.email_events
 for select using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
+);
+
+-- Message templates
+alter table public.message_templates enable row level security;
+create policy "message_templates_select" on public.message_templates
+for select using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
+);
+create policy "message_templates_write" on public.message_templates
+for all using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
+);
+
+-- Inbox messages
+alter table public.inbox_messages enable row level security;
+create policy "inbox_messages_select" on public.inbox_messages
+for select using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
+);
+create policy "inbox_messages_write" on public.inbox_messages
+for all using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
+);
+
+-- Status banners
+alter table public.status_banners enable row level security;
+create policy "status_banners_select" on public.status_banners
+for select using (auth.role() = 'authenticated');
+create policy "status_banners_write" on public.status_banners
+for all using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
+);
+
+-- SLA policies
+alter table public.sla_policies enable row level security;
+create policy "sla_policies_select" on public.sla_policies
+for select using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
+);
+create policy "sla_policies_write" on public.sla_policies
+for all using (
   exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
 );

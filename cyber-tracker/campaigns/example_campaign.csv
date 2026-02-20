@@ -1,0 +1,4 @@
+employee_id,email,name,department,target_url
+emp001,john.smith@company.com,John Smith,Engineering,https://portal.office.com
+emp002,jane.doe@company.com,Jane Doe,HR,https://portal.office.com
+emp003,bob.wilson@company.com,Bob Wilson,Sales,https://portal.office.com

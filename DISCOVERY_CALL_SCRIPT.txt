@@ -1,0 +1,211 @@
+# Discovery Call Script — IT Consultancy
+
+**Objective:** Understand client's situation, qualify the opportunity, establish credibility, and secure next steps (proposal meeting).
+
+**Duration:** 30-45 minutes  
+**Format:** Video call (Zoom/Teams) or phone
+
+---
+
+## Opening (2-3 minutes)
+
+"Thanks for taking the time to speak with me today, [NAME]. I've reviewed your inquiry about [migration/security/infrastructure], and I'm looking forward to understanding more about your situation.
+
+Before we dive in, would it be helpful if I briefly explained how I work, or would you prefer to start with your current challenges?"
+
+*[Let them choose — shows you're consultative, not pushy]*
+
+---
+
+## Current State Assessment (10-12 minutes)
+
+### Opening Question:
+"To make sure I understand where you're at, could you walk me through your current IT setup?"
+
+### Key Questions to Ask:
+
+**Infrastructure:**
+- "How many users and locations are we talking about?"
+- "What's your current email system?"
+- "Where do you store files currently — servers, cloud, or mixed?"
+- "Are you using any collaboration tools like Teams, Slack, Zoom?"
+
+**Pain Points:**
+- "What's driving this conversation now? What prompted you to look at this?"
+- "What are the biggest frustrations with your current setup?"
+- "If you don't make any changes, what happens in 6-12 months?"
+
+**Timeline:**
+- "Do you have any hard deadlines I should be aware of?"
+- "Is there an event driving this — lease ending, contract renewal, security incident?"
+
+**Decision Process:**
+- "Who else is involved in this decision?"
+- "Have you done this type of project before, or is this new territory?"
+- "What's your budget range for this project?" *[Handle this diplomatically — see below]*
+
+**Budget Question (if appropriate):**
+"I work with businesses ranging from £3,000 to £50,000+ depending on scope. Without committing to a number, does that range sound like it might work, or should we discuss a different approach?"
+
+---
+
+## Their Goals (5-7 minutes)
+
+"Let's talk about the ideal outcome. If we work together and this project is successful, what does that look like in 6 months?"
+
+Listen for:
+- Measurable outcomes ("reduce IT tickets by 50%")
+- Business objectives ("enable remote work", "win that contract")
+- User experience improvements ("people stop complaining about email")
+
+**Follow-up:**
+"Of those goals, which is the most important? What would you compromise on if needed?"
+
+---
+
+## Establishing Credibility (5 minutes)
+
+"Based on what you've shared, this sounds similar to a project I completed for [similar company/industry]. They had [similar challenge], and we [solution]. The result was [outcome]."
+
+**Then ask:**
+"Does that sound like the type of approach that would work for you, or are there specific concerns you have?"
+
+*[This positions you as experienced but opens door for them to voice concerns]*
+
+---
+
+## Handling Objections
+
+### "Can you just give me a ballpark figure?"
+"I understand you need budget visibility. Based on [X users/sites], projects typically range from £[X] to £[Y]. To give you a precise figure, I'd need to do a quick assessment of your current environment. I can provide a detailed proposal within 48 hours of a 30-minute technical review. Would that work?"
+
+### "We need this done urgently"
+"I can appreciate the urgency. Rushing migrations increases risk. Let me ask — what's the real deadline? If it's [specific event], we might be able to stage this — secure the critical piece first, then complete the rest properly. Can you tell me more about what's driving the timeline?"
+
+### "We can probably do this ourselves"
+"Absolutely, and if you have the internal expertise that's great. Can I ask — has your team done a migration like this before? [If yes] What happened last time? [If no] What would happen if this doesn't go smoothly? Sometimes it makes sense to have someone who's done this 50+ times guide the process, even if your team handles the day-to-day."
+
+### "Your competitor quoted less"
+"I can't speak to their approach, but I can tell you what I include: [specific value adds — pilot testing, 30-day support, admin training, documentation]. If budget is tight, I'm happy to discuss phasing the work or focusing on the highest-impact elements first. What are the must-haves vs nice-to-haves?"
+
+---
+
+## Next Steps (3-5 minutes)
+
+### Qualify the Opportunity:
+"Based on our conversation, this sounds like a good fit. Here's what I think makes sense as next steps:"
+
+**Option A: They're Ready to Proceed**
+"I'll prepare a detailed proposal breaking down the approach, timeline, and investment. I can have that to you by [day]. Once you've reviewed it, we can schedule a 30-minute call to walk through any questions. Does that work?"
+
+**Option B: They Need More Information**
+"Would it be helpful if I did a quick technical assessment of your current environment? It's non-intrusive — I just need 30 minutes with your IT person to understand what we're working with. From there I can give you a precise quote rather than a range. Does [day/time] work for that?"
+
+**Option C: They're Not Ready**
+"Totally understand — this is a significant decision. Would it be helpful if I sent you some resources? I have a free Microsoft 365 migration checklist that walks through the process. You can grab it at [link]. If questions come up as you work through it, just drop me an email. No pressure, no follow-up calls unless you reach out."
+
+---
+
+## Closing the Call
+
+"Thanks for the conversation today, [NAME]. Just to confirm:"
+
+- [Restate key points: X users, Y sites, timeline, next step]
+- "I'll send you [proposal/checklist/assessment invite] by [timeframe]"
+- "If anything changes or questions come up before then, just email me at patrickcorr4@gmail.com"
+- "My mobile is [number] if anything urgent comes up"
+
+"Looking forward to [next step]. Thanks again for your time."
+
+---
+
+## Post-Call Actions (Within 2 Hours)
+
+- [ ] Send follow-up email summarising discussion and next steps
+- [ ] Add to CRM/spreadsheet (company name, contact, project type, estimated value, next action)
+- [ ] Calendar reminder for follow-up
+- [ ] If sending proposal: Customise template, send within promised timeframe
+- [ ] If sending checklist: Include personal note, no hard sell
+
+---
+
+## Red Flags (Don't Proceed)
+
+🚩 **No budget defined and won't discuss range**  
+🚩 **Unrealistic timeline ("We need this done by Friday")**  
+🚩 **Wants fixed price without scoping**  
+🚩 **Previous 3 consultants "didn't work out"**  
+🚩 **No decision-maker involved in initial call**  
+🚩 **Asks you to do free work as "test"**  
+
+If 2+ red flags: Politely decline or require 100% payment upfront.
+
+---
+
+## Green Flags (Prioritise)
+
+✅ **Specific problem, clear timeline**  
+✅ **Decision-maker on the call**  
+✅ **Had previous consultant, knows what they don't want**  
+✅ **Asks about process and risk mitigation**  
+✅ **Willing to invest in proper planning**  
+✅ **References similar successful projects**  
+
+---
+
+## Email Templates
+
+### Follow-up After Discovery Call
+
+**Subject:** Next steps: [Company] Microsoft 365 migration
+
+Hi [NAME],
+
+Thanks for the conversation today. Great to learn more about [Company]'s plans and the challenges you're facing with [current system].
+
+As discussed, I'll prepare a detailed proposal covering:
+- Phased migration approach for your [X] users across [Y] sites
+- Timeline: [approximate based on call]
+- Investment breakdown by phase
+- Risk mitigation and support plan
+
+You'll have this by [day/time]. Once you've had a chance to review, let's schedule 30 minutes to discuss any questions.
+
+In the meantime, if anything else comes to mind, just reply to this email.
+
+Best regards,
+Patrick
+
+---
+
+### Follow-up After No Response (5 days)
+
+**Subject:** Quick question about [Company] IT project
+
+Hi [NAME],
+
+I sent over the proposal last [day] and wanted to check in. Totally understand you're probably reviewing options or discussing internally.
+
+Quick question: On a scale of 1-10, how urgent is this project now? Just want to make sure I'm not chasing if priorities have shifted.
+
+If you have questions about the proposal or want to discuss phasing the work differently, I'm happy to jump on a quick call. No pressure either way.
+
+Patrick
+
+---
+
+### Follow-up Final Attempt (14 days)
+
+**Subject:** Should I close the file on [Company]?
+
+Hi [NAME],
+
+I haven't heard back, so I'm assuming priorities have shifted or you've gone in a different direction. No worries at all — happens all the time.
+
+I'll close my file on this for now, but if circumstances change in the future, feel free to reach out. I'm always happy to chat, even if just to answer questions.
+
+Hope the project goes well whatever you decide.
+
+Patrick
+
+**[This often gets a response — either they're still interested or they'll tell you they've gone elsewhere, which is valuable information.]**

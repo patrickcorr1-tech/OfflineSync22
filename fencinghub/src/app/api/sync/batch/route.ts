@@ -29,25 +29,6 @@ export async function POST(req: NextRequest) {
         await supabase.from("project_notes").insert(item.payload);
       }
 
-      if (item.type === "chat_message") {
-        const { notify, ...payload } = item.payload || {};
-        await supabase.from("chat_messages").insert(payload);
-        if (notify?.projectId && notify?.title) {
-          await fetch(`${appUrl}/api/notifications/project-update`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              projectId: notify.projectId,
-              type: "chat_message",
-              title: notify.title,
-              body: notify.body || "New message",
-              audience: notify.audience || "admins",
-              push: true,
-            }),
-          });
-        }
-      }
-
       if (item.type === "measurement") {
         const payload =
           typeof item.payload.data === "string" ? JSON.parse(item.payload.data) : item.payload.data;
@@ -106,14 +87,6 @@ export async function POST(req: NextRequest) {
               });
             }),
           );
-        }
-      }
-
-      if (item.type === "gallery_upload") {
-        const { bucket, path, project_id, dataUrl } = item.payload || {};
-        if (bucket && path && dataUrl) {
-          await uploadFromDataUrl(bucket, path, dataUrl);
-          await supabase.from("gallery_items").insert({ project_id, file_path: path });
         }
       }
 

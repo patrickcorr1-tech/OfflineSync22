@@ -1,0 +1,17 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.2/schema.json",
+  "files": { "experimentalScannerIgnores": ["node_modules", ".next", "dist"] },
+  "assist": { "enabled": false },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": { "useExhaustiveDependencies": "off", "noUnusedFunctionParameters": "off" },
+      "suspicious": { "noUnknownAtRules": "off", "noExplicitAny": "off" },
+      "a11y": { "useButtonType": "off" },
+      "style": { "noNonNullAssertion": "off" },
+      "performance": { "noImgElement": "off" }
+    }
+  },
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 }
+}

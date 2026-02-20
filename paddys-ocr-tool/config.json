@@ -1,0 +1,9 @@
+{
+  "outlook_scan_folder": "Inbox\\Scannedpdfs",
+  "outlook_processed_folder": "Inbox\\processedscans",
+  "dest_root": "C:/Users/%USERNAME%/Documents/Scannedocuments",
+  "temp_folder": "C:/Users/%USERNAME%/Documents/Scannedocuments/_temp",
+  "ocr_language": "eng",
+  "ocr_dpi": 300,
+  "rename_files": true
+}

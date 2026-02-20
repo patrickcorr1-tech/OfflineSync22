@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import NotificationsBell from "@/components/NotificationsBell";
 import OfflineStatusBar from "@/components/OfflineStatusBar";
 import PushSubscribe from "@/components/PushSubscribe";
+import StatusBanner from "@/components/StatusBanner";
 import { useProfile } from "@/lib/useProfile";
 
 export default function DashboardShell({
@@ -41,7 +42,17 @@ export default function DashboardShell({
           <Link href="/quotes" className="btn-ghost">
             Quotes
           </Link>
-          {!isCustomer && <NotificationsBell />}
+          {!isCustomer && (
+            <>
+              <Link href="/inbox" className="btn-ghost">
+                Inbox
+              </Link>
+              <Link href="/templates" className="btn-ghost">
+                Templates
+              </Link>
+              <NotificationsBell />
+            </>
+          )}
           <Link href="/logout" className="btn-ghost">
             Sign out
           </Link>
@@ -76,6 +87,20 @@ export default function DashboardShell({
               <Link href="/quotes" className="btn-ghost" onClick={() => setMobileOpen(false)}>
                 Quotes
               </Link>
+              {!isCustomer && (
+                <>
+                  <Link href="/inbox" className="btn-ghost" onClick={() => setMobileOpen(false)}>
+                    Inbox
+                  </Link>
+                  <Link
+                    href="/templates"
+                    className="btn-ghost"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Templates
+                  </Link>
+                </>
+              )}
               {isCustomer && (
                 <>
                   <Link href="/projects" className="btn-ghost" onClick={() => setMobileOpen(false)}>
@@ -115,6 +140,12 @@ export default function DashboardShell({
                   <Link href="/quotes" className="btn-ghost">
                     Quotes
                   </Link>
+                  <Link href="/inbox" className="btn-ghost">
+                    Inbox
+                  </Link>
+                  <Link href="/templates" className="btn-ghost">
+                    Templates
+                  </Link>
                   {roleReady && !isCustomer && (
                     <button
                       type="button"
@@ -128,7 +159,8 @@ export default function DashboardShell({
               </div>
             )}
           </div>
-          <div className="mt-4">
+          <div className="mt-4 space-y-3">
+            <StatusBanner />
             <OfflineStatusBar />
           </div>
           <div className="mt-6">{children}</div>

@@ -1,0 +1,2 @@
+-- Deprecated: superseded by 2026-02-21_phase1.sql
+-- (intentionally left blank)

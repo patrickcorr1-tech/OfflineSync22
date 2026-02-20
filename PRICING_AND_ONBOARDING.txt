@@ -1,0 +1,279 @@
+# Consultancy Pricing Guide & Client Onboarding
+
+## Pricing Framework
+
+### Microsoft 365 Migration
+
+| Size | Complexity | Price Range | Timeline |
+|------|-----------|-------------|----------|
+| 5-25 users | Simple (basic email only) | £2,000 - £4,000 | 2-3 weeks |
+| 5-25 users | Complex (shared mailboxes, public folders) | £3,500 - £6,000 | 3-4 weeks |
+| 25-75 users | Standard | £5,000 - £10,000 | 4-6 weeks |
+| 25-75 users | Complex (multi-site, compliance needs) | £8,000 - £15,000 | 6-8 weeks |
+| 75-200 users | Enterprise | £12,000 - £25,000 | 8-12 weeks |
+| 200+ users | Enterprise + Custom | £20,000+ | 12+ weeks |
+
+**What's included:**
+- Planning and discovery
+- Pilot migration
+- Full production migration
+- 30-day post-migration support
+- Admin training
+- Documentation
+
+**What's NOT included:**
+- Microsoft 365 licensing (client pays Microsoft directly)
+- Third-party migration tools (if required)
+- Hardware purchases
+- Desktop/laptop setup (can be added)
+
+---
+
+### Multi-Site Network Design
+
+| Sites | Users | Price Range | Timeline |
+|-------|-------|-------------|----------|
+| 2-3 sites | 10-50 users | £3,000 - £7,000 | 4-6 weeks |
+| 2-3 sites | 50-150 users | £6,000 - £12,000 | 6-8 weeks |
+| 4-6 sites | 50-200 users | £10,000 - £20,000 | 8-12 weeks |
+| 6+ sites | 200+ users | £18,000+ | 12+ weeks |
+
+**What's included:**
+- Network assessment
+- WAN/VPN design
+- Security architecture
+- Implementation
+- Documentation
+- Handover training
+
+---
+
+### Cybersecurity Compliance
+
+| Service | Price Range | Timeline |
+|---------|-------------|----------|
+| Cyber Essentials (Prep only) | £1,500 - £3,000 | 2-4 weeks |
+| Cyber Essentials Plus (Prep only) | £3,000 - £5,000 | 4-6 weeks |
+| ISO 27001 Gap Analysis | £2,500 - £4,000 | 2-3 weeks |
+| GDPR Compliance Review | £2,000 - £3,500 | 2-3 weeks |
+| Security Hardening (M365) | £1,500 - £3,000 | 1-2 weeks |
+| Penetration Test Coordination | £500 - £1,000 | Project management only |
+
+---
+
+### Day Rate / Retainer Options
+
+**Ad-hoc Consulting:**
+- £800 - £1,200/day (on-site)
+- £600 - £900/day (remote)
+- Minimum 1 day billing
+
+**Monthly Retainer (Ongoing IT Leadership):**
+- £2,000/month: 2 days/month + email/phone support
+- £3,500/month: 4 days/month + priority support
+- £5,000/month: 6 days/month + strategic planning + quarterly board reports
+
+**Emergency Support:**
+- £150/hour (business hours)
+- £250/hour (out of hours)
+- 2-hour minimum
+
+---
+
+## Payment Terms
+
+**Standard:** 50% deposit, 25% at midpoint, 25% on completion  
+**Retainers:** Monthly in advance  
+**Ad-hoc:** 14 days from invoice  
+**Late payment:** 8% statutory interest after 30 days
+
+**Ways to Accept Payment:**
+- Bank transfer (preferred)
+- Wise (for international clients)
+- PayPal (invoiced with 3% surcharge)
+- Credit card (via Stripe, 2.9% surcharge)
+
+---
+
+## Client Onboarding Checklist
+
+### Before Project Start
+
+**Week -1 (Proposal Accepted):**
+- [ ] Send service agreement for signature
+- [ ] Send deposit invoice
+- [ ] Create project folder (Google Drive/Dropbox)
+- [ ] Send welcome email with:
+  - Project timeline
+  - Key contact information
+  - What to expect next
+  - Any prep work required
+
+**Week 0 (Kick-off):**
+- [ ] Receive signed agreement
+- [ ] Receive deposit payment
+- [ ] Schedule kick-off meeting
+- [ ] Send meeting agenda
+
+---
+
+### Kick-off Meeting Agenda
+
+**Attendees:** Client project lead, IT contact (if applicable), Patrick  
+**Duration:** 60 minutes  
+**Format:** Video call
+
+1. **Introductions (5 min)**
+2. **Project Recap (10 min)**
+   - Confirm scope and objectives
+   - Review timeline
+   - Identify any changes since proposal
+3. **Access Requirements (15 min)**
+   - What systems need access
+   - Who provides credentials
+   - Security protocols (2FA, VPN, etc.)
+4. **Communication Plan (10 min)**
+   - Weekly status calls? Email updates?
+   - Emergency contact process
+   - Preferred communication channels
+5. **Risk and Constraints (10 min)**
+   - Blackout dates (client holidays, critical business periods)
+   - Known technical debt or issues
+   - Compliance requirements
+6. **Next Steps (10 min)**
+   - What I need from client this week
+   - What I'll deliver this week
+   - Schedule first technical session
+
+**Action:** Send meeting notes within 24 hours with action items assigned.
+
+---
+
+### During Project
+
+**Weekly (for projects >2 weeks):**
+- [ ] Status update email (Fridays)
+- [ ] Track progress against milestones
+- [ ] Flag any risks or blockers
+- [ ] Update project documentation
+
+**Key Milestones:**
+- [ ] Phase completion sign-off (get email confirmation)
+- [ ] Test results documented
+- [ ] User acceptance confirmed
+- [ ] Training completed
+
+**Communication:**
+- [ ] Respond to client emails within 4 business hours
+- [ ] If delay expected, notify BEFORE deadline
+- [ ] No surprises — flag issues early
+
+---
+
+### Project Completion
+
+**Final Week:**
+- [ ] Final testing completed
+- [ ] Documentation delivered
+- [ ] Training sessions completed
+- [ ] Final invoice sent
+- [ ] Project closure meeting scheduled
+
+**Closure Meeting:**
+- [ ] Review what was delivered
+- [ ] Confirm acceptance
+- [ ] Discuss any post-project support needs
+- [ ] Ask for testimonial/review
+- [ ] Ask for referrals
+
+**Post-Project:**
+- [ ] Final invoice paid
+- [ ] Archive project files (keep for 7 years)
+- [ ] Schedule 30-day check-in call
+- [ ] Add to newsletter/announcement list (with permission)
+- [ ] Update portfolio/case studies (with permission)
+
+---
+
+## Red Flags During Project
+
+🚩 **Scope creep without written approval**  
+🚩 **Client won't provide access or information**  
+🚩 **Key decision-maker disappears**  
+🚩 **Payment delays beyond terms**  
+🚩 **"While you're here..." requests**  
+🚩 **Client becomes unresponsive**  
+
+**How to handle:**
+- Document everything in writing
+- Reference original agreement
+- Offer change order for additional work
+- Be prepared to pause work if payment issues
+- Stay professional but firm
+
+---
+
+## Professional Toolkit
+
+**Software I Use:**
+- **Project Management:** Trello (simple) or Notion (complex)
+- **Documentation:** Google Docs + Draw.io (diagrams)
+- **Communication:** Email + Microsoft Teams
+- **Time Tracking:** Toggl Track (for retainer clients)
+- **Invoicing:** QuickBooks or Xero
+- **Password Sharing:** 1Password or Bitwarden (secure sharing)
+
+**Insurance:**
+- Professional Indemnity: £1M minimum
+- Public Liability: £1M minimum
+- Cyber Insurance: £250K recommended
+
+**Legal:**
+- Service agreement template (created)
+- NDA template (for sensitive projects)
+- Accountant for tax/VAT
+- Bookkeeping: Monthly reconciliation
+
+---
+
+## Setting Boundaries
+
+**Working Hours:**
+- Standard: Monday-Friday, 9am-5pm GMT
+- Out of hours: Emergency only, premium rate
+- Response time: 4 hours during business hours
+
+**Scope Management:**
+- "That's outside the current scope, but I can quote for it separately"
+- "Let me document that as a Phase 2 item"
+- "That would be a change order — are you happy to proceed?"
+
+**Communication:**
+- No WhatsApp (unless emergency)
+- No calls without prior scheduling (unless critical outage)
+- Weekend work by arrangement only, premium rates apply
+
+**Remember:** You're a consultant, not an employee. Clients are buying expertise and results, not unlimited time.
+
+---
+
+## Continuous Improvement
+
+**After Every Project:**
+- What went well?
+- What could have gone better?
+- Did I estimate accurately?
+- Would I work with this client again?
+- What did I learn?
+
+**Quarterly:**
+- Review pricing (increase annually)
+- Update templates based on lessons learned
+- Refresh case studies
+- Review insurance coverage
+
+**Annually:**
+- Professional development (certifications, courses)
+- Industry conference (if budget allows)
+- Update website with new projects/skills
+- Review and raise rates

@@ -1,0 +1,42 @@
+============================================================
+🔒 Cyber Awareness Analytics Dashboard v3
+============================================================
+Dashboard:    http://localhost:5000/dashboard
+Quick Send:   http://localhost:5000/quick-send
+Track:        http://localhost:5000/track?id=XXX&url=YYY
+Pixel:        http://localhost:5000/pixel?id=XXX
+============================================================
+ * Serving Flask app 'tracker'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://89.167.4.32:5000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [13/Feb/2026 12:43:33] "POST /api/generate-email HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 12:43:41] "POST /api/generate-email HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 12:44:01] "GET /quick-send HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 12:44:01] "GET /api/smtp-config HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 12:46:52] "GET /quick-send HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 12:46:52] "GET /api/smtp-config HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 12:49:21] "GET /quick-send HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 12:49:21] "GET /api/smtp-config HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 12:49:45] "POST /api/generate-email HTTP/1.1" 200 -
+/home/admin/.openclaw/workspace/cyber-tracker/tracker.py:97: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  timestamp = datetime.utcnow().isoformat()
+127.0.0.1 - - [13/Feb/2026 12:49:45] "GET /pixel?id=marketing_team_124945 HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 13:01:41] "GET /quick-send HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 13:01:41] "GET /api/smtp-config HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 13:01:59] "POST /api/generate-email HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 13:01:59] "GET /pixel?id=tom_130159 HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 13:02:26] "POST /api/smtp-config HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 13:02:29] "POST /api/send-email HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 13:02:57] "GET /pixel?id=tom_130159 HTTP/1.1" 200 -
+/home/admin/.openclaw/workspace/cyber-tracker/tracker.py:73: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  timestamp = datetime.utcnow().isoformat()
+127.0.0.1 - - [13/Feb/2026 13:03:04] "[32mGET /track?id=tom_130159_e051cfab&url=https://portal.office.com HTTP/1.1[0m" 302 -
+127.0.0.1 - - [13/Feb/2026 13:03:19] "[32mGET /track?id=tom_130159_e051cfab&url=https://portal.office.com HTTP/1.1[0m" 302 -
+127.0.0.1 - - [13/Feb/2026 13:03:33] "[32mGET /track?id=tom_130159_e051cfab&url=https://portal.office.com HTTP/1.1[0m" 302 -
+127.0.0.1 - - [13/Feb/2026 13:03:50] "GET /dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [13/Feb/2026 13:05:05] "[32mGET /track?id=tom_130159_e051cfab&url=https://portal.office.com HTTP/1.1[0m" 302 -
+127.0.0.1 - - [13/Feb/2026 13:07:12] "GET /dashboard HTTP/1.1" 200 -

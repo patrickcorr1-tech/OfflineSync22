@@ -12,6 +12,7 @@ import ProjectDocuments from "@/components/ProjectDocuments";
 import ProjectTimeline from "@/components/ProjectTimeline";
 // Measurements removed
 import ProjectDetails from "@/components/ProjectDetails";
+import Customer360 from "@/components/Customer360";
 import ProjectChecklist from "@/components/ProjectChecklist";
 import ProjectReminders from "@/components/ProjectReminders";
 import DashboardShell from "@/components/DashboardShell";
@@ -59,6 +60,7 @@ export default function ProjectDetailPage() {
         {/* Customer chat removed */}
         {active === "Approvals" && <ProjectApprovals projectId={projectId} />}
         {active === "Project details" && <ProjectDetails projectId={projectId} />}
+        {active === "Customer 360" && <Customer360 projectId={projectId} />}
         {active === "Checklist" && <ProjectChecklist projectId={projectId} />}
         {active === "Reminders" && <ProjectReminders projectId={projectId} />}
         {active === "Gallery" && <ProjectGallery projectId={projectId} />}

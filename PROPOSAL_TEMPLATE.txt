@@ -1,0 +1,179 @@
+# IT Consultancy Proposal Template
+
+## [CLIENT NAME] — IT Infrastructure Review & Microsoft 365 Migration
+
+---
+
+**Prepared by:** Patrick Corr  
+**Date:** [Date]  
+**Proposal valid for:** 30 days  
+**Contact:** patrickcorr4@gmail.com | https://www.patrickcorr.me
+
+---
+
+## Executive Summary
+
+Following our discovery call on [DATE], I understand [CLIENT NAME] is seeking to:
+
+- [Primary objective, e.g., "Migrate from on-premise Exchange to Microsoft 365"]
+- [Secondary objective, e.g., "Improve security posture across 3 sites"]
+- [Tertiary objective, e.g., "Enable remote work capabilities"]
+
+This proposal outlines my recommended approach, timeline, deliverables, and investment.
+
+---
+
+## Current Situation
+
+Based on our discussion, your current environment includes:
+
+- **Users:** [Number] staff across [Number] locations
+- **Current Email:** [Exchange on-premise / Gmail / Other]
+- **Current File Storage:** [Server / Dropbox / Google Drive / Mixed]
+- **Current Collaboration:** [Teams / Zoom / Slack / None]
+- **Key Challenges:** [List specific pain points discussed]
+
+---
+
+## Recommended Solution
+
+### Phase 1: Discovery & Planning (Week 1-2)
+
+**Objectives:**
+- Complete technical audit of current environment
+- Identify integration points and dependencies
+- Document user requirements and training needs
+- Finalise migration approach and timeline
+
+**Deliverables:**
+- Environment assessment report
+- Migration strategy document
+- Risk register and mitigation plan
+- Communication plan for staff
+
+**Investment:** £[Amount]
+
+---
+
+### Phase 2: Preparation & Pilot (Week 3-4)
+
+**Objectives:**
+- Configure Microsoft 365 tenant and security baseline
+- Set up hybrid connectivity (if required)
+- Migrate pilot group (5-10 users)
+- Refine process based on feedback
+
+**Deliverables:**
+- Fully configured M365 tenant
+- Security policies implemented (MFA, DLP, conditional access)
+- Pilot migration completed
+- User training materials prepared
+
+**Investment:** £[Amount]
+
+---
+
+### Phase 3: Production Migration (Week 5-6)
+
+**Objectives:**
+- Migrate all users in staged approach
+- Transfer email, files, and collaboration data
+- Configure Teams, SharePoint, and OneDrive
+- Provide day-of-migration support
+
+**Deliverables:**
+- All users migrated to Microsoft 365
+- Data integrity verified
+- Legacy system decommissioned
+- Post-migration support (2 weeks)
+
+**Investment:** £[Amount]
+
+---
+
+### Phase 4: Optimisation & Handover (Week 7-8)
+
+**Objectives:**
+- Fine-tune security and compliance settings
+- Train administrators on M365 management
+- Document new processes and procedures
+- Transition to ongoing support (if required)
+
+**Deliverables:**
+- Admin training session (2 hours)
+- Technical documentation
+- User guides and quick reference cards
+- 30-day support period
+
+**Investment:** £[Amount]
+
+---
+
+## Total Investment
+
+| Phase | Description | Investment |
+|-------|-------------|------------|
+| 1 | Discovery & Planning | £[Amount] |
+| 2 | Preparation & Pilot | £[Amount] |
+| 3 | Production Migration | £[Amount] |
+| 4 | Optimisation & Handover | £[Amount] |
+| **Total** | | **£[Total]** |
+
+**Payment Terms:** 50% deposit to commence, 25% at end of Phase 2, 25% on completion.
+
+**Exclusions:** Microsoft 365 licensing costs (billed directly by Microsoft), third-party software, hardware purchases, out-of-scope work requires written approval.
+
+---
+
+## Why Work With Me?
+
+**Experience:** 10+ years leading IT operations for multi-site businesses  
+**Track Record:** 50+ Microsoft 365 migrations with 100% data integrity  
+**Approach:** Calm, pragmatic, zero-downtime focus  
+**Availability:** Ongoing support available post-migration  
+**Geography:** UK-based with on-site capability nationwide
+
+---
+
+## Next Steps
+
+1. **Accept Proposal:** Sign below and return with deposit invoice
+2. **Kick-off Meeting:** Schedule within 5 business days
+3. **Access:** Provide admin credentials (securely) for assessment
+4. **Begin:** Phase 1 commences upon receipt of deposit
+
+---
+
+## Terms & Conditions
+
+**1. Scope:** Work covered is as detailed above. Additional work requires written approval and separate pricing.
+
+**2. Timeline:** Timelines are estimates based on current understanding. Delays caused by client (e.g., delayed access, scope changes) may affect timeline.
+
+**3. Confidentiality:** All client data and information treated as strictly confidential. NDA available on request.
+
+**4. Liability:** Professional indemnity insurance held to £[Amount]. Liability limited to total contract value.
+
+**5. Termination:** Either party may terminate with 14 days written notice. Client pays for work completed to date.
+
+---
+
+**Acceptance:**
+
+I accept this proposal and authorise work to commence.
+
+_________________________  
+Signature
+
+_________________________  
+Name
+
+_________________________  
+Date
+
+_________________________  
+Company
+
+---
+
+**Questions?** Contact Patrick Corr at patrickcorr4@gmail.com or 079XX XXXXXX

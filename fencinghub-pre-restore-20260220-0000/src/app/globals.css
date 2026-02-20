@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+
+  /* Obsidian Pulse — core tokens */
+  --bg-0: hsl(222 47% 6%);
+  --bg-1: hsl(222 44% 8%);
+  --bg-2: hsl(222 40% 10%);
+
+  --surface-0: hsl(222 38% 12%);
+  --surface-1: hsl(222 34% 14%);
+  --surface-2: hsl(222 30% 16%);
+
+  --border: hsl(220 18% 22%);
+  --border-strong: hsl(220 18% 28%);
+
+  --text-0: hsl(210 40% 98%);
+  --text-1: hsl(215 18% 78%);
+  --text-2: hsl(215 14% 62%);
+
+  --accent: hsl(190 95% 48%);
+  --accent-2: hsl(190 95% 60%);
+  --accent-contrast: hsl(222 47% 6%);
+  --ring: hsl(190 95% 55%);
+
+  /* Legacy variable mappings */
+  --bg: var(--bg-0);
+  --slate-900: var(--text-0);
+  --slate-500: var(--text-2);
+
+  --success: hsl(142 70% 45%);
+  --warning: hsl(38 92% 50%);
+  --danger: hsl(0 80% 58%);
+  --info: hsl(210 90% 60%);
+
+  --shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 20px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 1px 0 rgba(255, 255, 255, 0.05), 0 14px 40px rgba(0, 0, 0, 0.45);
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+
+  --state-hover: rgba(255, 255, 255, 0.04);
+  --state-active: rgba(255, 255, 255, 0.08);
+  --state-disabled: rgba(255, 255, 255, 0.25);
+
+  /* Back-compat vars used in components */
+  --text-primary: var(--text-0);
+  --text-secondary: var(--text-1);
+  --text-muted: var(--text-2);
+  --accent-hover: var(--accent-2);
+  --accent-pressed: #1fd69d;
+  --focus-ring: var(--ring);
+  --overlay: rgba(10, 12, 16, 0.75);
+  --glass-bg: rgba(18, 22, 30, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 18px;
+
+  /* Status backgrounds */
+  --success-bg: rgba(45, 196, 133, 0.12);
+  --warn-bg: rgba(255, 180, 71, 0.1);
+  --error-bg: rgba(255, 84, 84, 0.12);
+  --info-bg: rgba(83, 163, 255, 0.1);
+  --success-border: rgba(45, 196, 133, 0.35);
+  --warn-border: rgba(255, 180, 71, 0.35);
+  --error-border: rgba(255, 84, 84, 0.35);
+  --info-border: rgba(83, 163, 255, 0.35);
+
+  /* shadcn/ui mappings */
+  --background: var(--bg-0);
+  --foreground: var(--text-0);
+  --card: var(--surface-0);
+  --card-foreground: var(--text-0);
+  --popover: var(--surface-1);
+  --popover-foreground: var(--text-0);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-contrast);
+  --secondary: var(--surface-1);
+  --secondary-foreground: var(--text-0);
+  --muted: var(--surface-1);
+  --muted-foreground: var(--text-2);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--accent-contrast);
+  --border-color: var(--border);
+  --input: var(--surface-0);
+  --ring-color: var(--ring);
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0) 0 0 / 18px 18px,
+    radial-gradient(circle at 30% -10%, rgba(57, 242, 178, 0.08), transparent 40%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-0));
+  color: var(--text-0);
+  font-family:
+    "Public Sans",
+    "Sora",
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global polish utilities */
+.glass {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)), var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+.interactive {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+.interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  filter: brightness(1.04);
+}
+
+.interactive:active {
+  transform: translateY(0);
+}
+
+.tilt {
+  transform-style: preserve-3d;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.tilt:hover {
+  transform: translateY(-2px) rotateX(1deg) rotateY(-1deg);
+  box-shadow: var(--shadow-md);
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive,
+  .tilt {
+    transition: none;
+  }
+  .interactive:hover,
+  .tilt:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+    filter: none;
+  }
+}
+
+/* Legacy utility class overrides */
+.card {
+  border-radius: var(--r-lg);
+  background: var(--surface-0);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--text-2);
+}
+
+.btn-primary {
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 0.65rem 1.2rem;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-weight: 700;
+  box-shadow: 0 10px 20px rgba(57, 242, 178, 0.25);
+}
+
+.btn-ghost {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 0.6rem 1.2rem;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--text-0);
+  background: var(--surface-1);
+}

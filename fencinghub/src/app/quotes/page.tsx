@@ -28,6 +28,7 @@ export default function QuotesPage() {
   const [discountMsg, setDiscountMsg] = useState<string | null>(null);
   const [discountPdf, setDiscountPdf] = useState<string | null>(null);
   const [pendingDiscounts, setPendingDiscounts] = useState<any[]>([]);
+  const [remindId, setRemindId] = useState<string | null>(null);
   const [approvedCompanies, setApprovedCompanies] = useState<any[]>([]);
   const [companyOptions, setCompanyOptions] = useState<any[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
@@ -73,7 +74,7 @@ export default function QuotesPage() {
     const { data } = await supabase
       .from("quotes")
       .select(
-        "id,status,file_path,project_id,version,pinned,archived,sent_at,viewed_at,responded_at,response_comment,projects(name),created_at",
+        "id,status,file_path,project_id,version,pinned,archived,sent_at,viewed_at,responded_at,response_comment,expires_at,response_due_at,reminder_sent_at,projects(name),created_at",
       )
       .order("created_at", { ascending: false });
 
@@ -115,6 +116,19 @@ export default function QuotesPage() {
   };
 
   const formatDate = (value?: string | null) => (value ? new Date(value).toLocaleString() : "—");
+  const formatDateInput = (value?: string | null) =>
+    value ? new Date(value).toISOString().slice(0, 10) : "";
+  const isExpiringSoon = (value?: string | null) => {
+    if (!value) return false;
+    const diff = new Date(value).getTime() - Date.now();
+    const days = diff / (1000 * 60 * 60 * 24);
+    return days >= 0 && days <= 7;
+  };
+  const daysUntil = (value?: string | null) => {
+    if (!value) return null;
+    const diff = new Date(value).getTime() - Date.now();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  };
 
   const getStatusLabel = (q: any) => {
     if (q.archived) return "Archived";
@@ -161,6 +175,24 @@ export default function QuotesPage() {
     if (res.ok) setUploadMsg("Quote email resent.");
     else setUploadMsg(`Resend failed: ${data?.error || "Unknown error"}`);
     setResendId(null);
+  };
+
+  const sendExpiryReminder = async (quoteId: string) => {
+    setRemindId(quoteId);
+    const res = await fetch("/api/quotes/remind-expiry", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quoteId }),
+    });
+    if (res.ok) {
+      setQuotes((prev) =>
+        prev.map((q) =>
+          q.id === quoteId ? { ...q, reminder_sent_at: new Date().toISOString() } : q,
+        ),
+      );
+      setUploadMsg("Expiry reminder sent.");
+    }
+    setRemindId(null);
   };
 
   useEffect(() => {
@@ -539,12 +571,42 @@ export default function QuotesPage() {
                       </span>
                     )}
                   </div>
+                  {q.expires_at && (
+                    <div className="mt-2 text-[10px] text-white/50">
+                      Expires in {daysUntil(q.expires_at)} days
+                    </div>
+                  )}
+                  {profile?.role !== "customer" && (
+                    <div className="mt-2 flex items-center gap-2 text-[10px] text-white/50">
+                      <span>Set expiry</span>
+                      <input
+                        type="date"
+                        className="rounded-lg bg-[#f1f5f9] px-2 py-1 text-xs text-[var(--slate-900)]"
+                        defaultValue={q.expires_at ? q.expires_at.slice(0, 10) : ""}
+                        onChange={async (e) => {
+                          const value = e.target.value;
+                          await fetch("/api/quotes/update", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              quoteId: q.id,
+                              expires_at: value ? new Date(value).toISOString() : null,
+                            }),
+                          });
+                          load();
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="text-left sm:text-right text-[10px] text-white/50">
                   <div>Sent {formatDate(q.sent_at || q.created_at)}</div>
                   <div>Viewed {formatDate(q.viewed_at)}</div>
                   <div>
                     Responded {q.responded_at ? `${formatDate(q.responded_at)} (${q.status})` : "—"}
+                  </div>
+                  <div className={isExpiringSoon(q.expires_at) ? "text-orange-200" : ""}>
+                    Expires {q.expires_at ? formatDate(q.expires_at) : "—"}
                   </div>
                 </div>
               </div>
@@ -590,6 +652,29 @@ export default function QuotesPage() {
                   >
                     {q.archived ? "Unarchive" : "Archive"}
                   </button>
+                )}
+                {canEdit(profile?.role) && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <input
+                      type="date"
+                      className="rounded-lg border border-white/20 bg-transparent px-2 py-1"
+                      value={formatDateInput(q.expires_at)}
+                      onChange={(e) =>
+                        updateQuote(q.id, {
+                          expires_at: e.target.value ? `${e.target.value}T17:00:00` : null,
+                        })
+                      }
+                    />
+                    {q.expires_at && (
+                      <button
+                        className="rounded-lg border border-white/20 px-3 py-1"
+                        onClick={() => sendExpiryReminder(q.id)}
+                        disabled={!!q.reminder_sent_at || remindId === q.id}
+                      >
+                        {q.reminder_sent_at ? "Reminder sent" : "Send reminder"}
+                      </button>
+                    )}
+                  </div>
                 )}
                 {canEdit(profile?.role) && (
                   <button

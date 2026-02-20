@@ -1,0 +1,4 @@
+employee_id,email,name,department,target_url,tracking_id,tracking_link
+paddy001,patrickcorr4@gmail.com,Paddy Corr,IT Security,https://portal.office.com,paddy001_2ca6c5f3,https://www.patrickcorr.me/track?id=paddy001_2ca6c5f3&url=https%3A%2F%2Fportal.office.com
+jack001,jack.smith@example.com,Jack Smith,Sales,https://portal.office.com,jack001_88193b7d,https://www.patrickcorr.me/track?id=jack001_88193b7d&url=https%3A%2F%2Fportal.office.com
+sarah001,sarah.jones@example.com,Sarah Jones,HR,https://portal.office.com,sarah001_ca0287d8,https://www.patrickcorr.me/track?id=sarah001_ca0287d8&url=https%3A%2F%2Fportal.office.com

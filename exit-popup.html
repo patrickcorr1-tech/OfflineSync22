@@ -1,0 +1,106 @@
+<!-- Exit Intent Popup - Add before </body> tag -->
+<div id="exit-popup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:9999;justify-content:center;align-items:center">
+  <div style="background:var(--card-bg,#0f172a);border:1px solid var(--border,#1e293b);border-radius:16px;padding:2rem;max-width:500px;width:90%;position:relative;box-shadow:0 25px 50px -12px rgba(0,0,0,.5)">
+    <button onclick="closeExitPopup()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer">×</button>
+    
+    <h3 style="margin-bottom:1rem;color:var(--accent)">Before You Go... 🎁</h3>
+    
+    <p style="margin-bottom:1.5rem;color:var(--muted)">
+      Get my free <strong>Microsoft 365 Migration Checklist</strong> — 
+      the same 12-step process I use with clients to ensure zero-downtime migrations.
+    </p>
+    
+    <form action="mailto:patrickcorr4@gmail.com?subject=Free Checklist Request" method="post" enctype="text/plain" onsubmit="trackDownload();closeExitPopup();">
+      <input 
+        type="email" 
+        name="email" 
+        placeholder="your@email.com" 
+        required
+        style="width:100%;padding:.85rem 1rem;margin-bottom:1rem;border:1px solid var(--panel-border);background:var(--panel);color:var(--text);border-radius:8px"
+      />
+      
+      <button 
+        type="submit"
+        style="width:100%;background:var(--accent);color:#fff;padding:.85rem 1.6rem;border:none;border-radius:999px;font-weight:600;cursor:pointer"
+      >
+        Send Me The Free Checklist →
+      </button>
+    </form>
+    
+    <p style="margin-top:1rem;font-size:.85rem;color:var(--muted);text-align:center">
+      No spam. Unsubscribe anytime.
+    </p>
+  </div>
+</div>
+
+<script>
+(function() {
+  var popupShown = false;
+  var mouseY = 0;
+  
+  // Check if user already downloaded
+  if (localStorage.getItem('exitPopupDownloaded')) return;
+  
+  // Track mouse movement
+  document.addEventListener('mousemove', function(e) {
+    mouseY = e.clientY;
+  });
+  
+  // Show popup when mouse leaves viewport (top only)
+  document.addEventListener('mouseleave', function(e) {
+    if (e.clientY < 10 && !popupShown && !localStorage.getItem('exitPopupDownloaded')) {
+      showExitPopup();
+    }
+  });
+  
+  // Also show on scroll attempt to leave (mobile)
+  var lastScrollTop = 0;
+  document.addEventListener('scroll', function() {
+    var st = window.pageYOffset || document.documentElement.scrollTop;
+    if (st < lastScrollTop && st < 100 && !popupShown && !localStorage.getItem('exitPopupDownloaded')) {
+      setTimeout(showExitPopup, 1000);
+    }
+    lastScrollTop = st <= 0 ? 0 : st;
+  });
+  
+  // Don't show immediately - wait 10 seconds minimum
+  setTimeout(function() {
+    popupShown = false;
+  }, 10000);
+})();
+
+function showExitPopup() {
+  var popup = document.getElementById('exit-popup');
+  if (popup && popup.style.display !== 'flex') {
+    popup.style.display = 'flex';
+    // Track in Google Analytics
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'exit_intent_popup_shown');
+    }
+  }
+}
+
+function closeExitPopup() {
+  var popup = document.getElementById('exit-popup');
+  if (popup) {
+    popup.style.display = 'none';
+  }
+}
+
+function trackDownload() {
+  localStorage.setItem('exitPopupDownloaded', 'true');
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'checklist_download', {
+      'event_category': 'Lead Generation',
+      'event_label': 'Exit Intent Popup'
+    });
+  }
+}
+
+// Close on background click
+document.getElementById('exit-popup').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeExitPopup();
+  }
+});
+</script>

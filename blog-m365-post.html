@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Microsoft 365 Migration Checklist: 12 Steps for Zero Downtime | Patrick Corr</title>
+    <meta name="description" content="Complete Microsoft 365 migration checklist for businesses. 12 proven steps to migrate email, files, and teams with zero downtime. Expert guide from IT consultant Patrick Corr." />
+    <link rel="stylesheet" href="/assets/index-Ne8fBzdJ-v3.css" />
+    <link rel="canonical" href="https://www.patrickcorr.me/blog/microsoft-365-migration-checklist.html" />
+    
+    <!-- Article Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Microsoft 365 Migration Checklist: 12 Steps for Zero Downtime",
+      "description": "Complete Microsoft 365 migration checklist for businesses. 12 proven steps to migrate email, files, and teams with zero downtime.",
+      "author": {
+        "@type": "Person",
+        "name": "Patrick Corr",
+        "url": "https://www.patrickcorr.me/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Patrick Corr IT Consulting",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.patrickcorr.me/hero.webp"
+        }
+      },
+      "datePublished": "2026-02-12",
+      "dateModified": "2026-02-12",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.patrickcorr.me/blog/microsoft-365-migration-checklist.html"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div class="page">
+      <nav class="breadcrumb" style="padding:1rem 6vw">
+        <a href="/">Home</a> <span>/</span> <a href="/blogs.html">Blog</a> <span>/</span> <span>Microsoft 365 Migration Checklist</span>
+      </nav>
+      
+      <article class="section" style="max-width:800px;margin:0 auto">
+        <header style="text-align:center;margin-bottom:2rem">
+          <p style="color:var(--muted);font-size:.9rem">February 12, 2026 · Microsoft 365 Migration</p>
+          <h1 style="font-size:2.2rem;margin-bottom:1rem">Microsoft 365 Migration Checklist: 12 Steps for Zero Downtime</h1>
+          <p style="color:var(--muted);font-size:1.1rem">A complete guide to migrating your business to Microsoft 365 without disrupting operations</p>
+        </header>
+        
+        <div class="about-card" style="text-align:left">
+          
+          <p style="margin-bottom:1.5rem">After completing 50+ Microsoft 365 migrations for businesses ranging from 20 to 500 users, I've refined this 12-step checklist. Following these steps consistently delivers zero-downtime migrations and reduces post-migration support tickets by 80%.</p>
+          
+          <div style="background:var(--panel);padding:1.5rem;border-radius:12px;margin:2rem 0;border-left:4px solid var(--accent)">
+            <p style="margin:0;font-weight:600">⚡ Quick Summary: Most failed migrations skip steps 3, 7, and 11. Don't be that statistic.</p>
+          </div>
+          
+          <h2 style="margin-top:2rem;color:var(--accent)">Pre-Migration Phase (Weeks 1-2)</h2>
+          
+          <h3 style="margin-top:1.5rem">Step 1: Audit Your Current Environment</h3>
+          <p>Before touching any settings, document:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Total mailbox sizes (watch for >50GB mailboxes)</li>
+            <li>Distribution groups and shared mailboxes</li>
+            <li>Third-party integrations (CRM, ERP, scanners)</li>
+            <li>Legacy protocols (IMAP/POP still in use?)</li>
+            <li>Public folders and legacy archives</li>
+          </ul>
+          <p style="background:#1a2332;padding:1rem;border-radius:8px;margin:1rem 0"><strong>Pro tip:</strong> Use the Microsoft Assessment and Planning Toolkit for automated discovery. It finds things you'll miss manually.</p>
+          
+          <h3 style="margin-top:1.5rem">Step 2: Choose Your Migration Strategy</h3>
+          <p>Three main approaches:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li><strong>Cutover:</strong> Everyone moves at once. Best for <150 users.</li>
+            <li><strong>Staged:</strong> By department over weeks. Best for 150-500 users.</li>
+            <li><strong>Hybrid:</strong> Coexistence period. Best for >500 users or complex environments.</li>
+          </ul>
+          
+          <h3 style="margin-top:1.5rem">Step 3: The Pilot Group (CRITICAL)</h3>
+          <p>Select 10-15 users representing:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Different departments (finance has different needs than sales)</li>
+            <li>Power users and "challenging" users</li>
+            <li>Users with large mailboxes (>20GB)</li>
+            <li>Mobile-only users</li>
+          </ul>
+          <p style="color:var(--accent);font-weight:600">This pilot will surface 90% of issues before company-wide rollout.</p>
+          
+          <h2 style="margin-top:2rem;color:var(--accent)">Tenant Setup Phase (Week 2)</h2>
+          
+          <h3 style="margin-top:1.5rem">Step 4: Configure Identity and Access</h3>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Set up Azure AD Connect (password hash sync minimum, PTA recommended)</li>
+            <li>Configure Conditional Access policies (block legacy auth, require MFA)</li>
+            <li>Set up emergency access accounts (break-glass accounts)</li>
+            <li>Configure self-service password reset</li>
+          </ul>
+          
+          <h3 style="margin-top:1.5rem">Step 5: Security Baseline</h3>
+          <p>Before migrating data, lock down the tenant:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Enable MFA for all admin accounts</li>
+            <li>Configure Microsoft Defender for Office 365</li>
+            <li>Set up data loss prevention (DLP) policies</li>
+            <li>Configure retention policies</li>
+            <li>Enable audit logging</li>
+          </ul>
+          
+          <h3 style="margin-top:1.5rem">Step 6: Email Hygiene and Preparation</h3>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Clean mailboxes (archive/delete old data)</li>
+            <li>Document all distribution lists and aliases</li>
+            <li>Prepare CSV for bulk user creation</li>
+            <li>Verify domain ownership in Microsoft 365</li>
+          </ul>
+          
+          <h2 style="margin-top:2rem;color:var(--accent)">Migration Phase (Week 3-4)</h2>
+          
+          <h3 style="margin-top:1.5rem">Step 7: Migrate the Pilot Group</h3>
+          <p>Execute the pilot migration:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Provision mailboxes</li>
+            <li>Start mailbox sync (can take 24-72 hours for large mailboxes)</li>
+            <li>Configure Outlook profiles</li>
+            <li>Test mobile device enrollment</li>
+            <li>Gather detailed feedback</li>
+          </ul>
+          <p style="background:#1a2332;padding:1rem;border-radius:8px;margin:1rem 0"><strong>Common pilot issues:</strong> Scanner/copier SMTP settings, CRM integrations, mobile certificate warnings. Fix these now.</p>
+          
+          <h3 style="margin-top:1.5rem">Step 8: Training and Documentation</h3>
+          <p>Before go-live, users need:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>15-minute "What's Changing" session</li>
+            <li>Written guide for their specific role</li>
+            <li>Clear support channel (Slack channel, helpdesk ticket type)</li>
+            <li>FAQ covering: "Where are my old emails?" and "How do I share files?"</li>
+          </ul>
+          
+          <h3 style="margin-top:1.5rem">Step 9: The Big Bang (or Staged Waves)</h3>
+          <p>For cutover migrations:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Friday evening: Final sync, update MX records</li>
+            <li>Saturday: Monitor sync completion, troubleshoot</li>
+            <li>Monday morning: Support team standing by</li>
+          </ul>
+          <p style="background:#1a2332;padding:1rem;border-radius:8px;margin:1rem 0"><strong>MX record tip:</strong> Set TTL to 300 (5 minutes) 24 hours before cutover. This speeds up email flow redirection.</p>
+          
+          <h2 style="margin-top:2rem;color:var(--accent)">Post-Migration Phase (Week 5-6)</h2>
+          
+          <h3 style="margin-top:1.5rem">Step 10: Monitor and Support</h3>
+          <p>First two weeks post-migration:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Daily sync monitoring (catch failed syncs early)</li>
+            <li>Track support ticket themes</li>
+            <li>Monitor mailbox sizes and quotas</li>
+            <li>Check mobile device compliance</li>
+          </ul>
+          
+          <h3 style="margin-top:1.5rem">Step 11: Decommission Old Environment (CRITICAL)</h3>
+          <p>Don't leave the old system running "just in case":</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Export final backups</li>
+            <li>Archive old mail server data (7-year retention)</li>
+            <li>Remove legacy licenses</li>
+            <li>Document what was decommissioned and when</li>
+          </ul>
+          <p style="color:var(--accent);font-weight:600">Running parallel systems for "just in case" costs £10k+/year and creates security gaps.</p>
+          
+          <h3 style="margin-top:1.5rem">Step 12: Optimise and Enhance</h3>
+          <p>Month 2 onwards:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>Enable Teams if not already done</li>
+            <li>Configure SharePoint team sites</li>
+            <li>Implement Power Automate workflows</li>
+            <li>Set up eDiscovery and legal hold policies</li>
+            <li>Review and optimise license usage</li>
+          </ul>
+          
+          <h2 style="margin-top:2rem;color:var(--accent)">Downloadable Checklist</h2>
+          
+          <div style="background:linear-gradient(135deg,#2563eb26,#2563eb0d);padding:1.5rem;border-radius:16px;border:1px solid rgba(37,99,235,.3);text-align:center;margin:2rem 0">
+            <h3 style="margin-bottom:1rem">Want the printable version?</h3>
+            <p style="margin-bottom:1rem;color:var(--muted)">Get the Microsoft 365 Migration Checklist PDF with bonus migration timeline template.</p>
+            <a href="mailto:patrickcorr4@gmail.com?subject=Request: M365 Migration Checklist PDF" style="background:var(--accent);color:#fff;padding:.85rem 1.6rem;border-radius:999px;text-decoration:none;font-weight:600;display:inline-block">Request Free Checklist PDF</a>
+          </div>
+          
+          <h2 style="margin-top:2rem;color:var(--accent)">Common Migration Mistakes to Avoid</h2>
+          
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li><strong>Skipping the pilot:</strong> "We don't have time" = 3 weeks of chaos later</li>
+            <li><strong>No rollback plan:</strong> Always have a 48-hour rollback window</li>
+            <li><strong>Forgetting mobile devices:</strong> 60% of users check email on mobile first</li>
+            <li><strong>Ignoring third-party apps:</strong> Scanners, CRMs, and copiers break silently</li>
+            <li><strong>Inadequate training:</strong> 15 minutes of training saves 10 hours of support</li>
+          </ul>
+          
+          <h2 style="margin-top:2rem;color:var(--accent)">When to Hire an Expert</h2>
+          
+          <p>Consider professional help if:</p>
+          <ul style="margin:1rem 0;padding-left:1.5rem">
+            <li>You have >100 users</li>
+            <li>You're running hybrid Exchange currently</li>
+            <li>You have complex compliance requirements (GDPR, HIPAA, etc.)</li>
+            <li>You lack in-house Exchange/AD expertise</li>
+            <li>You can't afford 24-48 hours of email downtime</li>
+          </ul>
+          
+          <p style="margin-top:1.5rem">A botched migration costs 3x more than doing it right the first time. I've rescued migrations that went sideways because teams skipped the pilot phase or didn't plan for third-party integrations.</p>
+          
+          <div style="background:var(--panel);padding:1.5rem;border-radius:12px;margin:2rem 0;border-left:4px solid var(--accent)">
+            <p style="margin:0"><strong>Need help with your Microsoft 365 migration?</strong> I plan and deliver secure migrations for multi-site businesses across the UK, Europe, and USA. <a href="/microsoft-365-migrations.html" style="color:var(--accent)">Learn more about my services</a> or <a href="mailto:patrickcorr4@gmail.com" style="color:var(--accent)">email me for a consultation</a>.</p>
+          </div>
+          
+          <hr style="border-color:var(--panel-border);margin:2rem 0" />
+          
+          <p style="color:var(--muted);font-size:.9rem"><strong>About the author:</strong> Patrick Corr is a Head of IT and Security Leader with 10+ years delivering Microsoft 365 migrations, multi-site infrastructure, and cybersecurity solutions for businesses across the UK, Europe, and USA.</p>
+          
+        </div>
+        
+        <div style="margin-top:2rem;text-align:center">
+          <p style="color:var(--muted);margin-bottom:1rem">Share this article</p>
+          <div style="display:flex;gap:1rem;justify-content:center">
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.patrickcorr.me/blog/microsoft-365-migration-checklist.html" target="_blank" style="padding:.5rem 1rem;background:var(--panel);border:1px solid var(--panel-border);border-radius:999px;text-decoration:none;color:var(--text)">LinkedIn</a>
+            <a href="https://twitter.com/intent/tweet?url=https://www.patrickcorr.me/blog/microsoft-365-migration-checklist.html&text=Microsoft%20365%20Migration%20Checklist" target="_blank" style="padding:.5rem 1rem;background:var(--panel);border:1px solid var(--panel-border);border-radius:999px;text-decoration:none;color:var(--text)">Twitter</a>
+            <a href="mailto:?subject=Microsoft%20365%20Migration%20Checklist&body=https://www.patrickcorr.me/blog/microsoft-365-migration-checklist.html" style="padding:.5rem 1rem;background:var(--panel);border:1px solid var(--panel-border);border-radius:999px;text-decoration:none;color:var(--text)">Email</a>
+          </div>
+        </div>
+        
+        <p style="margin-top:2rem"><a href="/blogs.html">← All blog posts</a></p>
+      </article>
+      
+      <!-- Footer with Blog Link -->
+      <footer style="padding:2rem 6vw;border-top:1px solid var(--panel-border);margin-top:3rem;text-align:center">
+        <div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem">
+          <a href="/" style="color:var(--text);text-decoration:none">Home</a>
+          <a href="/microsoft-365-migrations.html" style="color:var(--text);text-decoration:none">Services</a>
+          <a href="/blogs.html" style="color:var(--accent);text-decoration:none;font-weight:600">Blog</a>
+          <a href="mailto:patrickcorr4@gmail.com" style="color:var(--text);text-decoration:none">Contact</a>
+        </div>
+        <p style="color:var(--muted);font-size:.9rem">© 2026 Patrick Corr. IT & Security Leader.</p>
+      </footer>
+    </div>
+  </body>
+</html>

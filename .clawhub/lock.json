@@ -4,6 +4,18 @@
     "elicitation": {
       "version": "1.0.4",
       "installedAt": 1770333583266
+    },
+    "pinch-to-post": {
+      "version": "3.1.2",
+      "installedAt": 1770384073429
+    },
+    "pdf-text-extractor": {
+      "version": "1.0.0",
+      "installedAt": 1770385420590
+    },
+    "clawsec-suite": {
+      "version": "0.1.2",
+      "installedAt": 1771460025856
     }
   }
 }

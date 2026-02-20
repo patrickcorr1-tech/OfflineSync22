@@ -6,12 +6,10 @@ export type OutboxItem = {
   id?: number;
   type:
     | "note"
-    | "chat_message"
     | "snag"
-    | "measurement"
     | "snag_status"
+    | "measurement"
     | "quote_request"
-    | "gallery_upload"
     | "customer_project"
     | "customer_snag";
   payload: any;
