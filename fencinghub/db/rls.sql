@@ -305,6 +305,15 @@ for insert with check (auth.role() = 'authenticated');
 create policy "cobrowse_sessions_update" on public.cobrowse_sessions
 for update using (auth.role() = 'authenticated');
 
+-- Support audit logs
+alter table public.support_audit_logs enable row level security;
+create policy "support_audit_logs_select" on public.support_audit_logs
+for select using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('admin','sales'))
+);
+create policy "support_audit_logs_insert" on public.support_audit_logs
+for insert with check (auth.role() = 'authenticated');
+
 -- Snag photos
 create policy "snag_photos_select" on public.snag_photos
 for select using (

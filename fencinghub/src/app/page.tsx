@@ -295,6 +295,16 @@ export default function Home() {
             </button>
           </div>
         </div>
+
+        <div className="mt-4 card p-4">
+          <div className="section-title">Help center</div>
+          <p className="mt-2 text-xs text-white/50">Quick answers and support options.</p>
+          <ul className="mt-3 space-y-2 text-sm text-white/80">
+            <li>• How do I add photos? Open a project → Snags → Upload photos.</li>
+            <li>• Where are my quotes? Use the Quotes tab or Downloads above.</li>
+            <li>• Need help right now? Use “Request help” on Projects or Quotes.</li>
+          </ul>
+        </div>
       </DashboardShell>
     );
   }

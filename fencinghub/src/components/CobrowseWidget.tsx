@@ -32,6 +32,7 @@ export default function CobrowseWidget({
   const [allowControl, setAllowControl] = useState(false);
   const [consent, setConsent] = useState(false);
   const [bugReport, setBugReport] = useState(false);
+  const [bugNotes, setBugNotes] = useState("");
   const [recordConsent, setRecordConsent] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -121,7 +122,7 @@ export default function CobrowseWidget({
   const applyMasking = () => {
     const elements = Array.from(
       document.querySelectorAll(
-        'input[type="password"], input[data-sensitive], textarea[data-sensitive]',
+        'input[type="password"], input[type="email"], input[type="tel"], input[name*="email" i], input[name*="phone" i], input[name*="address" i], input[data-sensitive], textarea[data-sensitive]',
       ),
     );
     maskedElementsRef.current = [];
@@ -189,6 +190,15 @@ export default function CobrowseWidget({
   const startSharing = async () => {
     if (!session || sharing) return;
     if (!consent) return;
+    if (!navigator.onLine) {
+      setError("You appear to be offline. Please reconnect and try again.");
+      return;
+    }
+    const connection = (navigator as any).connection?.effectiveType;
+    if (connection && ["slow-2g", "2g"].includes(connection)) {
+      setError("Connection is too weak for screen sharing. Please try again on a stronger signal.");
+      return;
+    }
     setError(null);
     try {
       const res = await fetch("/api/cobrowse/consent", {
@@ -198,6 +208,7 @@ export default function CobrowseWidget({
           sessionId: session.id,
           allowControl,
           bugReport,
+          bugNotes: bugReport ? bugNotes : null,
           recordingConsent: bugReport ? recordConsent : false,
         }),
       });
@@ -322,14 +333,23 @@ export default function CobrowseWidget({
                 I&apos;m reporting a bug
               </label>
               {bugReport && (
-                <label className="flex items-center gap-2 text-xs text-slate-600">
-                  <input
-                    type="checkbox"
-                    checked={recordConsent}
-                    onChange={(e) => setRecordConsent(e.target.checked)}
+                <div className="space-y-2">
+                  <textarea
+                    className="w-full rounded-xl bg-[#f1f5f9] px-3 py-2 text-xs"
+                    rows={3}
+                    placeholder="Briefly describe the bug (optional)"
+                    value={bugNotes}
+                    onChange={(e) => setBugNotes(e.target.value)}
                   />
-                  I consent to screen recording for this session (to help diagnose the bug)
-                </label>
+                  <label className="flex items-center gap-2 text-xs text-slate-600">
+                    <input
+                      type="checkbox"
+                      checked={recordConsent}
+                      onChange={(e) => setRecordConsent(e.target.checked)}
+                    />
+                    I consent to screen recording for this session (to help diagnose the bug)
+                  </label>
+                </div>
               )}
             </div>
 

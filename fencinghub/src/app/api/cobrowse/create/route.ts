@@ -50,5 +50,11 @@ export async function POST(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  await admin.from("support_audit_logs").insert({
+    user_id: user.id,
+    action: "cobrowse_create",
+    context: { sessionId: data.id, projectId, quoteId },
+  });
+
   return NextResponse.json({ session: data });
 }

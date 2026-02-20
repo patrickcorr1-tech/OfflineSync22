@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { sessionId, allowControl, bugReport, recordingConsent } = await req.json();
+  const { sessionId, allowControl, bugReport, bugNotes, recordingConsent } = await req.json();
   if (!sessionId) return NextResponse.json({ error: "Missing sessionId" }, { status: 400 });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -27,12 +27,19 @@ export async function POST(req: NextRequest) {
       allow_control: !!allowControl,
       bug_reported: !!bugReport,
       recording_consent: !!recordingConsent,
+      bug_notes: bugNotes || null,
       status: "active",
       started_at: new Date().toISOString(),
     })
     .eq("id", sessionId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await admin.from("support_audit_logs").insert({
+    user_id: user.id,
+    action: "cobrowse_consent",
+    context: { sessionId, allowControl, bugReport, recordingConsent },
+  });
 
   return NextResponse.json({ ok: true });
 }

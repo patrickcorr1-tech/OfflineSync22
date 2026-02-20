@@ -44,5 +44,11 @@ export async function POST(req: NextRequest) {
     .update({ status: "active", started_at: new Date().toISOString(), joined_by: user.id })
     .eq("id", data.id);
 
+  await admin.from("support_audit_logs").insert({
+    user_id: user.id,
+    action: "cobrowse_join",
+    context: { sessionId: data.id },
+  });
+
   return NextResponse.json({ session: data });
 }

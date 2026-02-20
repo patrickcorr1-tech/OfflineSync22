@@ -37,5 +37,11 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  await admin.from("support_audit_logs").insert({
+    user_id: user.id,
+    action: "cobrowse_end",
+    context: { sessionId },
+  });
+
   return NextResponse.json({ ok: true });
 }

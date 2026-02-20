@@ -329,9 +329,19 @@ create table if not exists public.cobrowse_sessions (
   allow_control boolean not null default false,
   bug_reported boolean not null default false,
   recording_consent boolean not null default false,
+  bug_notes text,
   consented_at timestamptz,
   started_at timestamptz,
   ended_at timestamptz,
   expires_at timestamptz not null default (now() + interval '15 minutes'),
+  created_at timestamptz default now()
+);
+
+-- Support audit logs
+create table if not exists public.support_audit_logs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references public.profiles(id) on delete set null,
+  action text not null,
+  context jsonb,
   created_at timestamptz default now()
 );
