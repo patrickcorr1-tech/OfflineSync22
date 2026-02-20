@@ -181,7 +181,9 @@ export function DataTable<TData>({
                   colSpan={columns.length + (renderRowActions ? 1 : 0)}
                   className="px-4 py-8 text-center text-[var(--text-2)]"
                 >
-                  No results. Try adjusting filters.
+                  <div className="mx-auto max-w-sm rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-6 text-sm">
+                    No results. Try adjusting filters or saved views.
+                  </div>
                 </td>
               </tr>
             )}

@@ -1,14 +1,25 @@
 import AdminShell from "@/components/layouts/AdminShell";
 import { MotionCard } from "@/components/ui/MotionCard";
 import { Badge } from "@/components/ui/Badge";
+import { Activity, AlertTriangle, ClipboardList, PoundSterling } from "lucide-react";
 
 export default function AdminDashboard() {
   return (
     <AdminShell>
       <div className="grid grid-cols-4 gap-5">
-        {["Active Jobs", "Quotes Pending", "Overdue", "Revenue"].map((k) => (
-          <MotionCard key={k} className="interactive">
-            <div className="text-xs uppercase tracking-[0.2em] text-[var(--text-2)]">{k}</div>
+        {[
+          { label: "Active Jobs", icon: <Activity size={16} /> },
+          { label: "Quotes Pending", icon: <ClipboardList size={16} /> },
+          { label: "Overdue", icon: <AlertTriangle size={16} /> },
+          { label: "Revenue", icon: <PoundSterling size={16} /> },
+        ].map((k) => (
+          <MotionCard key={k.label} className="interactive">
+            <div className="flex items-center justify-between">
+              <div className="text-xs uppercase tracking-[0.2em] text-[var(--text-2)]">
+                {k.label}
+              </div>
+              <div className="text-[var(--accent)]">{k.icon}</div>
+            </div>
             <div className="mt-3 text-3xl font-semibold">24</div>
             <div className="mt-2 text-xs text-[var(--text-2)]">+12% this week</div>
           </MotionCard>
