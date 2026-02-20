@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import NotificationsBell from "@/components/NotificationsBell";
+import OfflineStatusBar from "@/components/OfflineStatusBar";
 import { useProfile } from "@/lib/useProfile";
 
 export default function DashboardShell({
@@ -23,11 +24,13 @@ export default function DashboardShell({
   const onProjectsPage = pathname?.startsWith("/projects");
 
   return (
-    <div className="min-h-screen bg-[var(--bg-0)] text-[var(--text-0)]">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--slate-900)]">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
-        <div className="text-sm uppercase tracking-[0.25em] text-[var(--text-2)]">FencingHub</div>
+        <div className="text-sm uppercase tracking-[0.25em] text-[var(--slate-500)]">
+          FencingHub
+        </div>
 
-        <nav className="hidden items-center gap-3 text-xs uppercase tracking-[0.25em] text-[var(--text-2)] md:flex">
+        <nav className="hidden items-center gap-3 text-xs uppercase tracking-[0.25em] text-[var(--slate-500)] md:flex">
           <Link href="/" className="btn-ghost">
             {isCustomer ? "Home" : "Dashboard"}
           </Link>
@@ -43,13 +46,26 @@ export default function DashboardShell({
           </Link>
         </nav>
 
-        {/* top-right mobile menu removed */}
+        <div className="md:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileOpen((v) => !v)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm"
+            aria-label="Toggle menu"
+          >
+            <div className="flex flex-col gap-1">
+              <span className="h-0.5 w-5 rounded-full bg-slate-700" />
+              <span className="h-0.5 w-5 rounded-full bg-slate-700" />
+              <span className="h-0.5 w-5 rounded-full bg-slate-700" />
+            </div>
+          </button>
+        </div>
       </header>
 
       {mobileOpen && (
         <div className="mx-auto w-full max-w-6xl px-6 pt-4 md:hidden">
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-1)] p-4 shadow-[var(--shadow-md)]">
-            <div className="grid gap-2 text-xs uppercase tracking-[0.25em] text-[var(--text-2)]">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+            <div className="grid gap-2 text-xs uppercase tracking-[0.25em] text-[var(--slate-500)]">
               <Link href="/" className="btn-ghost" onClick={() => setMobileOpen(false)}>
                 {isCustomer ? "Home" : "Dashboard"}
               </Link>
@@ -59,6 +75,7 @@ export default function DashboardShell({
               <Link href="/quotes" className="btn-ghost" onClick={() => setMobileOpen(false)}>
                 Quotes
               </Link>
+              {!isCustomer && <NotificationsBell />}
               <Link href="/logout" className="btn-ghost" onClick={() => setMobileOpen(false)}>
                 Sign out
               </Link>
@@ -73,7 +90,7 @@ export default function DashboardShell({
             <div>
               <div className="section-title">Operations</div>
               <h1 className="mt-3 text-3xl font-semibold">{title}</h1>
-              {subtitle && <p className="mt-2 max-w-2xl text-[var(--text-2)]">{subtitle}</p>}
+              {subtitle && <p className="text-[var(--slate-500)] mt-2 max-w-2xl">{subtitle}</p>}
             </div>
             {!isCustomer && (
               <div className="flex flex-wrap gap-2 items-center w-full md:w-auto">
@@ -96,6 +113,9 @@ export default function DashboardShell({
                 </div>
               </div>
             )}
+          </div>
+          <div className="mt-4">
+            <OfflineStatusBar />
           </div>
           <div className="mt-6">{children}</div>
         </div>
