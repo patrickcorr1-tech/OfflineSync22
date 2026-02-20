@@ -220,6 +220,17 @@ create table if not exists public.project_checklist_items (
   updated_at timestamptz default now()
 );
 
+-- Customer callback requests
+create table if not exists public.customer_callback_requests (
+  id uuid primary key default gen_random_uuid(),
+  company_id uuid references public.companies(id) on delete cascade,
+  requested_by uuid references public.profiles(id) on delete set null,
+  phone text,
+  notes text,
+  status text not null default 'open',
+  created_at timestamptz default now()
+);
+
 -- Project reminders
 create table if not exists public.project_reminders (
   id uuid primary key default gen_random_uuid(),

@@ -24,6 +24,7 @@ export default function ProjectMeasurements({ projectId }: { projectId: string }
   const [points, setPoints] = useState<Point[]>([]);
   const [distanceMeters, setDistanceMeters] = useState(0);
   const [comment, setComment] = useState("");
+  const [draftStatus, setDraftStatus] = useState<string | null>(null);
 
   const load = async () => {
     try {
@@ -42,7 +43,37 @@ export default function ProjectMeasurements({ projectId }: { projectId: string }
 
   useEffect(() => {
     load();
+    if (typeof window !== "undefined") {
+      const raw = window.localStorage.getItem(`fh_measurement_draft_${projectId}`);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed.mode) setMode(parsed.mode);
+          if (parsed.points) setPoints(parsed.points);
+          if (parsed.comment) setComment(parsed.comment);
+          setDraftStatus("Draft loaded");
+        } catch {
+          // ignore
+        }
+      }
+    }
   }, [projectId]);
+
+  useEffect(() => {
+    if (!projectId) return;
+    if (!comment && points.length === 0) return;
+    setDraftStatus("Saving draft...");
+    const t = setTimeout(() => {
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          `fh_measurement_draft_${projectId}`,
+          JSON.stringify({ mode, points, comment }),
+        );
+        setDraftStatus("Draft saved");
+      }
+    }, 600);
+    return () => clearTimeout(t);
+  }, [projectId, mode, points, comment]);
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
@@ -129,6 +160,10 @@ export default function ProjectMeasurements({ projectId }: { projectId: string }
       await enqueueOutbox("measurement", { project_id: projectId, data: payload });
       clearPoints();
       setComment("");
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(`fh_measurement_draft_${projectId}`);
+      }
+      setDraftStatus(null);
       setItems((prev) => [{ id: `queued-${Date.now()}`, data: payload }, ...prev]);
       return;
     }
@@ -147,6 +182,10 @@ export default function ProjectMeasurements({ projectId }: { projectId: string }
 
     clearPoints();
     setComment("");
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(`fh_measurement_draft_${projectId}`);
+    }
+    setDraftStatus(null);
     load();
   };
 
@@ -195,6 +234,7 @@ export default function ProjectMeasurements({ projectId }: { projectId: string }
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
+        {draftStatus && <p className="mt-2 text-xs text-emerald-400">{draftStatus}</p>}
         <button className="mt-3 btn-primary w-full" onClick={saveMeasurement}>
           Save
         </button>

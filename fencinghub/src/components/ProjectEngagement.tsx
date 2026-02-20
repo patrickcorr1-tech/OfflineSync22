@@ -43,6 +43,7 @@ export default function ProjectEngagement({
   const [projectStatus, setProjectStatus] = useState<string>("");
   const [snagTitle, setSnagTitle] = useState("");
   const [snagDescription, setSnagDescription] = useState("");
+  const [snagDraftStatus, setSnagDraftStatus] = useState<string | null>(null);
   const [snagFiles, setSnagFiles] = useState<File[]>([]);
   const [requestTitle, setRequestTitle] = useState("");
   const [requestDetails, setRequestDetails] = useState("");
@@ -118,7 +119,36 @@ export default function ProjectEngagement({
   useEffect(() => {
     if (!projectId) return;
     load();
+    if (typeof window !== "undefined") {
+      const raw = window.localStorage.getItem(`fh_snag_draft_${projectId}`);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          setSnagTitle(parsed.title || "");
+          setSnagDescription(parsed.description || "");
+          setSnagDraftStatus("Draft loaded");
+        } catch {
+          // ignore
+        }
+      }
+    }
   }, [projectId]);
+
+  useEffect(() => {
+    if (!projectId) return;
+    if (snagTitle === "" && snagDescription === "") return;
+    setSnagDraftStatus("Saving draft...");
+    const t = setTimeout(() => {
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          `fh_snag_draft_${projectId}`,
+          JSON.stringify({ title: snagTitle, description: snagDescription }),
+        );
+        setSnagDraftStatus("Draft saved");
+      }
+    }, 600);
+    return () => clearTimeout(t);
+  }, [projectId, snagTitle, snagDescription]);
 
   const snagSummary = useMemo(() => {
     const open = snags.filter((s) => s.status !== "closed").length;
@@ -151,6 +181,13 @@ export default function ProjectEngagement({
       if (!error) paths.push(path);
     }
     return paths;
+  };
+
+  const clearSnagDraft = () => {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(`fh_snag_draft_${projectId}`);
+    }
+    setSnagDraftStatus(null);
   };
 
   const createSnag = async () => {
@@ -238,6 +275,7 @@ export default function ProjectEngagement({
           });
         }
       }
+      clearSnagDraft();
       setSnagTitle("");
       setSnagDescription("");
       setSnagFiles([]);
@@ -397,6 +435,7 @@ export default function ProjectEngagement({
                   {snagFiles.length} photo{snagFiles.length === 1 ? "" : "s"} ready to upload
                 </p>
               )}
+              {snagDraftStatus && <p className="text-xs text-emerald-600">{snagDraftStatus}</p>}
               <button
                 className="btn-primary w-full sm:w-fit"
                 onClick={createSnag}
