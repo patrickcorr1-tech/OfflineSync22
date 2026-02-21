@@ -35,6 +35,12 @@ export default function Home() {
   const [inviteRole, setInviteRole] = useState<"customer" | "sales">("customer");
   const [inviteMsg, setInviteMsg] = useState<string | null>(null);
   const [pulseMsg, setPulseMsg] = useState<string | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState<null | { message: string; level: string }>(
+    null,
+  );
+  const [confirmPreset, setConfirmPreset] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+  const [presetMsg, setPresetMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const loadMetrics = async () => {
@@ -452,9 +458,11 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="card p-5">
+        <div id="status-banner-presets" className="card p-5">
           <div className="section-title">Status banner presets</div>
-          <p className="mt-2 text-[10px] text-white/50">One tap to post a status update.</p>
+          <p className="mt-2 text-[10px] text-white/50">
+            Select a preset, then submit. Type YES to confirm before it goes live.
+          </p>
           <div className="mt-3 grid gap-2">
             {[
               { message: "Weather delay today — we’ll update schedules by 2pm.", level: "warn" },
@@ -463,19 +471,36 @@ export default function Home() {
             ].map((preset) => (
               <button
                 key={preset.message}
-                className="btn-ghost text-left"
-                onClick={async () => {
-                  await fetch("/api/status-banner/set", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(preset),
-                  });
+                className={`text-left ${
+                  selectedPreset?.message === preset.message
+                    ? "rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-emerald-100"
+                    : "btn-ghost"
+                }`}
+                onClick={() => {
+                  setSelectedPreset(preset);
+                  setPresetMsg(null);
                 }}
               >
                 {preset.message}
               </button>
             ))}
           </div>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-[10px] text-white/40">
+              {selectedPreset ? "Preset selected." : "Pick a preset to continue."}
+            </div>
+            <button
+              className="btn-primary"
+              disabled={!selectedPreset}
+              onClick={() => {
+                setConfirmText("");
+                setConfirmPreset(true);
+              }}
+            >
+              Submit preset
+            </button>
+          </div>
+          {presetMsg && <div className="mt-2 text-xs text-emerald-200">{presetMsg}</div>}
         </div>
 
         <div className="card p-5">
@@ -493,6 +518,52 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {confirmPreset && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0b1118] p-5">
+            <div className="text-xs uppercase tracking-[0.3em] text-white/40">Confirm update</div>
+            <h2 className="mt-2 text-lg font-semibold text-white">Publish status banner?</h2>
+            <p className="mt-2 text-sm text-white/60">
+              This will push the banner to all customers. Type YES to confirm.
+            </p>
+            <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white/80">
+              {selectedPreset?.message}
+            </div>
+            <input
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder="Type YES to confirm"
+              className="mt-4 w-full rounded-xl border border-white/10 bg-[#0b1118] px-3 py-2 text-sm text-white"
+            />
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
+              <button
+                className="btn-ghost"
+                onClick={() => {
+                  setConfirmPreset(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn-primary"
+                disabled={confirmText.trim().toLowerCase() !== "yes" || !selectedPreset}
+                onClick={async () => {
+                  if (!selectedPreset) return;
+                  await fetch("/api/status-banner/set", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(selectedPreset),
+                  });
+                  setPresetMsg("Status banner updated.");
+                  setConfirmPreset(false);
+                }}
+              >
+                Confirm & publish
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardShell>
   );
 }

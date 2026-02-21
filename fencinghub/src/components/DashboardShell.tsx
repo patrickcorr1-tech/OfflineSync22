@@ -58,6 +58,9 @@ export default function DashboardShell({
               <Link href="/admin/invites" className="btn-ghost">
                 Invites
               </Link>
+              <Link href="/#status-banner-presets" className="btn-ghost">
+                Status banner
+              </Link>
             </>
           )}
           <Link href="/logout" className="btn-ghost">
@@ -113,6 +116,13 @@ export default function DashboardShell({
                   >
                     Invites
                   </Link>
+                  <Link
+                    href="/#status-banner-presets"
+                    className="btn-ghost"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Status banner
+                  </Link>
                 </>
               )}
               {isCustomer && (
@@ -164,6 +174,9 @@ export default function DashboardShell({
                   </Link>
                   <Link href="/admin/invites" className="btn-ghost">
                     Invites
+                  </Link>
+                  <Link href="/#status-banner-presets" className="btn-ghost">
+                    Status banner
                   </Link>
                   <div className="hidden md:block">
                     <NotificationsBell compact />
