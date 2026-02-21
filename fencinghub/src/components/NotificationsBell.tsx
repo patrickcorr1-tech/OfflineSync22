@@ -5,7 +5,7 @@ import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
 import { useProfile } from "@/lib/useProfile";
 
-export default function NotificationsBell() {
+export default function NotificationsBell({ compact = false }: { compact?: boolean }) {
   const supabase = createSupabaseBrowserClient();
   const { profile } = useProfile();
   const [open, setOpen] = useState(false);
@@ -65,7 +65,11 @@ export default function NotificationsBell() {
   return (
     <div className="relative">
       <button
-        className="rounded-full border border-white/20 px-3 py-2 text-xs uppercase tracking-[0.3em] text-white/80"
+        className={
+          compact
+            ? "rounded-full border border-white/20 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-white/80"
+            : "rounded-full border border-white/20 px-3 py-2 text-xs uppercase tracking-[0.3em] text-white/80"
+        }
         onClick={() => {
           setOpen(!open);
           if (!open) markRead();
