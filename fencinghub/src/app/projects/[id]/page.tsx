@@ -47,7 +47,7 @@ export default function ProjectDetailPage() {
 
       <CobrowseWidget projectId={projectId} label="Request help" />
 
-      <div className="mt-6">
+      <div className="mt-4">
         {active === "Engagement" && (
           <ProjectEngagement
             projectId={projectId}

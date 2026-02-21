@@ -359,7 +359,7 @@ export default function ProjectEngagement({
 
   return (
     <div className={isCustomer ? "space-y-4 sm:space-y-6" : "grid gap-6 lg:grid-cols-3"}>
-      <div className={isCustomer ? "space-y-4 sm:space-y-6" : "lg:col-span-2 space-y-6"}>
+      <div className={isCustomer ? "space-y-4 sm:space-y-5" : "lg:col-span-2 space-y-5"}>
         {showStatus && isCustomer && (
           <div className="card p-4">
             <div className="section-title">Next step</div>
@@ -385,7 +385,7 @@ export default function ProjectEngagement({
           </div>
         )}
         {showSnags && (
-          <div className="card p-4 sm:p-6">
+          <div className="card p-5">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
                 <div className="section-title">Snag tracker</div>
@@ -519,7 +519,7 @@ export default function ProjectEngagement({
         )}
 
         {showQuoteRequests && (
-          <div className="card p-4 sm:p-6">
+          <div className="card p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="section-title">Quote requests</div>
