@@ -43,6 +43,7 @@ export default function InboxPage() {
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
+  const notificationCount = messages.filter((m) => m.channel === "system").length;
   const filtered =
     tab === "notifications"
       ? messages.filter((m) => m.channel === "system")
@@ -62,7 +63,18 @@ export default function InboxPage() {
               }
               onClick={() => setTab(t)}
             >
-              {t === "notifications" ? "Notifications" : t[0].toUpperCase() + t.slice(1)}
+              {t === "notifications" ? (
+                <span className="flex items-center gap-2">
+                  Notifications
+                  {notificationCount > 0 && (
+                    <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-[10px] text-blue-200">
+                      {notificationCount}
+                    </span>
+                  )}
+                </span>
+              ) : (
+                t[0].toUpperCase() + t.slice(1)
+              )}
             </button>
           ))}
         </div>
