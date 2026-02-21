@@ -10,7 +10,7 @@ import ProjectApprovals from "@/components/ProjectApprovals";
 import ProjectGallery from "@/components/ProjectGallery";
 import ProjectDocuments from "@/components/ProjectDocuments";
 import ProjectTimeline from "@/components/ProjectTimeline";
-// Measurements removed
+import ProjectMeasurements from "@/components/ProjectMeasurements";
 import ProjectDetails from "@/components/ProjectDetails";
 import Customer360 from "@/components/Customer360";
 import ProjectChecklist from "@/components/ProjectChecklist";
@@ -72,7 +72,7 @@ export default function ProjectDetailPage() {
         {active === "Gallery" && <ProjectGallery projectId={projectId} />}
         {active === "Documents" && <ProjectDocuments projectId={projectId} />}
         {active === "Timeline" && <ProjectTimeline projectId={projectId} />}
-        {/* Measurements removed */}
+        {active === "Measurements" && <ProjectMeasurements projectId={projectId} />}
       </div>
     </DashboardShell>
   );

@@ -11,6 +11,7 @@ const tabs = [
   "Customer 360",
   "Checklist",
   "Reminders",
+  "Measurements",
 ];
 
 export default function ProjectTabs({

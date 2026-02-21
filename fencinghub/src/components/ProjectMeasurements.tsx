@@ -1,30 +1,48 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
 import { enqueueOutbox } from "@/lib/outbox";
 import { getCachedMeasurements, setCachedMeasurements } from "@/lib/offlineCache";
+import { useProfile } from "@/lib/useProfile";
 
-const MAPS_URL = (key: string) =>
-  `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=geometry`;
+type Run = {
+  id: string;
+  length: string;
+  height: string;
+  spacing: string;
+  fenceType: string;
+  notes: string;
+};
 
-type Point = { lat: number; lng: number };
-
-type Mode = "distance" | "gate";
+type Point = {
+  id: string;
+  kind: "Gate" | "Corner" | "End";
+  width: string;
+  height: string;
+  notes: string;
+};
 
 export default function ProjectMeasurements({ projectId }: { projectId: string }) {
   const supabase = createSupabaseBrowserClient();
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapObj = useRef<any>(null);
-  const polyline = useRef<any>(null);
-  const markers = useRef<any[]>([]);
-
+  const { profile } = useProfile();
   const [items, setItems] = useState<any[]>([]);
-  const [mode, setMode] = useState<Mode>("distance");
-  const [points, setPoints] = useState<Point[]>([]);
-  const [distanceMeters, setDistanceMeters] = useState(0);
-  const [comment, setComment] = useState("");
   const [draftStatus, setDraftStatus] = useState<string | null>(null);
+
+  const [runs, setRuns] = useState<Run[]>([]);
+  const [points, setPoints] = useState<Point[]>([]);
+  const [notes, setNotes] = useState("");
+
+  const [runLength, setRunLength] = useState("");
+  const [runHeight, setRunHeight] = useState("");
+  const [runSpacing, setRunSpacing] = useState("");
+  const [runType, setRunType] = useState("");
+  const [runNotes, setRunNotes] = useState("");
+
+  const [pointKind, setPointKind] = useState<Point["kind"]>("Gate");
+  const [pointWidth, setPointWidth] = useState("");
+  const [pointHeight, setPointHeight] = useState("");
+  const [pointNotes, setPointNotes] = useState("");
 
   const load = async () => {
     try {
@@ -48,9 +66,9 @@ export default function ProjectMeasurements({ projectId }: { projectId: string }
       if (raw) {
         try {
           const parsed = JSON.parse(raw);
-          if (parsed.mode) setMode(parsed.mode);
-          if (parsed.points) setPoints(parsed.points);
-          if (parsed.comment) setComment(parsed.comment);
+          setRuns(parsed.runs || []);
+          setPoints(parsed.points || []);
+          setNotes(parsed.notes || "");
           setDraftStatus("Draft loaded");
         } catch {
           // ignore
@@ -61,110 +79,74 @@ export default function ProjectMeasurements({ projectId }: { projectId: string }
 
   useEffect(() => {
     if (!projectId) return;
-    if (!comment && points.length === 0) return;
+    if (runs.length === 0 && points.length === 0 && !notes) return;
     setDraftStatus("Saving draft...");
     const t = setTimeout(() => {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(
           `fh_measurement_draft_${projectId}`,
-          JSON.stringify({ mode, points, comment }),
+          JSON.stringify({ runs, points, notes }),
         );
         setDraftStatus("Draft saved");
       }
     }, 600);
     return () => clearTimeout(t);
-  }, [projectId, mode, points, comment]);
+  }, [projectId, runs, points, notes]);
 
-  useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
-    if (!key || !mapRef.current) return;
-
-    const existing = document.querySelector(
-      `script[src^="https://maps.googleapis.com/maps/api/js"]`,
-    );
-    if (!existing) {
-      const s = document.createElement("script");
-      s.src = MAPS_URL(key);
-      s.async = true;
-      s.onload = initMap;
-      document.body.appendChild(s);
-    } else if ((window as any).google?.maps) {
-      initMap();
-    }
-
-    function initMap() {
-      if (!mapRef.current || mapObj.current) return;
-      const g = (window as any).google;
-      mapObj.current = new g.maps.Map(mapRef.current, {
-        center: { lat: 51.5074, lng: -0.1278 },
-        zoom: 13,
-        mapId: "fencinghub-map",
-        disableDefaultUI: true,
-        zoomControl: true,
-      });
-
-      mapObj.current.addListener("click", (e: any) => {
-        const lat = e.latLng?.lat();
-        const lng = e.latLng?.lng();
-        if (lat == null || lng == null) return;
-        addPoint({ lat, lng });
-      });
-    }
-  }, []);
-
-  const addPoint = (p: Point) => {
-    const updated = [...points, p];
-    setPoints(updated);
-
-    if (mapObj.current) {
-      const g = (window as any).google;
-      const marker = new g.maps.Marker({ position: p, map: mapObj.current });
-      markers.current.push(marker);
-
-      if (!polyline.current) {
-        polyline.current = new g.maps.Polyline({
-          map: mapObj.current,
-          strokeColor: "#7dd3fc",
-          strokeOpacity: 0.9,
-          strokeWeight: 3,
-        });
-      }
-
-      if (mode === "distance") {
-        polyline.current.setPath(updated);
-        if (g?.maps?.geometry) {
-          const meters = g.maps.geometry.spherical.computeLength(
-            updated.map((x: Point) => new g.maps.LatLng(x.lat, x.lng)),
-          );
-          setDistanceMeters(meters);
-        }
-      }
-    }
+  const addRun = () => {
+    if (!runLength.trim()) return;
+    setRuns((prev) => [
+      {
+        id: crypto.randomUUID(),
+        length: runLength,
+        height: runHeight,
+        spacing: runSpacing,
+        fenceType: runType,
+        notes: runNotes,
+      },
+      ...prev,
+    ]);
+    setRunLength("");
+    setRunHeight("");
+    setRunSpacing("");
+    setRunType("");
+    setRunNotes("");
   };
 
-  const clearPoints = () => {
-    setPoints([]);
-    setDistanceMeters(0);
-    markers.current.forEach((m) => m.setMap(null));
-    markers.current = [];
-    if (polyline.current) polyline.current.setPath([]);
+  const addPoint = () => {
+    setPoints((prev) => [
+      {
+        id: crypto.randomUUID(),
+        kind: pointKind,
+        width: pointWidth,
+        height: pointHeight,
+        notes: pointNotes,
+      },
+      ...prev,
+    ]);
+    setPointWidth("");
+    setPointHeight("");
+    setPointNotes("");
   };
 
   const saveMeasurement = async () => {
-    const payload =
-      mode === "distance"
-        ? { type: "distance", points, distance_m: Math.round(distanceMeters), comment }
-        : { type: "gate", points, comment };
+    const payload = {
+      type: "fencing_tool",
+      runs,
+      points,
+      notes,
+    };
 
     if (!navigator.onLine) {
       await enqueueOutbox("measurement", { project_id: projectId, data: payload });
-      clearPoints();
-      setComment("");
       if (typeof window !== "undefined") {
         window.localStorage.removeItem(`fh_measurement_draft_${projectId}`);
       }
       setDraftStatus(null);
       setItems((prev) => [{ id: `queued-${Date.now()}`, data: payload }, ...prev]);
+      setRuns([]);
+      setPoints([]);
+      setNotes("");
       return;
     }
 
@@ -180,78 +162,158 @@ export default function ProjectMeasurements({ projectId }: { projectId: string }
       }),
     });
 
-    clearPoints();
-    setComment("");
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(`fh_measurement_draft_${projectId}`);
     }
     setDraftStatus(null);
+    setRuns([]);
+    setPoints([]);
+    setNotes("");
     load();
   };
 
+  const isCustomer = profile?.role === "customer";
+
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      <div className="lg:col-span-2 panel p-4">
-        <div className="flex items-center justify-between">
-          <div className="section-title">Map</div>
-          <div className="flex gap-2">
-            <button
-              className={mode === "distance" ? "btn-primary" : "btn-ghost"}
-              onClick={() => {
-                setMode("distance");
-                clearPoints();
-              }}
-            >
-              Distance
-            </button>
-            <button
-              className={mode === "gate" ? "btn-primary" : "btn-ghost"}
-              onClick={() => {
-                setMode("gate");
-                clearPoints();
-              }}
-            >
-              Gate points
+      <div className="lg:col-span-2 panel p-5">
+        <div className="section-title">Fencing tool (offline)</div>
+        <p className="mt-2 text-sm text-white/60">
+          Add runs and points while on site. Works offline and syncs when you reconnect.
+        </p>
+
+        <div className="mt-4 grid gap-4">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div className="text-xs uppercase tracking-[0.2em] text-white/50">Add run</div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <input
+                className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+                placeholder="Length (m)"
+                value={runLength}
+                onChange={(e) => setRunLength(e.target.value)}
+              />
+              <input
+                className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+                placeholder="Height (m)"
+                value={runHeight}
+                onChange={(e) => setRunHeight(e.target.value)}
+              />
+              <input
+                className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+                placeholder="Post spacing (m)"
+                value={runSpacing}
+                onChange={(e) => setRunSpacing(e.target.value)}
+              />
+              <input
+                className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+                placeholder="Fence type (e.g. featheredge)"
+                value={runType}
+                onChange={(e) => setRunType(e.target.value)}
+              />
+            </div>
+            <textarea
+              className="mt-3 w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              placeholder="Notes (optional)"
+              value={runNotes}
+              onChange={(e) => setRunNotes(e.target.value)}
+              rows={2}
+            />
+            <button className="mt-3 btn-primary" onClick={addRun}>
+              Add run
             </button>
           </div>
-        </div>
-        <div ref={mapRef} className="mt-3 h-[420px] w-full rounded-xl border border-white/10" />
-        <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-white/60">
-          <span>{points.length} points</span>
-          {mode === "distance" && <span>{(distanceMeters / 1000).toFixed(2)} km</span>}
-          <button className="rounded-lg border border-white/20 px-3 py-1" onClick={clearPoints}>
-            Clear
-          </button>
+
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div className="text-xs uppercase tracking-[0.2em] text-white/50">Add point</div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {["Gate", "Corner", "End"].map((kind) => (
+                <button
+                  key={kind}
+                  className={
+                    pointKind === kind
+                      ? "btn-primary"
+                      : "rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/60"
+                  }
+                  onClick={() => setPointKind(kind as Point["kind"])}
+                >
+                  {kind}
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <input
+                className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+                placeholder="Width (m)"
+                value={pointWidth}
+                onChange={(e) => setPointWidth(e.target.value)}
+              />
+              <input
+                className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+                placeholder="Height (m)"
+                value={pointHeight}
+                onChange={(e) => setPointHeight(e.target.value)}
+              />
+            </div>
+            <textarea
+              className="mt-3 w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              placeholder="Notes (optional)"
+              value={pointNotes}
+              onChange={(e) => setPointNotes(e.target.value)}
+              rows={2}
+            />
+            <button className="mt-3 btn-primary" onClick={addPoint}>
+              Add point
+            </button>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div className="text-xs uppercase tracking-[0.2em] text-white/50">Summary</div>
+            <div className="mt-3 grid gap-2 text-sm text-white/70">
+              <div>Runs: {runs.length}</div>
+              <div>Points: {points.length}</div>
+            </div>
+            <textarea
+              className="mt-3 w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              placeholder="Overall notes (optional)"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={2}
+            />
+            {draftStatus && <p className="mt-2 text-xs text-emerald-400">{draftStatus}</p>}
+            {isCustomer && (
+              <button className="mt-3 btn-primary w-full" onClick={saveMeasurement}>
+                Save measurements
+              </button>
+            )}
+            {!isCustomer && (
+              <p className="mt-3 text-xs text-white/50">
+                Customers save measurements here. Admins can view history on the right.
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="panel p-5">
-        <div className="section-title">Save measurement</div>
-        <textarea
-          className="mt-3 w-full rounded-xl bg-white/10 p-3 text-xs"
-          rows={4}
-          placeholder="Notes (optional)"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        {draftStatus && <p className="mt-2 text-xs text-emerald-400">{draftStatus}</p>}
-        <button className="mt-3 btn-primary w-full" onClick={saveMeasurement}>
-          Save
-        </button>
-
-        <div className="mt-6 section-title">History</div>
+        <div className="section-title">History</div>
         <div className="mt-3 space-y-2 text-xs text-white/60">
           {items.map((m) => (
             <div key={m.id} className="rounded-xl border border-white/10 p-3 bg-black/30">
-              <div className="flex justify-between">
-                <span>{m.data?.type || "measurement"}</span>
-                {m.data?.distance_m && <span>{(m.data.distance_m / 1000).toFixed(2)} km</span>}
+              <div className="flex items-center justify-between">
+                <span>Fencing tool</span>
+                <span className="text-white/50">
+                  {m.created_at ? new Date(m.created_at).toLocaleDateString() : ""}
+                </span>
               </div>
-              <pre className="mt-2 whitespace-pre-wrap text-[11px] text-white/50">
-                {JSON.stringify(m.data, null, 2)}
-              </pre>
+              <div className="mt-2 text-[11px] text-white/50">
+                Runs: {m.data?.runs?.length || 0} · Points: {m.data?.points?.length || 0}
+              </div>
+              {m.data?.notes && (
+                <div className="mt-2 text-[11px] text-white/60">Notes: {m.data.notes}</div>
+              )}
             </div>
           ))}
+          {items.length === 0 && <div className="text-white/40">No measurements yet.</div>}
         </div>
       </div>
     </div>
