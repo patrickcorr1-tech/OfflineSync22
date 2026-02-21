@@ -33,6 +33,15 @@ const statusLabel = (status: string) => {
   return status;
 };
 
+const statusPill = (status: string) => {
+  if (status === "completed") return "bg-emerald-500/15 text-emerald-300";
+  if (status === "in_progress") return "bg-blue-500/15 text-blue-300";
+  if (status === "approved") return "bg-purple-500/15 text-purple-300";
+  if (status === "quoted") return "bg-amber-500/15 text-amber-300";
+  if (status === "on_hold") return "bg-slate-500/15 text-slate-300";
+  return "bg-white/10 text-white/70";
+};
+
 export default function ProjectsPage() {
   const supabase = createSupabaseBrowserClient();
   const router = useRouter();
@@ -280,9 +289,9 @@ export default function ProjectsPage() {
       subtitle="Track every install, approval, and snag from one view."
     >
       {profile?.role === "customer" && (
-        <div className="card p-4 mb-4">
+        <div className="card p-5 mb-4">
           <div className="section-title">Customer tools</div>
-          <div className="mt-2 grid gap-2 sm:flex sm:flex-wrap sm:gap-3 text-sm">
+          <div className="mt-3 flex flex-wrap gap-2 text-sm">
             <a href="/projects/new" className="btn-primary text-center">
               New project
             </a>
@@ -290,18 +299,16 @@ export default function ProjectsPage() {
               Quotes
             </a>
             <span
-              className={`rounded-full px-3 py-1 text-xs ${isOnline ? "bg-emerald-500/15 text-emerald-700" : "bg-orange-500/20 text-orange-700"}`}
+              className={`rounded-full px-3 py-1 text-xs ${isOnline ? "bg-emerald-500/15 text-emerald-300" : "bg-orange-500/20 text-orange-300"}`}
             >
               {isOnline ? "Online" : "Offline ready"}
             </span>
-            <span className="rounded-full bg-slate-500/15 px-3 py-1 text-xs text-slate-600">
+            <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/70">
               Pending sync: {syncCount}
             </span>
           </div>
-          {feedback && <p className="mt-2 text-sm text-[var(--slate-500)]">{feedback}</p>}
-          {draftSaved && !feedback && (
-            <p className="mt-2 text-xs text-[var(--slate-500)]">Draft saved</p>
-          )}
+          {feedback && <p className="mt-2 text-sm text-white/60">{feedback}</p>}
+          {draftSaved && !feedback && <p className="mt-2 text-xs text-white/40">Draft saved</p>}
         </div>
       )}
 
@@ -310,21 +317,55 @@ export default function ProjectsPage() {
       ) : (
         <div className="space-y-3">
           {projects.length === 0 && <p className="text-white/60 mt-2">No projects yet.</p>}
-          <div className="grid gap-3 md:grid-cols-2">
+
+          {profile?.role !== "customer" && projects.length > 0 && (
+            <div className="hidden md:block rounded-2xl border border-white/10 bg-white/5">
+              <div className="grid grid-cols-[2fr_2fr_1fr_1fr] gap-4 border-b border-white/10 px-6 py-3 text-[10px] uppercase tracking-[0.3em] text-white/40">
+                <span>Project</span>
+                <span>Address</span>
+                <span>Status</span>
+                <span>Updated</span>
+              </div>
+              <div className="divide-y divide-white/5">
+                {projects.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/projects/${p.id}`}
+                    className="grid grid-cols-[2fr_2fr_1fr_1fr] gap-4 px-6 py-4 text-sm hover:bg-white/5"
+                  >
+                    <div className="font-semibold">{p.name}</div>
+                    <div className="text-white/60">{p.address || "No address"}</div>
+                    <span
+                      className={`w-fit rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.2em] ${statusPill(p.status)}`}
+                    >
+                      {statusLabel(p.status)}
+                    </span>
+                    <div className="text-white/50">
+                      {p.updated_at ? new Date(p.updated_at).toLocaleDateString() : "—"}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="grid gap-3 md:grid-cols-2 md:hidden">
             {projects.map((p) => (
               <Link key={p.id} href={`/projects/${p.id}`} className="card p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-semibold">{p.name}</p>
-                    <p className="text-sm text-[var(--slate-500)]">{p.address || "No address"}</p>
+                    <p className="text-sm text-white/60">{p.address || "No address"}</p>
                     {profile?.role === "customer" && (
-                      <p className="text-xs text-[var(--slate-500)] mt-1">
+                      <p className="text-xs text-white/40 mt-1">
                         Last updated{" "}
                         {p.updated_at ? new Date(p.updated_at).toLocaleDateString() : "—"}
                       </p>
                     )}
                   </div>
-                  <span className="chip">
+                  <span
+                    className={`rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.2em] ${statusPill(p.status)}`}
+                  >
                     {profile?.role === "customer" ? statusLabel(p.status) : p.status}
                   </span>
                 </div>
