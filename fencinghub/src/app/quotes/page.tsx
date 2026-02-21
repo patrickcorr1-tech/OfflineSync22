@@ -545,16 +545,16 @@ export default function QuotesPage() {
             </select>
           </div>
         )}
-        <div className="mt-3 space-y-3">
+        <div className="mt-3 space-y-2">
           {filteredQuotes.map((q) => (
-            <div key={q.id} className="rounded-xl border border-white/10 p-3 sm:p-4 text-xs">
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div key={q.id} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs">
+              <div className="flex flex-col gap-3">
                 <div className="min-w-0">
-                  <div className="truncate text-sm sm:text-base">
+                  <div className="truncate text-sm">
                     {q.projects?.name || q.project_id}
                     <span className="ml-2 text-white/50">v{q.version || 1}</span>
                   </div>
-                  <div className="mt-1 flex flex-wrap gap-2">
+                  <div className="mt-3 grid gap-2 sm:flex sm:flex-wrap">
                     {(() => {
                       const label = getStatusLabel(q);
                       return (
@@ -566,7 +566,7 @@ export default function QuotesPage() {
                       );
                     })()}
                     {q.pinned && (
-                      <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] text-purple-700">
+                      <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] text-purple-300">
                         Pinned
                       </span>
                     )}
@@ -599,7 +599,7 @@ export default function QuotesPage() {
                     </div>
                   )}
                 </div>
-                <div className="text-left sm:text-right text-[10px] text-white/50">
+                <div className="text-[10px] text-white/50">
                   <div>Sent {formatDate(q.sent_at || q.created_at)}</div>
                   <div>Viewed {formatDate(q.viewed_at)}</div>
                   <div>
@@ -610,10 +610,10 @@ export default function QuotesPage() {
                   </div>
                 </div>
               </div>
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-3 grid gap-2 sm:flex sm:flex-wrap">
                 {q.url && (
                   <a
-                    className="rounded-lg border border-white/20 px-3 py-1 w-full sm:w-auto text-center"
+                    className="rounded-lg border border-white/20 px-3 py-2 text-center"
                     href={q.url}
                     target="_blank"
                   >
@@ -622,7 +622,7 @@ export default function QuotesPage() {
                 )}
                 {q.url && profile?.role !== "customer" && (
                   <button
-                    className="rounded-lg border border-white/20 px-3 py-1 w-full sm:w-auto"
+                    className="rounded-lg border border-white/20 px-3 py-2"
                     onClick={() => {
                       setSelectedId(q.id);
                       if (profile?.role === "customer") {
@@ -639,7 +639,7 @@ export default function QuotesPage() {
                 )}
                 {canEdit(profile?.role) && (
                   <button
-                    className="rounded-lg border border-white/20 px-3 py-1"
+                    className="rounded-lg border border-white/20 px-3 py-2"
                     onClick={() => updateQuote(q.id, { pinned: !q.pinned })}
                   >
                     {q.pinned ? "Unpin" : "Pin"}
@@ -647,7 +647,7 @@ export default function QuotesPage() {
                 )}
                 {canEdit(profile?.role) && (
                   <button
-                    className="rounded-lg border border-white/20 px-3 py-1"
+                    className="rounded-lg border border-white/20 px-3 py-2"
                     onClick={() => updateQuote(q.id, { archived: !q.archived })}
                   >
                     {q.archived ? "Unarchive" : "Archive"}
@@ -667,7 +667,7 @@ export default function QuotesPage() {
                     />
                     {q.expires_at && (
                       <button
-                        className="rounded-lg border border-white/20 px-3 py-1"
+                        className="rounded-lg border border-white/20 px-3 py-2"
                         onClick={() => sendExpiryReminder(q.id)}
                         disabled={!!q.reminder_sent_at || remindId === q.id}
                       >
@@ -678,7 +678,7 @@ export default function QuotesPage() {
                 )}
                 {canEdit(profile?.role) && (
                   <button
-                    className={`rounded-lg border border-white/20 px-3 py-1 ${resendId === q.id ? "opacity-50" : ""}`}
+                    className={`rounded-lg border border-white/20 px-3 py-2 ${resendId === q.id ? "opacity-50" : ""}`}
                     onClick={() => resendQuote(q.id)}
                   >
                     Resend email
