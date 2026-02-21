@@ -52,6 +52,19 @@ export async function POST(req: NextRequest) {
         payload,
       })),
     );
+
+    await admin.from("inbox_messages").insert(
+      staff.map((s: any) => ({
+        channel: "system",
+        from_name: "FencingHub",
+        subject: payload.title,
+        body: payload.body,
+        status: "new",
+        priority: "normal",
+        company_id: profile.company_id,
+        assigned_to: null,
+      })),
+    );
   }
 
   return NextResponse.json({ ok: true });

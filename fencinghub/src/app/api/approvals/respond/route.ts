@@ -29,15 +29,30 @@ export async function POST(req: NextRequest) {
 
   const { data: staff } = await admin.from("profiles").select("id").in("role", ["admin", "sales"]);
   if (staff?.length) {
+    const payload = {
+      title: `Approval ${status}`,
+      body: `Customer ${status} approval: ${approval.type}`,
+      projectId: approval.project_id,
+    };
+
     await admin.from("notifications").insert(
       staff.map((s: any) => ({
         user_id: s.id,
         type: "approval_response",
-        payload: {
-          title: `Approval ${status}`,
-          body: `Customer ${status} approval: ${approval.type}`,
-          projectId: approval.project_id,
-        },
+        payload,
+      })),
+    );
+
+    await admin.from("inbox_messages").insert(
+      staff.map((s: any) => ({
+        channel: "system",
+        from_name: "FencingHub",
+        subject: payload.title,
+        body: payload.body,
+        status: "new",
+        priority: "normal",
+        project_id: approval.project_id,
+        assigned_to: null,
       })),
     );
   }

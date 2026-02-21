@@ -51,6 +51,22 @@ export async function POST(req: NextRequest) {
       .insert(targets.map((id) => ({ user_id: id, type: type || "project_update", payload })));
   }
 
+  if (targets.length && audience !== "customers") {
+    await admin.from("inbox_messages").insert(
+      targets.map((id) => ({
+        channel: "system",
+        from_name: "FencingHub",
+        subject: title || "Project update",
+        body: body || "",
+        status: "new",
+        priority: "normal",
+        project_id: projectId,
+        company_id: project?.company_id || null,
+        assigned_to: null,
+      })),
+    );
+  }
+
   if (push && targets.length) {
     for (const userId of targets) {
       const { data: subs } = await admin

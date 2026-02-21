@@ -74,6 +74,16 @@ export async function POST(req: NextRequest) {
       payload: { title, body, quoteId, projectId, viewerId: user.id, link },
     });
 
+    await admin.from("inbox_messages").insert({
+      channel: "system",
+      from_name: "FencingHub",
+      subject: title,
+      body,
+      status: "new",
+      priority: "normal",
+      project_id: projectId,
+    });
+
     const { data: subs } = await admin
       .from("notifications")
       .select("payload")
