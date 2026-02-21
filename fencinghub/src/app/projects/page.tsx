@@ -63,6 +63,15 @@ export default function ProjectsPage() {
   const [snagFiles, setSnagFiles] = useState<File[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [draftSaved, setDraftSaved] = useState(false);
+  const [adminCustomerEmail, setAdminCustomerEmail] = useState("");
+  const [adminCustomerName, setAdminCustomerName] = useState("");
+  const [adminCompanyName, setAdminCompanyName] = useState("");
+  const [adminProjectName, setAdminProjectName] = useState("");
+  const [adminProjectAddress, setAdminProjectAddress] = useState("");
+  const [adminPreferredDate, setAdminPreferredDate] = useState("");
+  const [adminNotes, setAdminNotes] = useState("");
+  const [adminFeedback, setAdminFeedback] = useState<string | null>(null);
+  const [adminSubmitting, setAdminSubmitting] = useState(false);
 
   const load = async () => {
     try {
@@ -165,6 +174,39 @@ export default function ProjectsPage() {
       if (!error) paths.push(path);
     }
     return paths;
+  };
+
+  const submitAdminProject = async () => {
+    if (!adminProjectName.trim() || !adminCustomerEmail.trim()) return;
+    setAdminSubmitting(true);
+    setAdminFeedback(null);
+    try {
+      const res = await fetch("/api/admin/projects/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectName: adminProjectName,
+          address: adminProjectAddress,
+          notes: adminNotes,
+          preferredDate: adminPreferredDate,
+          customerEmail: adminCustomerEmail,
+          customerName: adminCustomerName,
+          companyName: adminCompanyName,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Create failed");
+      setAdminFeedback("Project created.");
+      setAdminProjectName("");
+      setAdminProjectAddress("");
+      setAdminNotes("");
+      setAdminPreferredDate("");
+      load();
+    } catch (err: any) {
+      setAdminFeedback(err?.message || "Create failed");
+    } finally {
+      setAdminSubmitting(false);
+    }
   };
 
   const submitProject = async () => {
@@ -309,6 +351,66 @@ export default function ProjectsPage() {
           </div>
           {feedback && <p className="mt-2 text-sm text-white/60">{feedback}</p>}
           {draftSaved && !feedback && <p className="mt-2 text-xs text-white/40">Draft saved</p>}
+        </div>
+      )}
+
+      {profile?.role !== "customer" && (
+        <div className="card p-5 mb-4">
+          <div className="section-title">Create project for customer</div>
+          <p className="mt-2 text-xs text-white/60">
+            Works for existing customers or new emails (invite sent automatically).
+          </p>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            <input
+              className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              placeholder="Customer email"
+              value={adminCustomerEmail}
+              onChange={(e) => setAdminCustomerEmail(e.target.value)}
+            />
+            <input
+              className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              placeholder="Customer name (optional)"
+              value={adminCustomerName}
+              onChange={(e) => setAdminCustomerName(e.target.value)}
+            />
+            <input
+              className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              placeholder="Company name (optional)"
+              value={adminCompanyName}
+              onChange={(e) => setAdminCompanyName(e.target.value)}
+            />
+            <input
+              className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              placeholder="Project name"
+              value={adminProjectName}
+              onChange={(e) => setAdminProjectName(e.target.value)}
+            />
+            <input
+              className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              placeholder="Site address"
+              value={adminProjectAddress}
+              onChange={(e) => setAdminProjectAddress(e.target.value)}
+            />
+            <input
+              type="date"
+              className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+              value={adminPreferredDate}
+              onChange={(e) => setAdminPreferredDate(e.target.value)}
+            />
+          </div>
+          <textarea
+            className="mt-3 w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
+            placeholder="Notes (optional)"
+            value={adminNotes}
+            onChange={(e) => setAdminNotes(e.target.value)}
+            rows={3}
+          />
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <button className="btn-primary" onClick={submitAdminProject} disabled={adminSubmitting}>
+              {adminSubmitting ? "Creating..." : "Create project"}
+            </button>
+            {adminFeedback && <span className="text-xs text-white/60">{adminFeedback}</span>}
+          </div>
         </div>
       )}
 
