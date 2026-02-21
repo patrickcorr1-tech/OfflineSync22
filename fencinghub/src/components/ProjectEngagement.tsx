@@ -361,9 +361,9 @@ export default function ProjectEngagement({
     <div className={isCustomer ? "space-y-4 sm:space-y-6" : "grid gap-6 lg:grid-cols-3"}>
       <div className={isCustomer ? "space-y-4 sm:space-y-5" : "lg:col-span-2 space-y-5"}>
         {showStatus && isCustomer && (
-          <div className="card p-4">
+          <div className="card p-4 sm:p-5">
             <div className="section-title">Next step</div>
-            <div className="mt-2 text-sm text-[var(--slate-500)]">
+            <div className="mt-2 text-sm text-white/60">
               {projectStatus === "completed"
                 ? "Project complete — thank you!"
                 : projectStatus === "in_progress"
@@ -372,13 +372,13 @@ export default function ProjectEngagement({
                     ? "Approved — scheduling is next."
                     : "We’re reviewing your request."}
             </div>
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
               {["Submitted", "Approved", "In progress", "Complete"].map((label, idx) => (
                 <div key={label} className="flex items-center gap-2">
                   <span
-                    className={`h-3 w-3 rounded-full ${projectStep(projectStatus) > idx ? "bg-emerald-500" : "bg-slate-200"}`}
+                    className={`h-3 w-3 rounded-full ${projectStep(projectStatus) > idx ? "bg-emerald-500" : "bg-white/20"}`}
                   />
-                  <span className="text-xs text-[var(--slate-500)] hidden sm:inline">{label}</span>
+                  <span className="text-xs text-white/60">{label}</span>
                 </div>
               ))}
             </div>
@@ -390,7 +390,7 @@ export default function ProjectEngagement({
               <div>
                 <div className="section-title">Snag tracker</div>
                 <h2 className="mt-2 text-xl font-semibold">Report snags and track fixes</h2>
-                <p className="mt-2 text-sm text-[var(--slate-500)]">
+                <p className="mt-2 text-sm text-white/60">
                   Share issues with photos so the team can respond quickly.
                 </p>
               </div>
@@ -404,15 +404,15 @@ export default function ProjectEngagement({
                   </a>
                 </div>
               )}
-              <div className="flex gap-4 text-sm text-[var(--slate-500)]">
+              <div className="flex gap-4 text-sm text-white/60">
                 <span>{snagSummary.open} open</span>
                 <span>{snagSummary.total} total</span>
               </div>
             </div>
 
             <div id="snag-form" className="mt-4 grid gap-3">
-              <div className="rounded-xl border border-dashed border-slate-200 p-3">
-                <div className="text-xs uppercase tracking-[0.2em] text-[var(--slate-500)]">
+              <div className="rounded-xl border border-dashed border-white/10 bg-white/5 p-3">
+                <div className="text-xs uppercase tracking-[0.2em] text-white/50">
                   Add photos first
                 </div>
                 <input
@@ -524,19 +524,19 @@ export default function ProjectEngagement({
               <div>
                 <div className="section-title">Quote requests</div>
                 <h2 className="mt-2 text-xl font-semibold">Request a new quote or change</h2>
-                <p className="mt-2 text-sm text-[var(--slate-500)]">
+                <p className="mt-2 text-sm text-white/60">
                   Ask for pricing updates, add-ons, or scope changes. Attach photos for clarity.
                 </p>
               </div>
-              <div className="flex gap-4 text-sm text-[var(--slate-500)]">
+              <div className="flex gap-4 text-sm text-white/60">
                 <span>{requestSummary.open} active</span>
                 <span>{requestSummary.total} total</span>
               </div>
             </div>
 
             <div className="mt-4 grid gap-3">
-              <div className="rounded-xl border border-dashed border-slate-200 p-3">
-                <div className="text-xs uppercase tracking-[0.2em] text-[var(--slate-500)]">
+              <div className="rounded-xl border border-dashed border-white/10 bg-white/5 p-3">
+                <div className="text-xs uppercase tracking-[0.2em] text-white/50">
                   Add photos first
                 </div>
                 <input
