@@ -137,11 +137,16 @@ export default function DashboardShell({
             {!isCustomer && (
               <div className="flex flex-wrap gap-2 items-center w-full md:w-auto">
                 <div className="flex flex-wrap gap-2 items-center ml-auto md:ml-0">
-                  <Link href="/projects" className="btn-primary">
-                    Projects
+                  <Link href="/" className="btn-ghost">
+                    Dashboard
                   </Link>
-                  <div className="hidden md:block">
-                    <NotificationsBell />
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="hidden md:block">
+                      <NotificationsBell />
+                    </div>
+                    <Link href="/projects" className="btn-primary">
+                      Projects
+                    </Link>
                   </div>
                   <Link href="/quotes" className="btn-ghost">
                     Quotes
