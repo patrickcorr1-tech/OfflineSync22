@@ -6,7 +6,7 @@ import DashboardShell from "@/components/DashboardShell";
 export default function InboxPage() {
   const [messages, setMessages] = useState<any[]>([]);
   const [tab, setTab] = useState<"new" | "triaged" | "assigned" | "closed" | "notifications">(
-    "new",
+    "notifications",
   );
 
   const load = async () => {
