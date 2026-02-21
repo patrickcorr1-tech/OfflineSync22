@@ -32,6 +32,17 @@ export async function POST(req: NextRequest) {
       if (item.type === "measurement") {
         const payload =
           typeof item.payload.data === "string" ? JSON.parse(item.payload.data) : item.payload.data;
+        if (payload?.photos?.length) {
+          const uploadedPaths = [] as string[];
+          for (const photo of payload.photos) {
+            const filename = photo.name || `measurement-${Date.now()}`;
+            const path = `${item.payload.project_id}/${Date.now()}-${filename}`;
+            await uploadFromDataUrl("customer-uploads", path, photo.dataUrl);
+            uploadedPaths.push(path);
+          }
+          payload.photo_paths = uploadedPaths;
+          delete payload.photos;
+        }
         await supabase
           .from("measurements")
           .insert({ project_id: item.payload.project_id, data: payload });
