@@ -28,11 +28,16 @@ export default function DashboardShell({
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--slate-900)]">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
-        <div className="text-sm uppercase tracking-[0.25em] text-[var(--slate-500)]">
-          FencingHub
+        <div className="flex items-center gap-3">
+          <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.45em] text-white/70">
+            FencingHub
+          </div>
+          <div className="hidden text-xs uppercase tracking-[0.3em] text-white/40 sm:block">
+            Operations Portal
+          </div>
         </div>
 
-        <nav className="hidden items-center gap-3 text-xs uppercase tracking-[0.25em] text-[var(--slate-500)] md:flex">
+        <nav className="hidden items-center gap-3 text-xs uppercase tracking-[0.25em] text-white/60 md:flex">
           <Link href="/" className="btn-ghost">
             {isCustomer ? "Home" : "Dashboard"}
           </Link>
@@ -62,13 +67,13 @@ export default function DashboardShell({
           <button
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-sm"
             aria-label="Toggle menu"
           >
             <div className="flex flex-col gap-1">
-              <span className="h-0.5 w-5 rounded-full bg-slate-700" />
-              <span className="h-0.5 w-5 rounded-full bg-slate-700" />
-              <span className="h-0.5 w-5 rounded-full bg-slate-700" />
+              <span className="h-0.5 w-5 rounded-full bg-white/70" />
+              <span className="h-0.5 w-5 rounded-full bg-white/70" />
+              <span className="h-0.5 w-5 rounded-full bg-white/70" />
             </div>
           </button>
         </div>
@@ -76,8 +81,8 @@ export default function DashboardShell({
 
       {mobileOpen && (
         <div className="mx-auto w-full max-w-6xl px-6 pt-4 md:hidden">
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
-            <div className="grid gap-2 text-xs uppercase tracking-[0.25em] text-[var(--slate-500)]">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg">
+            <div className="grid gap-2 text-xs uppercase tracking-[0.25em] text-white/60">
               <Link href="/" className="btn-ghost" onClick={() => setMobileOpen(false)}>
                 {isCustomer ? "Home" : "Dashboard"}
               </Link>
@@ -128,8 +133,8 @@ export default function DashboardShell({
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <div className="section-title">Operations</div>
-              <h1 className="mt-3 text-3xl font-semibold">{title}</h1>
-              {subtitle && <p className="text-[var(--slate-500)] mt-2 max-w-2xl">{subtitle}</p>}
+              <h1 className="mt-3 text-3xl font-semibold heading-display">{title}</h1>
+              {subtitle && <p className="text-white/60 mt-2 max-w-2xl">{subtitle}</p>}
             </div>
             {!isCustomer && (
               <div className="flex flex-wrap gap-2 items-center w-full md:w-auto">

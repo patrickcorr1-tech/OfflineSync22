@@ -1,23 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
-  --slate-900: #0f172a;
-  --slate-500: #64748b;
-  --blue-600: #3b82f6;
+  color-scheme: dark;
+  --steel-900: #0a0d11;
+  --steel-800: #0f141b;
+  --steel-700: #141c26;
+  --steel-600: #1c2633;
+  --steel-500: #2a394b;
+  --steel-200: #94a3b8;
+  --slate-900: #e2e8f0;
+  --slate-500: #94a3b8;
+  --accent: #7fd0ff;
+  --accent-strong: #3b82f6;
   --emerald-500: #10b981;
-  --bg: #f8fafc;
+  --bg: #0a0d11;
 }
 
 body {
   background:
-    radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.03) 1px, transparent 0) 0 0 / 18px 18px,
-    var(--bg);
+    radial-gradient(1200px circle at 20% -10%, rgba(59, 130, 246, 0.15), transparent 60%),
+    radial-gradient(900px circle at 90% 10%, rgba(127, 208, 255, 0.08), transparent 50%),
+    linear-gradient(140deg, #07090c 0%, #0b1118 40%, #0a0d11 100%);
   color: var(--slate-900);
   font-family:
-    "Inter",
+    "Manrope",
     system-ui,
     -apple-system,
     Segoe UI,
@@ -27,40 +37,66 @@ body {
 }
 
 .card {
-  border-radius: 1.25rem;
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(15, 20, 27, 0.95), rgba(12, 16, 22, 0.85));
+  box-shadow:
+    0 20px 40px rgba(2, 6, 12, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .section-title {
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: var(--slate-500);
+  letter-spacing: 0.35em;
+  color: var(--steel-200);
+}
+
+h1,
+h2,
+h3,
+.heading-display {
+  font-family: "Syne", "Manrope", system-ui, sans-serif;
+  letter-spacing: 0.01em;
 }
 
 .btn-primary {
   border-radius: 999px;
-  background: var(--blue-600);
-  color: #fff;
-  padding: 0.65rem 1.2rem;
-  font-size: 12px;
+  background: linear-gradient(135deg, #3b82f6, #7fd0ff);
+  color: #0b1118;
+  padding: 0.75rem 1.5rem;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.3em;
   font-weight: 700;
-  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
 }
 
 .btn-ghost {
   border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.15);
-  padding: 0.6rem 1.2rem;
-  font-size: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 0.7rem 1.4rem;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.3em;
   color: var(--slate-900);
-  background: #ffffff;
+  background: rgba(12, 16, 22, 0.6);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+@layer base {
+  input,
+  textarea,
+  select {
+    background: rgba(10, 13, 17, 0.75);
+    color: var(--slate-900);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: rgba(148, 163, 184, 0.6);
+  }
 }
 
 body.cobrowse-masking input[type="password"],
