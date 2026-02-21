@@ -360,41 +360,41 @@ export default function Home() {
 
   return (
     <DashboardShell title="Admin Command" subtitle="Operations overview for today">
-      <div className="grid gap-4 md:grid-cols-4">
-        <div className="card p-5">
+      <div className="grid gap-3 md:grid-cols-4">
+        <div className="card p-4">
           <div className="section-title">Approved quotes</div>
-          <div className="mt-3 text-3xl font-semibold heading-display">
+          <div className="mt-2 text-2xl font-semibold heading-display">
             {metrics.approvedQuotes}
           </div>
-          <div className="mt-2 text-xs text-white/50">Ready for scheduling.</div>
+          <div className="mt-1 text-[10px] text-white/50">Ready for scheduling.</div>
         </div>
-        <div className="card p-5">
+        <div className="card p-4">
           <div className="section-title">Completed</div>
-          <div className="mt-3 text-3xl font-semibold heading-display">{metrics.completed}</div>
-          <div className="mt-2 text-xs text-white/50">Closed in the system.</div>
+          <div className="mt-2 text-2xl font-semibold heading-display">{metrics.completed}</div>
+          <div className="mt-1 text-[10px] text-white/50">Closed in the system.</div>
         </div>
-        <div className="card p-5">
+        <div className="card p-4">
           <div className="section-title">Not completed</div>
-          <div className="mt-3 text-3xl font-semibold heading-display">{metrics.open}</div>
-          <div className="mt-2 text-xs text-white/50">Active and in motion.</div>
+          <div className="mt-2 text-2xl font-semibold heading-display">{metrics.open}</div>
+          <div className="mt-1 text-[10px] text-white/50">Active and in motion.</div>
         </div>
-        <div className="card p-5">
+        <div className="card p-4">
           <div className="section-title">Status</div>
-          <div className="mt-3 text-3xl font-semibold heading-display">Online</div>
-          <div className="mt-2 text-xs text-white/50">All systems normal.</div>
+          <div className="mt-2 text-2xl font-semibold heading-display">Online</div>
+          <div className="mt-1 text-[10px] text-white/50">All systems normal.</div>
         </div>
       </div>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr_1fr]">
-        <div className="card p-6">
+      <div className="mt-3 grid gap-3 lg:grid-cols-[1.6fr_1fr_1fr]">
+        <div className="card p-5">
           <div className="section-title">Today command center</div>
-          <div className="mt-4 grid gap-4 sm:grid-cols-3 text-sm">
-            <div className="space-y-3">
-              <div className="text-xs uppercase tracking-[0.2em] text-white/40">Jobs due</div>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3 text-xs">
+            <div className="space-y-2">
+              <div className="uppercase tracking-[0.2em] text-white/40">Jobs due</div>
               {commandCenter.dueJobs.length === 0 && (
                 <div className="text-xs text-white/50">No jobs due.</div>
               )}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {commandCenter.dueJobs.map((job) => (
                   <a
                     key={job.id}
@@ -410,14 +410,12 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <div className="text-xs uppercase tracking-[0.2em] text-white/40">
-                Quotes expiring
-              </div>
+            <div className="space-y-2">
+              <div className="uppercase tracking-[0.2em] text-white/40">Quotes expiring</div>
               {commandCenter.expiringQuotes.length === 0 && (
                 <div className="text-xs text-white/50">None in next 5 days.</div>
               )}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {commandCenter.expiringQuotes.map((q) => (
                   <a
                     key={q.id}
@@ -433,12 +431,12 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <div className="text-xs uppercase tracking-[0.2em] text-white/40">Overdue snags</div>
+            <div className="space-y-2">
+              <div className="uppercase tracking-[0.2em] text-white/40">Overdue snags</div>
               {commandCenter.overdueSnags.length === 0 && (
                 <div className="text-xs text-white/50">No overdue snags.</div>
               )}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {commandCenter.overdueSnags.map((s) => (
                   <a
                     key={s.id}
@@ -454,10 +452,10 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="card p-6">
+        <div className="card p-5">
           <div className="section-title">Status banner presets</div>
-          <p className="mt-2 text-xs text-white/50">One tap to post a status update.</p>
-          <div className="mt-4 grid gap-2">
+          <p className="mt-2 text-[10px] text-white/50">One tap to post a status update.</p>
+          <div className="mt-3 grid gap-2">
             {[
               { message: "Weather delay today — we’ll update schedules by 2pm.", level: "warn" },
               { message: "Team on site. Expect updates this afternoon.", level: "info" },
@@ -480,9 +478,9 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="card p-6">
+        <div className="card p-5">
           <div className="section-title">Quick actions</div>
-          <div className="mt-4 grid gap-2 text-sm">
+          <div className="mt-3 grid gap-2 text-xs">
             <a href="/projects" className="btn-primary text-center">
               View projects
             </a>
