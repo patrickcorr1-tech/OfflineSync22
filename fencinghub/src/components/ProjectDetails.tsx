@@ -17,6 +17,10 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
   const [internalNotes, setInternalNotes] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
   const [primaryContact, setPrimaryContact] = useState<any | null>(null);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [templateId, setTemplateId] = useState("");
+  const [sendingTemplate, setSendingTemplate] = useState(false);
+  const [templateMsg, setTemplateMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (!projectId) return;
@@ -38,6 +42,13 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
           .limit(1);
         setPrimaryContact(contacts?.[0] || null);
       }
+
+      const { data: templateRows } = await supabase
+        .from("message_templates")
+        .select("id,name,subject,body,is_active")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
+      setTemplates(templateRows || []);
 
       const { data: photoRows } = await supabase
         .from("project_photos")
@@ -135,6 +146,59 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
                 </a>
               )}
             </div>
+            {primaryContact.email && templates.length > 0 && (
+              <div className="mt-3">
+                <div className="text-[10px] uppercase tracking-[0.3em] text-[var(--slate-500)]">
+                  One‑click follow‑up
+                </div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <select
+                    className="rounded-xl bg-[#f1f5f9] px-3 py-2 text-xs text-[var(--slate-900)]"
+                    value={templateId}
+                    onChange={(e) => setTemplateId(e.target.value)}
+                  >
+                    <option value="">Choose template</option>
+                    {templates.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    className="btn-primary"
+                    disabled={!templateId || sendingTemplate}
+                    onClick={async () => {
+                      const tpl = templates.find((t) => t.id === templateId);
+                      if (!tpl) return;
+                      setSendingTemplate(true);
+                      setTemplateMsg(null);
+                      const render = (text: string) =>
+                        text
+                          .replaceAll("{{project}}", project.name || "your project")
+                          .replaceAll("{{name}}", primaryContact.full_name || "there");
+                      const res = await fetch("/api/email/send", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          to: primaryContact.email,
+                          subject: render(tpl.subject || "Update from StowAg"),
+                          html: `<p>${render(tpl.body || "")}</p>`,
+                        }),
+                      });
+                      if (res.ok) {
+                        setTemplateMsg("Sent.");
+                      } else {
+                        setTemplateMsg("Could not send.");
+                      }
+                      setSendingTemplate(false);
+                    }}
+                  >
+                    Send
+                  </button>
+                </div>
+                {templateMsg && <div className="mt-2 text-xs text-white/60">{templateMsg}</div>}
+              </div>
+            )}
           </div>
         )}
         {project.address && (

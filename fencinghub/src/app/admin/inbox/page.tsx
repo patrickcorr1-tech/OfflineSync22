@@ -66,16 +66,17 @@ export default function InboxPage() {
             <div className="flex items-center justify-between">
               <div className="text-sm font-medium">{m.subject || "(no subject)"}</div>
               <div className="flex items-center gap-2">
-                {m.sla_due_at && (() => {
-                  const remaining = daysLeft(m.sla_due_at) ?? 0;
-                  const color =
-                    remaining <= 0 ? "text-red-500" : remaining <= 1 ? "text-amber-500" : "text-white/50";
-                  return (
-                    <span className={`text-xs ${color}`}>
-                      SLA {remaining}d
-                    </span>
-                  );
-                })()}
+                {m.sla_due_at &&
+                  (() => {
+                    const remaining = daysLeft(m.sla_due_at) ?? 0;
+                    const color =
+                      remaining <= 0
+                        ? "text-red-500"
+                        : remaining <= 1
+                          ? "text-amber-500"
+                          : "text-white/50";
+                    return <span className={`text-xs ${color}`}>SLA {remaining}d</span>;
+                  })()}
                 {m.priority !== "normal" && (
                   <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] text-red-600">
                     {m.priority}

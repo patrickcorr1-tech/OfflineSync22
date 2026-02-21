@@ -23,9 +23,11 @@ export async function POST(req: NextRequest) {
   const text = `${msg?.subject || ""} ${msg?.body || ""}`;
   const priority = inferPriority(text);
   const tags: string[] = [];
-  if (/quote/i.test(text)) tags.push("quote");
-  if (/invoice/i.test(text)) tags.push("invoice");
-  if (/snag|issue|problem/i.test(text)) tags.push("snag");
+  if (/quote|pricing|estimate/i.test(text)) tags.push("quote");
+  if (/invoice|payment|bill/i.test(text)) tags.push("invoice");
+  if (/snag|issue|problem|broken|damage/i.test(text)) tags.push("snag");
+  if (/callback|call me|phone/i.test(text)) tags.push("callback");
+  if (/discount|offer/i.test(text)) tags.push("discount");
 
   const { data, error } = await supabase
     .from("inbox_messages")

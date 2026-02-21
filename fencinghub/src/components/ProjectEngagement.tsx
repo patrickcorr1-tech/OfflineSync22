@@ -411,6 +411,24 @@ export default function ProjectEngagement({
             </div>
 
             <div id="snag-form" className="mt-4 grid gap-3">
+              <div className="rounded-xl border border-dashed border-slate-200 p-3">
+                <div className="text-xs uppercase tracking-[0.2em] text-[var(--slate-500)]">
+                  Add photos first
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  capture="environment"
+                  className="mt-2"
+                  onChange={(e) => setSnagFiles(Array.from(e.target.files || []))}
+                />
+                {snagFiles.length > 0 && (
+                  <p className="text-xs text-[var(--slate-500)] mt-2">
+                    {snagFiles.length} photo{snagFiles.length === 1 ? "" : "s"} ready to upload
+                  </p>
+                )}
+              </div>
               <input
                 className="rounded-xl border border-slate-200 px-4 py-2"
                 placeholder="Snag summary"
@@ -424,17 +442,6 @@ export default function ProjectEngagement({
                 value={snagDescription}
                 onChange={(e) => setSnagDescription(e.target.value)}
               />
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={(e) => setSnagFiles(Array.from(e.target.files || []))}
-              />
-              {snagFiles.length > 0 && (
-                <p className="text-xs text-[var(--slate-500)]">
-                  {snagFiles.length} photo{snagFiles.length === 1 ? "" : "s"} ready to upload
-                </p>
-              )}
               {snagDraftStatus && <p className="text-xs text-emerald-600">{snagDraftStatus}</p>}
               <button
                 className="btn-primary w-full sm:w-fit"
@@ -528,6 +535,25 @@ export default function ProjectEngagement({
             </div>
 
             <div className="mt-4 grid gap-3">
+              <div className="rounded-xl border border-dashed border-slate-200 p-3">
+                <div className="text-xs uppercase tracking-[0.2em] text-[var(--slate-500)]">
+                  Add photos first
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  capture="environment"
+                  className="mt-2"
+                  onChange={(e) => setRequestFiles(Array.from(e.target.files || []))}
+                />
+                {requestFiles.length > 0 && (
+                  <p className="text-xs text-[var(--slate-500)] mt-2">
+                    {requestFiles.length} photo{requestFiles.length === 1 ? "" : "s"} ready to
+                    upload
+                  </p>
+                )}
+              </div>
               <input
                 className="rounded-xl border border-slate-200 px-4 py-2"
                 placeholder="Request summary"
@@ -541,17 +567,6 @@ export default function ProjectEngagement({
                 value={requestDetails}
                 onChange={(e) => setRequestDetails(e.target.value)}
               />
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={(e) => setRequestFiles(Array.from(e.target.files || []))}
-              />
-              {requestFiles.length > 0 && (
-                <p className="text-xs text-[var(--slate-500)]">
-                  {requestFiles.length} photo{requestFiles.length === 1 ? "" : "s"} ready to upload
-                </p>
-              )}
               <button
                 className="btn-primary w-full sm:w-fit"
                 onClick={createQuoteRequest}

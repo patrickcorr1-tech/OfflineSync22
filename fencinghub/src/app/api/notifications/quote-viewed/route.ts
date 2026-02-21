@@ -65,10 +65,13 @@ export async function POST(req: NextRequest) {
 
     if (existing && existing.length > 0) continue;
 
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+    const link = projectId ? `${appUrl}/projects/${projectId}?tab=Documents` : "";
+
     await admin.from("notifications").insert({
       user_id: id,
       type: "quote_viewed",
-      payload: { title, body, quoteId, projectId, viewerId: user.id },
+      payload: { title, body, quoteId, projectId, viewerId: user.id, link },
     });
 
     const { data: subs } = await admin

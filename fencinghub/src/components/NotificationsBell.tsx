@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
 import { useProfile } from "@/lib/useProfile";
 
@@ -42,6 +43,15 @@ export default function NotificationsBell() {
 
   const unread = items.filter((i) => !i.read).length;
 
+  const getLink = (n: any) => {
+    const payload = n?.payload || {};
+    if (payload.link) return payload.link;
+    if (payload.projectId && payload.quoteId) return `/projects/${payload.projectId}?tab=Documents`;
+    if (payload.projectId) return `/projects/${payload.projectId}?tab=Project%20details`;
+    if (payload.quoteId) return `/admin/quotes`;
+    return null;
+  };
+
   const markRead = async () => {
     const unreadIds = items.filter((i) => !i.read).map((i) => i.id);
     if (unreadIds.length) {
@@ -67,13 +77,25 @@ export default function NotificationsBell() {
         <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-white/10 bg-[#0b0d10] p-3 shadow-2xl">
           <div className="text-xs uppercase tracking-[0.3em] text-white/40">Notifications</div>
           <div className="mt-3 space-y-2 max-h-80 overflow-auto">
-            {items.map((n) => (
-              <div key={n.id} className="rounded-xl border border-white/10 p-3 text-xs">
-                <div className="font-semibold">{n.payload?.title || n.type}</div>
-                {n.payload?.body && <div className="text-white/60 mt-1">{n.payload.body}</div>}
-                <div className="text-white/40 mt-1">{new Date(n.created_at).toLocaleString()}</div>
-              </div>
-            ))}
+            {items.map((n) => {
+              const link = getLink(n);
+              const content = (
+                <div className="rounded-xl border border-white/10 p-3 text-xs hover:border-white/30 hover:bg-white/5 transition">
+                  <div className="font-semibold">{n.payload?.title || n.type}</div>
+                  {n.payload?.body && <div className="text-white/60 mt-1">{n.payload.body}</div>}
+                  <div className="text-white/40 mt-1">
+                    {new Date(n.created_at).toLocaleString()}
+                  </div>
+                </div>
+              );
+              return link ? (
+                <Link key={n.id} href={link} onClick={() => setOpen(false)} className="block">
+                  {content}
+                </Link>
+              ) : (
+                <div key={n.id}>{content}</div>
+              );
+            })}
             {!items.length && <div className="text-white/50 text-xs">No notifications.</div>}
           </div>
         </div>

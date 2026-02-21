@@ -18,6 +18,11 @@ export default function Home() {
   const supabase = createSupabaseBrowserClient();
   const { profile } = useProfile();
   const [metrics, setMetrics] = useState({ approvedQuotes: 0, completed: 0, open: 0 });
+  const [commandCenter, setCommandCenter] = useState({
+    dueJobs: [] as any[],
+    expiringQuotes: [] as any[],
+    overdueSnags: [] as any[],
+  });
 
   const [projects, setProjects] = useState<any[]>([]);
   const [quotes, setQuotes] = useState<any[]>([]);
@@ -26,8 +31,10 @@ export default function Home() {
   const [callbackNotes, setCallbackNotes] = useState("");
   const [callbackMsg, setCallbackMsg] = useState<string | null>(null);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [isOnline, setIsOnline] = useState(true);
   const [inviteRole, setInviteRole] = useState<"customer" | "sales">("customer");
   const [inviteMsg, setInviteMsg] = useState<string | null>(null);
+  const [pulseMsg, setPulseMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const loadMetrics = async () => {
@@ -53,11 +60,63 @@ export default function Home() {
   }, [profile?.id]);
 
   useEffect(() => {
+    if (!profile?.role || profile.role === "customer") return;
+    const loadCommandCenter = async () => {
+      const { data: dueJobs } = await supabase
+        .from("projects")
+        .select("id,name,status,preferred_date")
+        .in("status", ["approved", "in_progress"])
+        .order("preferred_date", { ascending: true })
+        .limit(5);
+
+      const soon = new Date();
+      soon.setDate(soon.getDate() + 5);
+      const { data: expiringQuotes } = await supabase
+        .from("quotes")
+        .select("id,expires_at,project_id,projects(name)")
+        .not("expires_at", "is", null)
+        .lt("expires_at", soon.toISOString())
+        .neq("status", "accepted")
+        .order("expires_at", { ascending: true })
+        .limit(5);
+
+      const past = new Date();
+      past.setDate(past.getDate() - 7);
+      const { data: overdueSnags } = await supabase
+        .from("snags")
+        .select("id,title,project_id,created_at,projects(name)")
+        .neq("status", "closed")
+        .lt("created_at", past.toISOString())
+        .order("created_at", { ascending: true })
+        .limit(5);
+
+      setCommandCenter({
+        dueJobs: dueJobs || [],
+        expiringQuotes: expiringQuotes || [],
+        overdueSnags: overdueSnags || [],
+      });
+    };
+    loadCommandCenter();
+  }, [profile?.role]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const update = () => setIsOnline(navigator.onLine);
+    update();
+    window.addEventListener("online", update);
+    window.addEventListener("offline", update);
+    return () => {
+      window.removeEventListener("online", update);
+      window.removeEventListener("offline", update);
+    };
+  }, []);
+
+  useEffect(() => {
     if (profile?.role !== "customer") return;
     const loadCustomer = async () => {
       const { data: proj } = await supabase
         .from("projects")
-        .select("id,name,status,created_at")
+        .select("id,name,status,created_at,updated_at")
         .order("created_at", { ascending: false });
       setProjects(proj || []);
 
@@ -73,6 +132,7 @@ export default function Home() {
           label: `Quote – ${q.projects?.name || "Project"}`,
           url: q.file_path ? await getSignedUrl("quotes", q.file_path) : null,
           created_at: q.created_at,
+          type: "quote",
         })),
       );
 
@@ -80,7 +140,8 @@ export default function Home() {
         id: `job-pack-${p.id}`,
         label: `Job pack – ${p.name || "Project"}`,
         url: `/api/projects/${p.id}/job-pack`,
-        created_at: p.created_at,
+        created_at: p.updated_at || p.created_at,
+        type: "job_pack",
       }));
 
       setDownloads([...withUrls, ...jobPacks]);
@@ -240,7 +301,13 @@ export default function Home() {
                   href={d.url || "#"}
                   className="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2"
                 >
-                  <span>{d.label}</span>
+                  <div>
+                    <div>{d.label}</div>
+                    <div className="text-[10px] text-white/40">
+                      {d.created_at ? new Date(d.created_at).toLocaleDateString() : ""}
+                      {d.type === "job_pack" && !isOnline ? " • Available offline" : ""}
+                    </div>
+                  </div>
                   <span className="text-white/50">Download</span>
                 </a>
               ))}
@@ -296,14 +363,48 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-4 card p-4">
-          <div className="section-title">Help center</div>
-          <p className="mt-2 text-xs text-white/50">Quick answers and support options.</p>
-          <ul className="mt-3 space-y-2 text-sm text-white/80">
-            <li>• How do I add photos? Open a project → Snags → Upload photos.</li>
-            <li>• Where are my quotes? Use the Quotes tab or Downloads above.</li>
-            <li>• Need help right now? Use “Request help” on Projects or Quotes.</li>
-          </ul>
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="card p-4">
+            <div className="section-title">How did we do?</div>
+            <p className="mt-2 text-xs text-white/50">One tap helps us improve.</p>
+            {pulseMsg && <p className="mt-2 text-xs text-emerald-400">{pulseMsg}</p>}
+            <div className="mt-3 flex gap-2">
+              <button
+                className="btn-primary"
+                onClick={async () => {
+                  await supabase.from("support_audit_logs").insert({
+                    action: "customer_pulse",
+                    context: { rating: "up" },
+                  });
+                  setPulseMsg("Thanks for the feedback!");
+                }}
+              >
+                👍 Great
+              </button>
+              <button
+                className="btn-ghost"
+                onClick={async () => {
+                  await supabase.from("support_audit_logs").insert({
+                    action: "customer_pulse",
+                    context: { rating: "down" },
+                  });
+                  setPulseMsg("Thanks — we’ll improve this.");
+                }}
+              >
+                👎 Needs work
+              </button>
+            </div>
+          </div>
+
+          <div className="card p-4">
+            <div className="section-title">Help center</div>
+            <p className="mt-2 text-xs text-white/50">Quick answers and support options.</p>
+            <ul className="mt-3 space-y-2 text-sm text-white/80">
+              <li>• How do I add photos? Open a project → Snags → Upload photos.</li>
+              <li>• Where are my quotes? Use the Quotes tab or Downloads above.</li>
+              <li>• Need help right now? Use “Request help” on Projects or Quotes.</li>
+            </ul>
+          </div>
         </div>
       </DashboardShell>
     );
@@ -327,6 +428,117 @@ export default function Home() {
         <div className="card p-4">
           <div className="section-title">Status</div>
           <div className="mt-2 text-3xl font-semibold">Online</div>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        <div className="card p-4">
+          <div className="section-title">Today command center</div>
+          <div className="mt-3 space-y-3 text-sm">
+            <div>
+              <div className="text-xs uppercase tracking-[0.2em] text-white/40">Jobs due</div>
+              {commandCenter.dueJobs.length === 0 && (
+                <div className="mt-2 text-xs text-white/50">No jobs due.</div>
+              )}
+              <div className="mt-2 space-y-2">
+                {commandCenter.dueJobs.map((job) => (
+                  <a
+                    key={job.id}
+                    href={`/projects/${job.id}`}
+                    className="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2"
+                  >
+                    <span>{job.name || "Project"}</span>
+                    <span className="text-white/50">
+                      {job.preferred_date ? new Date(job.preferred_date).toLocaleDateString() : ""}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="text-xs uppercase tracking-[0.2em] text-white/40">
+                Quotes expiring
+              </div>
+              {commandCenter.expiringQuotes.length === 0 && (
+                <div className="mt-2 text-xs text-white/50">None in next 5 days.</div>
+              )}
+              <div className="mt-2 space-y-2">
+                {commandCenter.expiringQuotes.map((q) => (
+                  <a
+                    key={q.id}
+                    href={`/projects/${q.project_id}?tab=Documents`}
+                    className="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2"
+                  >
+                    <span>{q.projects?.name || "Quote"}</span>
+                    <span className="text-white/50">
+                      {q.expires_at ? new Date(q.expires_at).toLocaleDateString() : ""}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="text-xs uppercase tracking-[0.2em] text-white/40">Overdue snags</div>
+              {commandCenter.overdueSnags.length === 0 && (
+                <div className="mt-2 text-xs text-white/50">No overdue snags.</div>
+              )}
+              <div className="mt-2 space-y-2">
+                {commandCenter.overdueSnags.map((s) => (
+                  <a
+                    key={s.id}
+                    href={`/projects/${s.project_id}?tab=Snags`}
+                    className="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2"
+                  >
+                    <span>{s.projects?.name || "Project"}</span>
+                    <span className="text-white/50">{s.title || "Snag"}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="card p-4">
+          <div className="section-title">Status banner presets</div>
+          <p className="mt-2 text-xs text-white/50">One tap to post a status update.</p>
+          <div className="mt-3 grid gap-2">
+            {[
+              { message: "Weather delay today — we’ll update schedules by 2pm.", level: "warn" },
+              { message: "Team on site. Expect updates this afternoon.", level: "info" },
+              { message: "Emergency callouts only — response times extended.", level: "critical" },
+            ].map((preset) => (
+              <button
+                key={preset.message}
+                className="btn-ghost text-left"
+                onClick={async () => {
+                  await fetch("/api/status-banner/set", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(preset),
+                  });
+                }}
+              >
+                {preset.message}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="card p-4">
+          <div className="section-title">Quick actions</div>
+          <div className="mt-3 grid gap-2 text-sm">
+            <a href="/projects" className="btn-primary text-center">
+              View projects
+            </a>
+            <a href="/quotes" className="btn-ghost text-center">
+              View quotes
+            </a>
+            <a href="/admin/inbox" className="btn-ghost text-center">
+              Open inbox
+            </a>
+          </div>
         </div>
       </div>
     </DashboardShell>

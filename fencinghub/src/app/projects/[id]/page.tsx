@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import ProjectTabs from "@/components/ProjectTabs";
 import CobrowseWidget from "@/components/CobrowseWidget";
 // Customer chat removed
@@ -20,15 +20,21 @@ import { useProfile } from "@/lib/useProfile";
 
 export default function ProjectDetailPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const projectId = (params?.id as string) || "";
   const { profile } = useProfile();
   const [active, setActive] = useState("Engagement");
 
   useEffect(() => {
+    const tab = searchParams?.get("tab");
+    if (tab) {
+      setActive(tab);
+      return;
+    }
     if (profile?.role && profile.role !== "customer") {
       setActive("Project details");
     }
-  }, [profile?.role]);
+  }, [profile?.role, searchParams]);
 
   return (
     <DashboardShell title="Project Workspace" subtitle={`Project ID: ${projectId || ""}`}>
