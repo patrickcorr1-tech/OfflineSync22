@@ -141,7 +141,7 @@ export default function DashboardShell({
                     Dashboard
                   </Link>
                   <div className="flex flex-col items-center gap-2">
-                    <div className="hidden md:block">
+                    <div className="hidden md:flex w-full justify-center">
                       <NotificationsBell />
                     </div>
                     <Link href="/projects" className="btn-primary">
