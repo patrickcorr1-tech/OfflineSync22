@@ -1,12 +1,25 @@
 import { createBrowserClient } from "@supabase/ssr";
 
+const memoryStorage = (() => {
+  const store = new Map<string, string>();
+  return {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      store.set(key, value);
+    },
+    removeItem: (key: string) => {
+      store.delete(key);
+    },
+  };
+})();
+
 function resolveStorage() {
   if (typeof window === "undefined") return undefined;
   try {
     const pref = window.localStorage.getItem("fh_auth_storage");
     if (pref === "session") return window.sessionStorage;
   } catch {
-    return window.localStorage;
+    return memoryStorage;
   }
   return window.localStorage;
 }

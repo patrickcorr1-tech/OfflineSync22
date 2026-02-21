@@ -11,9 +11,13 @@ export default function LogoutPage() {
   useEffect(() => {
     supabase.auth.signOut().finally(() => {
       if (typeof window !== "undefined") {
-        window.localStorage.removeItem("fh_auth_storage");
-        window.localStorage.removeItem("supabase.auth.token");
-        window.sessionStorage.removeItem("supabase.auth.token");
+        try {
+          window.localStorage.removeItem("fh_auth_storage");
+          window.localStorage.removeItem("supabase.auth.token");
+          window.sessionStorage.removeItem("supabase.auth.token");
+        } catch {
+          // Ignore storage errors
+        }
       }
       router.push("/login");
     });

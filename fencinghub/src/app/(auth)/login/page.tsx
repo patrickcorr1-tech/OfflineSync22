@@ -17,7 +17,11 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     if (typeof window !== "undefined") {
-      window.localStorage.setItem("fh_auth_storage", rememberMe ? "local" : "session");
+      try {
+        window.localStorage.setItem("fh_auth_storage", rememberMe ? "local" : "session");
+      } catch {
+        // Ignore storage errors (private mode / restricted storage)
+      }
     }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return setError(error.message);
