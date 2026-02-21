@@ -45,16 +45,22 @@ export default function InboxPage() {
 
   return (
     <DashboardShell title="Inbox" subtitle="Triage and respond to customer messages">
-      <div className="flex flex-wrap gap-2 mb-4">
-        {(["new", "triaged", "assigned", "closed"] as const).map((t) => (
-          <button
-            key={t}
-            className={tab === t ? "btn-primary" : "btn-ghost"}
-            onClick={() => setTab(t)}
-          >
-            {t[0].toUpperCase() + t.slice(1)}
-          </button>
-        ))}
+      <div className="mb-4 rounded-2xl border border-white/10 bg-white/5 p-2">
+        <div className="flex flex-wrap gap-2">
+          {(["new", "triaged", "assigned", "closed"] as const).map((t) => (
+            <button
+              key={t}
+              className={
+                tab === t
+                  ? "rounded-full border border-white/40 bg-white/10 px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-white"
+                  : "rounded-full border border-white/10 px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-white/60 hover:border-white/30"
+              }
+              onClick={() => setTab(t)}
+            >
+              {t[0].toUpperCase() + t.slice(1)}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-3">
@@ -62,7 +68,7 @@ export default function InboxPage() {
           <div className="text-sm text-white/50">No messages in {tab}.</div>
         )}
         {filtered.map((m) => (
-          <div key={m.id} className="card p-4">
+          <div key={m.id} className="card p-5">
             <div className="flex items-center justify-between">
               <div className="text-sm font-medium">{m.subject || "(no subject)"}</div>
               <div className="flex items-center gap-2">
@@ -71,14 +77,14 @@ export default function InboxPage() {
                     const remaining = daysLeft(m.sla_due_at) ?? 0;
                     const color =
                       remaining <= 0
-                        ? "text-red-500"
+                        ? "text-red-300"
                         : remaining <= 1
-                          ? "text-amber-500"
-                          : "text-white/50";
+                          ? "text-amber-300"
+                          : "text-white/60";
                     return <span className={`text-xs ${color}`}>SLA {remaining}d</span>;
                   })()}
                 {m.priority !== "normal" && (
-                  <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] text-red-600">
+                  <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] text-red-300">
                     {m.priority}
                   </span>
                 )}
