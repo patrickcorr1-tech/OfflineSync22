@@ -5,7 +5,9 @@ import DashboardShell from "@/components/DashboardShell";
 
 export default function InboxPage() {
   const [messages, setMessages] = useState<any[]>([]);
-  const [tab, setTab] = useState<"new" | "triaged" | "assigned" | "closed">("new");
+  const [tab, setTab] = useState<"new" | "triaged" | "assigned" | "closed" | "notifications">(
+    "new",
+  );
 
   const load = async () => {
     const res = await fetch("/api/inbox/list");
@@ -41,13 +43,16 @@ export default function InboxPage() {
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
-  const filtered = messages.filter((m) => m.status === tab);
+  const filtered =
+    tab === "notifications"
+      ? messages.filter((m) => m.channel === "system")
+      : messages.filter((m) => m.status === tab);
 
   return (
     <DashboardShell title="Inbox" subtitle="Triage and respond to customer messages">
       <div className="mb-4 rounded-2xl border border-white/10 bg-white/5 p-2">
         <div className="flex flex-wrap gap-2">
-          {(["new", "triaged", "assigned", "closed"] as const).map((t) => (
+          {(["new", "triaged", "assigned", "closed", "notifications"] as const).map((t) => (
             <button
               key={t}
               className={
@@ -57,7 +62,7 @@ export default function InboxPage() {
               }
               onClick={() => setTab(t)}
             >
-              {t[0].toUpperCase() + t.slice(1)}
+              {t === "notifications" ? "Notifications" : t[0].toUpperCase() + t.slice(1)}
             </button>
           ))}
         </div>
