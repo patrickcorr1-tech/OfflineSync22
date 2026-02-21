@@ -186,16 +186,16 @@ export default function Home() {
   if (profile?.role === "customer") {
     return (
       <DashboardShell title="Customer Portal" subtitle="Everything for your project, in one place">
-        <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr]">
-          <div className="card p-6">
+        <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr]">
+          <div className="card p-5 sm:p-6">
             <div className="section-title">Mission control</div>
-            <h2 className="mt-3 text-2xl font-semibold heading-display">
+            <h2 className="mt-3 text-xl sm:text-2xl font-semibold heading-display">
               Your project at a glance
             </h2>
             <p className="mt-2 text-sm text-white/60">
               Track progress, access documents, and reach your team fast.
             </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
               <a href="/projects" className="btn-primary text-center">
                 View projects
               </a>
@@ -209,7 +209,7 @@ export default function Home() {
                 Request changes
               </a>
             </div>
-            <div className="mt-6 grid gap-3">
+            <div className="mt-5 grid gap-2">
               {checklist.map((item) => (
                 <a
                   key={item.label}
@@ -225,20 +225,20 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="card p-6">
+          <div className="card p-5 sm:p-6">
             <div className="section-title">Timeline</div>
             {!latestProject && (
               <p className="mt-3 text-sm text-white/60">Create a project to see your timeline.</p>
             )}
             {latestProject && (
-              <div className="mt-3 space-y-3 text-sm">
+              <div className="mt-3 space-y-2 text-sm">
                 <div className="text-xs text-white/50">
                   Latest: {latestProject.name || "Project"}
                 </div>
                 {timeline.map((step) => (
                   <div
                     key={step.key}
-                    className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
+                    className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-2"
                   >
                     <span>{step.label}</span>
                     <span className={step.done ? "text-emerald-400" : "text-white/40"}>
@@ -251,8 +251,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2 mt-4">
-          <div className="card p-6">
+        <div className="grid gap-3 lg:grid-cols-2 mt-4">
+          <div className="card p-5 sm:p-6">
             <div className="section-title">Downloads</div>
             <p className="mt-2 text-xs text-white/50">Quotes and job packs in one place.</p>
             <div className="mt-4 space-y-3 text-sm">
@@ -278,8 +278,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid gap-4">
-            <div className="card p-6">
+          <div className="grid gap-3">
+            <div className="card p-5 sm:p-6">
               <div className="section-title">Request a callback</div>
               <p className="mt-2 text-xs text-white/50">
                 Prefer a phone call? Leave your number and we’ll call you back.
