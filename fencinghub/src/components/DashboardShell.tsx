@@ -55,7 +55,6 @@ export default function DashboardShell({
               <Link href="/templates" className="btn-ghost">
                 Templates
               </Link>
-              <NotificationsBell compact />
             </>
           )}
           <Link href="/logout" className="btn-ghost">
@@ -141,14 +140,9 @@ export default function DashboardShell({
                   <Link href="/" className="btn-ghost">
                     Dashboard
                   </Link>
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="hidden md:flex w-full justify-center">
-                      <NotificationsBell compact />
-                    </div>
-                    <Link href="/projects" className="btn-primary">
-                      Projects
-                    </Link>
-                  </div>
+                  <Link href="/projects" className="btn-primary">
+                    Projects
+                  </Link>
                   <Link href="/quotes" className="btn-ghost">
                     Quotes
                   </Link>
@@ -158,6 +152,9 @@ export default function DashboardShell({
                   <Link href="/templates" className="btn-ghost">
                     Templates
                   </Link>
+                  <div className="hidden md:block">
+                    <NotificationsBell compact />
+                  </div>
                   {roleReady && !isCustomer && (
                     <button
                       type="button"
