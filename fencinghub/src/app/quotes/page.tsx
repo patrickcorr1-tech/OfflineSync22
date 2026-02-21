@@ -141,15 +141,15 @@ export default function QuotesPage() {
   const getStatusClass = (label: string) => {
     switch (label) {
       case "Accepted":
-        return "bg-emerald-500/20 text-emerald-700";
+        return "bg-emerald-500/15 text-emerald-300";
       case "Rejected":
-        return "bg-red-500/20 text-red-700";
+        return "bg-red-500/15 text-red-300";
       case "Viewed":
-        return "bg-slate-500/15 text-slate-600";
+        return "bg-white/10 text-white/70";
       case "Archived":
-        return "bg-gray-500/20 text-gray-700";
+        return "bg-slate-500/15 text-slate-300";
       default:
-        return "bg-blue-500/20 text-blue-700";
+        return "bg-blue-500/15 text-blue-300";
     }
   };
 
@@ -260,12 +260,12 @@ export default function QuotesPage() {
       {!canEdit(profile?.role) && (
         <div className="card p-4 mb-4">
           <div className="section-title">Apply discount</div>
-          <div className="mt-2 text-sm text-[var(--slate-500)]">
+          <div className="mt-2 text-sm text-white/60">
             Enter your discount % and we’ll approve instantly if your company is approved.
           </div>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
             <input
-              className="rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm"
+              className="rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
               placeholder="Discount %"
               value={discountPercent}
               onChange={(e) => setDiscountPercent(e.target.value)}
@@ -274,7 +274,7 @@ export default function QuotesPage() {
               Apply discount
             </button>
           </div>
-          {discountMsg && <div className="mt-2 text-sm text-[var(--slate-500)]">{discountMsg}</div>}
+          {discountMsg && <div className="mt-2 text-sm text-white/60">{discountMsg}</div>}
           {discountPdf && (
             <a
               className="btn-ghost mt-2 inline-block"
@@ -291,10 +291,10 @@ export default function QuotesPage() {
       {canEdit(profile?.role) && (
         <div className="card p-4 mb-4">
           <div className="section-title">Upload quote</div>
-          {uploadMsg && <div className="mt-2 text-sm text-[var(--slate-500)]">{uploadMsg}</div>}
+          {uploadMsg && <div className="mt-2 text-sm text-white/60">{uploadMsg}</div>}
           <div className="mt-3 grid gap-2 md:grid-cols-2">
             <select
-              className="rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm"
+              className="rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
               value={projectId}
               onChange={(e) => setProjectId(e.target.value)}
             >
@@ -372,7 +372,7 @@ export default function QuotesPage() {
               <div className="text-xs uppercase tracking-wide text-white/50">Add company</div>
               <div className="mt-2 flex items-center gap-2">
                 <select
-                  className="rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm w-full"
+                  className="rounded-2xl bg-[#0b1118] px-4 py-3 text-sm w-full text-white/90"
                   value={selectedCompany}
                   onChange={(e) => setSelectedCompany(e.target.value)}
                 >
@@ -436,7 +436,7 @@ export default function QuotesPage() {
         </div>
       )}
 
-      <div className="card p-4 mb-4">
+      <div className="card p-5 mb-4">
         <div className="flex items-center justify-between">
           <div className="section-title">All Quotes</div>
           {canEdit(profile?.role) && (
@@ -471,7 +471,7 @@ export default function QuotesPage() {
         </div>
         <div className="mt-3 grid gap-2 md:grid-cols-4">
           <select
-            className="rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm"
+            className="rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -483,7 +483,7 @@ export default function QuotesPage() {
             <option value="archived">Archived</option>
           </select>
           <select
-            className="rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm"
+            className="rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
             value={projectFilter}
             onChange={(e) => setProjectFilter(e.target.value)}
           >
@@ -496,18 +496,18 @@ export default function QuotesPage() {
           </select>
           <input
             type="date"
-            className="rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm"
+            className="rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
           />
           <input
             type="date"
-            className="rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm"
+            className="rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
             value={dateTo}
             onChange={(e) => setDateTo(e.target.value)}
           />
         </div>
-        <label className="mt-2 flex items-center gap-2 text-xs text-[var(--slate-500)]">
+        <label className="mt-2 flex items-center gap-2 text-xs text-white/60">
           <input
             type="checkbox"
             checked={showArchived}
@@ -518,7 +518,7 @@ export default function QuotesPage() {
         {profile?.role !== "customer" && (
           <div className="mt-3">
             <select
-              className="w-full rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm"
+              className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
               value={selectedId || ""}
               onChange={(e) => {
                 const q = quotes.find((x) => x.id === e.target.value);
@@ -581,7 +581,7 @@ export default function QuotesPage() {
                       <span>Set expiry</span>
                       <input
                         type="date"
-                        className="rounded-lg bg-[#f1f5f9] px-2 py-1 text-xs text-[var(--slate-900)]"
+                        className="rounded-lg bg-[#0b1118] px-2 py-1 text-xs text-white/80"
                         defaultValue={q.expires_at ? q.expires_at.slice(0, 10) : ""}
                         onChange={async (e) => {
                           const value = e.target.value;
@@ -734,7 +734,7 @@ export default function QuotesPage() {
           </div>
           <div className="mt-3">
             <select
-              className="w-full rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm"
+              className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
               value={selectedId || ""}
               onChange={(e) => {
                 const q = quotes.find((x) => x.id === e.target.value);
