@@ -28,8 +28,15 @@ export default function LoginPage() {
     router.push("/");
   };
 
+  const isOffline = typeof navigator !== "undefined" && !navigator.onLine;
+
   return (
     <AuthShell title="Sign in" subtitle="Access your FencingHub workspace.">
+      {isOffline && (
+        <div className="mb-4 rounded-2xl border border-white/10 bg-white/5 p-3 text-xs text-white/70">
+          You’re offline. Reconnect to sign in.
+        </div>
+      )}
       <form onSubmit={onSubmit} className="space-y-4">
         <input
           className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"

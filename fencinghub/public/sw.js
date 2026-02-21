@@ -1,5 +1,5 @@
 const CACHE_NAME = "fencinghub-v3";
-const APP_SHELL = ["/", "/projects", "/projects/new", "/quotes", "/manifest.json"];
+const APP_SHELL = ["/", "/login", "/projects", "/projects/new", "/quotes", "/manifest.json"];
 const OUTBOX_DB = "fencinghub-outbox";
 const OUTBOX_STORE = "outbox";
 const SYNC_TAG = "fencinghub-sync";
@@ -55,7 +55,7 @@ async function networkFirst(request) {
     return response;
   } catch {
     const cached = await caches.match(request);
-    return cached || caches.match("/");
+    return cached || caches.match("/login") || caches.match("/");
   }
 }
 
