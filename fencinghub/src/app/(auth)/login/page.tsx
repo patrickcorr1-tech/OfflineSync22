@@ -28,19 +28,19 @@ export default function LoginPage() {
     <AuthShell title="Sign in" subtitle="Access your FencingHub workspace.">
       <form onSubmit={onSubmit} className="space-y-4">
         <input
-          className="w-full rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm text-[var(--slate-900)]"
+          className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
-          className="w-full rounded-xl bg-[#f1f5f9] px-4 py-3 text-[var(--slate-900)]"
+          className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-white/90"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <label className="flex items-center gap-2 text-sm text-[var(--slate-700)]">
+        <label className="flex items-center gap-2 text-sm text-white/60">
           <input
             type="checkbox"
             className="h-4 w-4 rounded border-white/30"
@@ -49,9 +49,9 @@ export default function LoginPage() {
           />
           Keep me signed in
         </label>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {error && <p className="text-red-300 text-sm">{error}</p>}
         <button className="btn-primary w-full">Sign in</button>
-        <div className="text-sm text-[var(--slate-500)] flex justify-between">
+        <div className="text-sm text-white/60 flex justify-between">
           <a href="/signup" className="underline">
             Create account
           </a>

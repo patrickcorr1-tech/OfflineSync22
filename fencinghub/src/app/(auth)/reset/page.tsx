@@ -21,13 +21,13 @@ export default function ResetPage() {
     <AuthShell title="Reset password" subtitle="We’ll email you a reset link.">
       <form onSubmit={onSubmit} className="space-y-4">
         <input
-          className="w-full rounded-xl bg-[#f1f5f9] px-4 py-3 text-sm text-[var(--slate-900)]"
+          className="w-full rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <button className="btn-primary w-full">Send reset link</button>
-        {sent && <p className="text-green-600 text-sm">Reset link sent.</p>}
+        {sent && <p className="text-emerald-300 text-sm">Reset link sent.</p>}
       </form>
     </AuthShell>
   );
