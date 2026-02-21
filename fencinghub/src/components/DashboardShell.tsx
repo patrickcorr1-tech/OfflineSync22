@@ -55,6 +55,9 @@ export default function DashboardShell({
               <Link href="/templates" className="btn-ghost">
                 Templates
               </Link>
+              <Link href="/admin/invites" className="btn-ghost">
+                Invites
+              </Link>
             </>
           )}
           <Link href="/logout" className="btn-ghost">
@@ -102,6 +105,13 @@ export default function DashboardShell({
                     onClick={() => setMobileOpen(false)}
                   >
                     Templates
+                  </Link>
+                  <Link
+                    href="/admin/invites"
+                    className="btn-ghost"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Invites
                   </Link>
                 </>
               )}
@@ -151,6 +161,9 @@ export default function DashboardShell({
                   </Link>
                   <Link href="/templates" className="btn-ghost">
                     Templates
+                  </Link>
+                  <Link href="/admin/invites" className="btn-ghost">
+                    Invites
                   </Link>
                   <div className="hidden md:block">
                     <NotificationsBell compact />
