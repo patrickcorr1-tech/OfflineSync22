@@ -349,25 +349,27 @@ export default function ProjectsPage() {
             </div>
           )}
 
-          <div className="grid gap-3 md:grid-cols-2 md:hidden">
+          <div className="grid gap-2 md:grid-cols-2 md:hidden">
             {projects.map((p) => (
               <Link key={p.id} href={`/projects/${p.id}`} className="card p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-semibold">{p.name}</p>
-                    <p className="text-sm text-white/60">{p.address || "No address"}</p>
+                    <p className="text-xs text-white/60">{p.address || "No address"}</p>
                     {profile?.role === "customer" && (
-                      <p className="text-xs text-white/40 mt-1">
-                        Last updated{" "}
-                        {p.updated_at ? new Date(p.updated_at).toLocaleDateString() : "—"}
+                      <p className="text-[10px] text-white/40 mt-1">
+                        Updated {p.updated_at ? new Date(p.updated_at).toLocaleDateString() : "—"}
                       </p>
                     )}
                   </div>
-                  <span
-                    className={`rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.2em] ${statusPill(p.status)}`}
-                  >
-                    {profile?.role === "customer" ? statusLabel(p.status) : p.status}
-                  </span>
+                  <div className="flex flex-col items-end gap-2">
+                    <span
+                      className={`rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.2em] ${statusPill(p.status)}`}
+                    >
+                      {profile?.role === "customer" ? statusLabel(p.status) : p.status}
+                    </span>
+                    <span className="text-[10px] text-white/40">Open →</span>
+                  </div>
                 </div>
               </Link>
             ))}
