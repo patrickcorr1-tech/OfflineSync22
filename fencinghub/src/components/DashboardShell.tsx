@@ -157,6 +157,9 @@ export default function DashboardShell({
                   <Link href="/templates" className="btn-ghost">
                     Templates
                   </Link>
+                  <div className="hidden md:block">
+                    <NotificationsBell compact />
+                  </div>
                   {roleReady && !isCustomer && (
                     <button
                       type="button"
