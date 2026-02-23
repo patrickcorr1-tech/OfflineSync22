@@ -56,5 +56,34 @@ export async function POST(req: NextRequest) {
     context: { sessionId: data.id, projectId, quoteId },
   });
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+  const joinLink = `${appUrl}/admin/cobrowse?code=${data.code}`;
+  const subject = "New help request";
+  const body = `Customer started a help session. Code: ${data.code}`;
+
+  const { data: admins } = await admin.from("profiles").select("id").eq("role", "admin");
+
+  if (admins?.length) {
+    await admin.from("notifications").insert(
+      admins.map((a: any) => ({
+        user_id: a.id,
+        type: "cobrowse_request",
+        payload: { title: subject, body, link: joinLink, code: data.code },
+      })),
+    );
+
+    await admin.from("inbox_messages").insert(
+      admins.map((a: any) => ({
+        channel: "system",
+        from_name: "FencingHub",
+        subject,
+        body: `${body}\nJoin: ${joinLink}`,
+        status: "new",
+        priority: "high",
+        assigned_to: null,
+      })),
+    );
+  }
+
   return NextResponse.json({ session: data });
 }
