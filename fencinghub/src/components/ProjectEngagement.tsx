@@ -50,6 +50,7 @@ export default function ProjectEngagement({
   const [requestFiles, setRequestFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [snagNotice, setSnagNotice] = useState<string | null>(null);
+  const [expandedPhoto, setExpandedPhoto] = useState<string | null>(null);
 
   const load = async () => {
     try {
@@ -358,308 +359,339 @@ export default function ProjectEngagement({
   };
 
   return (
-    <div className={isCustomer ? "space-y-4 sm:space-y-6" : "grid gap-6 lg:grid-cols-3"}>
-      <div className={isCustomer ? "space-y-4 sm:space-y-5" : "lg:col-span-2 space-y-5"}>
-        {showStatus && isCustomer && (
-          <div className="card p-4 sm:p-5">
-            <div className="section-title">Next step</div>
-            <div className="mt-2 text-sm text-white/60">
-              {projectStatus === "completed"
-                ? "Project complete — thank you!"
-                : projectStatus === "in_progress"
-                  ? "Work is in progress. We’ll keep you updated."
-                  : projectStatus === "approved"
-                    ? "Approved — scheduling is next."
-                    : "We’re reviewing your request."}
+    <>
+      <div className={isCustomer ? "space-y-4 sm:space-y-6" : "grid gap-6 lg:grid-cols-3"}>
+        <div className={isCustomer ? "space-y-4 sm:space-y-5" : "lg:col-span-2 space-y-5"}>
+          {showStatus && isCustomer && (
+            <div className="card p-4 sm:p-5">
+              <div className="section-title">Next step</div>
+              <div className="mt-2 text-sm text-white/60">
+                {projectStatus === "completed"
+                  ? "Project complete — thank you!"
+                  : projectStatus === "in_progress"
+                    ? "Work is in progress. We’ll keep you updated."
+                    : projectStatus === "approved"
+                      ? "Approved — scheduling is next."
+                      : "We’re reviewing your request."}
+              </div>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                {["Submitted", "Approved", "In progress", "Complete"].map((label, idx) => (
+                  <div key={label} className="flex items-center gap-2">
+                    <span
+                      className={`h-3 w-3 rounded-full ${projectStep(projectStatus) > idx ? "bg-emerald-500" : "bg-white/20"}`}
+                    />
+                    <span className="text-xs text-white/60">{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              {["Submitted", "Approved", "In progress", "Complete"].map((label, idx) => (
-                <div key={label} className="flex items-center gap-2">
-                  <span
-                    className={`h-3 w-3 rounded-full ${projectStep(projectStatus) > idx ? "bg-emerald-500" : "bg-white/20"}`}
+          )}
+          {showSnags && (
+            <div className="card p-5">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <div className="section-title">Snag tracker</div>
+                  <h2 className="mt-2 text-xl font-semibold">Report snags and track fixes</h2>
+                  <p className="mt-2 text-sm text-white/60">
+                    Share issues with photos so the team can respond quickly.
+                  </p>
+                </div>
+                {isCustomer && (
+                  <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                    <a href="#snag-form" className="btn-primary w-full sm:w-auto text-center">
+                      Report an issue
+                    </a>
+                    <a href="#snag-form" className="btn-ghost w-full sm:w-auto text-center">
+                      Upload photos
+                    </a>
+                  </div>
+                )}
+                <div className="flex gap-4 text-sm text-white/60">
+                  <span>{snagSummary.open} open</span>
+                  <span>{snagSummary.total} total</span>
+                </div>
+              </div>
+
+              <div id="snag-form" className="mt-4 grid gap-3">
+                <div className="rounded-xl border border-dashed border-white/10 bg-white/5 p-3">
+                  <div className="text-xs uppercase tracking-[0.2em] text-white/50">
+                    Add photos first
+                  </div>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    capture="environment"
+                    className="mt-2"
+                    onChange={(e) => setSnagFiles(Array.from(e.target.files || []))}
                   />
-                  <span className="text-xs text-white/60">{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        {showSnags && (
-          <div className="card p-5">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <div className="section-title">Snag tracker</div>
-                <h2 className="mt-2 text-xl font-semibold">Report snags and track fixes</h2>
-                <p className="mt-2 text-sm text-white/60">
-                  Share issues with photos so the team can respond quickly.
-                </p>
-              </div>
-              {isCustomer && (
-                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                  <a href="#snag-form" className="btn-primary w-full sm:w-auto text-center">
-                    Report an issue
-                  </a>
-                  <a href="#snag-form" className="btn-ghost w-full sm:w-auto text-center">
-                    Upload photos
-                  </a>
-                </div>
-              )}
-              <div className="flex gap-4 text-sm text-white/60">
-                <span>{snagSummary.open} open</span>
-                <span>{snagSummary.total} total</span>
-              </div>
-            </div>
-
-            <div id="snag-form" className="mt-4 grid gap-3">
-              <div className="rounded-xl border border-dashed border-white/10 bg-white/5 p-3">
-                <div className="text-xs uppercase tracking-[0.2em] text-white/50">
-                  Add photos first
+                  {snagFiles.length > 0 && (
+                    <p className="text-xs text-[var(--slate-500)] mt-2">
+                      {snagFiles.length} photo{snagFiles.length === 1 ? "" : "s"} ready to upload
+                    </p>
+                  )}
                 </div>
                 <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  capture="environment"
-                  className="mt-2"
-                  onChange={(e) => setSnagFiles(Array.from(e.target.files || []))}
+                  className="rounded-xl border border-slate-200 px-4 py-2"
+                  placeholder="Snag summary"
+                  value={snagTitle}
+                  onChange={(e) => setSnagTitle(e.target.value)}
                 />
-                {snagFiles.length > 0 && (
-                  <p className="text-xs text-[var(--slate-500)] mt-2">
-                    {snagFiles.length} photo{snagFiles.length === 1 ? "" : "s"} ready to upload
-                  </p>
-                )}
+                <textarea
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-sm"
+                  rows={3}
+                  placeholder="Describe the issue and location"
+                  value={snagDescription}
+                  onChange={(e) => setSnagDescription(e.target.value)}
+                />
+                {snagDraftStatus && <p className="text-xs text-emerald-600">{snagDraftStatus}</p>}
+                <button
+                  className="btn-primary w-full sm:w-fit"
+                  onClick={createSnag}
+                  disabled={submitting}
+                >
+                  {submitting ? "Saving..." : "Submit snag"}
+                </button>
+                {snagNotice && <p className="text-xs text-[var(--slate-500)]">{snagNotice}</p>}
               </div>
-              <input
-                className="rounded-xl border border-slate-200 px-4 py-2"
-                placeholder="Snag summary"
-                value={snagTitle}
-                onChange={(e) => setSnagTitle(e.target.value)}
-              />
-              <textarea
-                className="rounded-xl border border-slate-200 px-4 py-2 text-sm"
-                rows={3}
-                placeholder="Describe the issue and location"
-                value={snagDescription}
-                onChange={(e) => setSnagDescription(e.target.value)}
-              />
-              {snagDraftStatus && <p className="text-xs text-emerald-600">{snagDraftStatus}</p>}
-              <button
-                className="btn-primary w-full sm:w-fit"
-                onClick={createSnag}
-                disabled={submitting}
-              >
-                {submitting ? "Saving..." : "Submit snag"}
-              </button>
-              {snagNotice && <p className="text-xs text-[var(--slate-500)]">{snagNotice}</p>}
-            </div>
 
-            <div className="mt-6 space-y-3">
-              {snags.length === 0 && (
-                <div className="rounded-xl border border-dashed border-slate-200 p-4 text-sm text-[var(--slate-500)]">
-                  No snags yet. Submissions will appear here.
-                </div>
-              )}
-              {snags.map((snag) => (
-                <div key={snag.id} className="rounded-xl border border-slate-200 p-3 sm:p-4">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <div className="text-sm sm:text-base font-semibold">{snag.title}</div>
-                      {snag.description && (
-                        <div className="text-xs text-[var(--slate-500)] mt-1">
-                          {snag.description}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs">
-                      {isCustomer ? (
-                        <span className="rounded-full bg-slate-100 px-3 py-1 uppercase tracking-wide">
-                          {snagStatusLabel(snag.status)}
-                        </span>
-                      ) : (
-                        <select
-                          className="rounded-lg border border-slate-200 px-2 py-1 text-xs"
-                          value={snag.status}
-                          onChange={(e) => updateSnagStatus(snag.id, e.target.value)}
-                        >
-                          {snagStatuses.map((status) => (
-                            <option key={status} value={status}>
-                              {status}
-                            </option>
-                          ))}
-                        </select>
-                      )}
-                    </div>
+              <div className="mt-6 space-y-3">
+                {snags.length === 0 && (
+                  <div className="rounded-xl border border-dashed border-slate-200 p-4 text-sm text-[var(--slate-500)]">
+                    No snags yet. Submissions will appear here.
                   </div>
-                  {snag.photos?.length > 0 && (
-                    <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                      {snag.photos.map((photo: any) => (
-                        <div key={photo.id} className="group relative">
+                )}
+                {snags.map((snag) => (
+                  <div key={snag.id} className="rounded-xl border border-slate-200 p-3 sm:p-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <div className="text-sm sm:text-base font-semibold">{snag.title}</div>
+                        {snag.description && (
+                          <div className="text-xs text-[var(--slate-500)] mt-1">
+                            {snag.description}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        {isCustomer ? (
+                          <span className="rounded-full bg-slate-100 px-3 py-1 uppercase tracking-wide">
+                            {snagStatusLabel(snag.status)}
+                          </span>
+                        ) : (
+                          <select
+                            className="rounded-lg border border-slate-200 px-2 py-1 text-xs"
+                            value={snag.status}
+                            onChange={(e) => updateSnagStatus(snag.id, e.target.value)}
+                          >
+                            {snagStatuses.map((status) => (
+                              <option key={status} value={status}>
+                                {status}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                    </div>
+                    {snag.photos?.length > 0 && (
+                      <div className="mt-3 space-y-2">
+                        {snag.photos.map((photo: any, idx: number) => (
+                          <div
+                            key={photo.id}
+                            className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs"
+                          >
+                            <span className="text-white/70">Photo {idx + 1}</span>
+                            <div className="flex gap-2">
+                              {photo.url && (
+                                <button
+                                  type="button"
+                                  className="rounded-full border border-white/20 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70"
+                                  onClick={() => setExpandedPhoto(photo.url)}
+                                >
+                                  Expand image
+                                </button>
+                              )}
+                              {photo.url && (
+                                <a
+                                  href={photo.url}
+                                  download
+                                  className="rounded-full border border-white/20 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70"
+                                >
+                                  Download
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {showQuoteRequests && (
+            <div className="card p-5">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="section-title">Quote requests</div>
+                  <h2 className="mt-2 text-xl font-semibold">Request a new quote or change</h2>
+                  <p className="mt-2 text-sm text-white/60">
+                    Ask for pricing updates, add-ons, or scope changes. Attach photos for clarity.
+                  </p>
+                </div>
+                <div className="flex gap-4 text-sm text-white/60">
+                  <span>{requestSummary.open} active</span>
+                  <span>{requestSummary.total} total</span>
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                <div className="rounded-xl border border-dashed border-white/10 bg-white/5 p-3">
+                  <div className="text-xs uppercase tracking-[0.2em] text-white/50">
+                    Add photos first
+                  </div>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    capture="environment"
+                    className="mt-2"
+                    onChange={(e) => setRequestFiles(Array.from(e.target.files || []))}
+                  />
+                  {requestFiles.length > 0 && (
+                    <p className="text-xs text-[var(--slate-500)] mt-2">
+                      {requestFiles.length} photo{requestFiles.length === 1 ? "" : "s"} ready to
+                      upload
+                    </p>
+                  )}
+                </div>
+                <input
+                  className="rounded-xl border border-slate-200 px-4 py-2"
+                  placeholder="Request summary"
+                  value={requestTitle}
+                  onChange={(e) => setRequestTitle(e.target.value)}
+                />
+                <textarea
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-sm"
+                  rows={3}
+                  placeholder="Describe what needs quoting"
+                  value={requestDetails}
+                  onChange={(e) => setRequestDetails(e.target.value)}
+                />
+                <button
+                  className="btn-primary w-full sm:w-fit"
+                  onClick={createQuoteRequest}
+                  disabled={submitting}
+                >
+                  {submitting ? "Saving..." : "Submit request"}
+                </button>
+              </div>
+
+              <div className="mt-6 space-y-3">
+                {quoteRequests.length === 0 && (
+                  <div className="rounded-xl border border-dashed border-slate-200 p-4 text-sm text-[var(--slate-500)]">
+                    No quote requests yet. Submissions will appear here.
+                  </div>
+                )}
+                {quoteRequests.map((request) => (
+                  <div key={request.id} className="rounded-xl border border-slate-200 p-4">
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <div className="text-sm font-semibold">{request.title}</div>
+                        {request.details && (
+                          <div className="text-xs text-[var(--slate-500)] mt-1">
+                            {request.details}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        {isCustomer ? (
+                          <span className="rounded-full bg-slate-100 px-3 py-1 uppercase tracking-wide">
+                            {request.status}
+                          </span>
+                        ) : (
+                          <select
+                            className="rounded-lg border border-slate-200 px-2 py-1 text-xs"
+                            value={request.status}
+                            onChange={(e) => updateRequestStatus(request.id, e.target.value)}
+                          >
+                            {quoteStatuses.map((status) => (
+                              <option key={status} value={status}>
+                                {status}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                    </div>
+                    {request.photos?.length > 0 && (
+                      <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {request.photos.map((photo: any) => (
                           <img
+                            key={photo.id}
                             src={photo.url}
-                            alt="Snag photo"
-                            className="h-20 sm:h-24 w-full rounded-lg object-cover"
+                            alt="Request photo"
+                            className="h-24 w-full rounded-lg object-cover"
                           />
-                          {photo.url && (
-                            <a
-                              href={photo.url}
-                              download
-                              className="absolute right-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-slate-700 shadow"
-                            >
-                              Download
-                            </a>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {showQuoteRequests && (
-          <div className="card p-5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="section-title">Quote requests</div>
-                <h2 className="mt-2 text-xl font-semibold">Request a new quote or change</h2>
-                <p className="mt-2 text-sm text-white/60">
-                  Ask for pricing updates, add-ons, or scope changes. Attach photos for clarity.
-                </p>
-              </div>
-              <div className="flex gap-4 text-sm text-white/60">
-                <span>{requestSummary.open} active</span>
-                <span>{requestSummary.total} total</span>
-              </div>
-            </div>
-
-            <div className="mt-4 grid gap-3">
-              <div className="rounded-xl border border-dashed border-white/10 bg-white/5 p-3">
-                <div className="text-xs uppercase tracking-[0.2em] text-white/50">
-                  Add photos first
-                </div>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  capture="environment"
-                  className="mt-2"
-                  onChange={(e) => setRequestFiles(Array.from(e.target.files || []))}
-                />
-                {requestFiles.length > 0 && (
-                  <p className="text-xs text-[var(--slate-500)] mt-2">
-                    {requestFiles.length} photo{requestFiles.length === 1 ? "" : "s"} ready to
-                    upload
-                  </p>
-                )}
-              </div>
-              <input
-                className="rounded-xl border border-slate-200 px-4 py-2"
-                placeholder="Request summary"
-                value={requestTitle}
-                onChange={(e) => setRequestTitle(e.target.value)}
-              />
-              <textarea
-                className="rounded-xl border border-slate-200 px-4 py-2 text-sm"
-                rows={3}
-                placeholder="Describe what needs quoting"
-                value={requestDetails}
-                onChange={(e) => setRequestDetails(e.target.value)}
-              />
-              <button
-                className="btn-primary w-full sm:w-fit"
-                onClick={createQuoteRequest}
-                disabled={submitting}
-              >
-                {submitting ? "Saving..." : "Submit request"}
-              </button>
-            </div>
-
-            <div className="mt-6 space-y-3">
-              {quoteRequests.length === 0 && (
-                <div className="rounded-xl border border-dashed border-slate-200 p-4 text-sm text-[var(--slate-500)]">
-                  No quote requests yet. Submissions will appear here.
-                </div>
-              )}
-              {quoteRequests.map((request) => (
-                <div key={request.id} className="rounded-xl border border-slate-200 p-4">
-                  <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <div className="text-sm font-semibold">{request.title}</div>
-                      {request.details && (
-                        <div className="text-xs text-[var(--slate-500)] mt-1">
-                          {request.details}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs">
-                      {isCustomer ? (
-                        <span className="rounded-full bg-slate-100 px-3 py-1 uppercase tracking-wide">
-                          {request.status}
-                        </span>
-                      ) : (
-                        <select
-                          className="rounded-lg border border-slate-200 px-2 py-1 text-xs"
-                          value={request.status}
-                          onChange={(e) => updateRequestStatus(request.id, e.target.value)}
-                        >
-                          {quoteStatuses.map((status) => (
-                            <option key={status} value={status}>
-                              {status}
-                            </option>
-                          ))}
-                        </select>
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  {request.photos?.length > 0 && (
-                    <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
-                      {request.photos.map((photo: any) => (
-                        <img
-                          key={photo.id}
-                          src={photo.url}
-                          alt="Request photo"
-                          className="h-24 w-full rounded-lg object-cover"
-                        />
-                      ))}
-                    </div>
-                  )}
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {!isCustomer && (
+          <div className="space-y-4">
+            <div className="card p-5">
+              <div className="section-title">Engagement overview</div>
+              <div className="mt-4 grid gap-3 text-sm">
+                <div className="rounded-xl border border-slate-200 p-3">
+                  <div className="text-xs uppercase tracking-widest text-[var(--slate-500)]">
+                    Open snags
+                  </div>
+                  <div className="mt-2 text-2xl font-semibold">{snagSummary.open}</div>
                 </div>
-              ))}
+                <div className="rounded-xl border border-slate-200 p-3">
+                  <div className="text-xs uppercase tracking-widest text-[var(--slate-500)]">
+                    Active quote requests
+                  </div>
+                  <div className="mt-2 text-2xl font-semibold">{requestSummary.open}</div>
+                </div>
+              </div>
+            </div>
+            <div className="card p-5 text-sm text-[var(--slate-500)]">
+              <div className="section-title">Customer guidance</div>
+              <p className="mt-3">
+                Encourage customers to include close-up and wide-angle photos. Offline submissions
+                are queued automatically and will sync once connectivity returns.
+              </p>
             </div>
           </div>
         )}
       </div>
 
-      {!isCustomer && (
-        <div className="space-y-4">
-          <div className="card p-5">
-            <div className="section-title">Engagement overview</div>
-            <div className="mt-4 grid gap-3 text-sm">
-              <div className="rounded-xl border border-slate-200 p-3">
-                <div className="text-xs uppercase tracking-widest text-[var(--slate-500)]">
-                  Open snags
-                </div>
-                <div className="mt-2 text-2xl font-semibold">{snagSummary.open}</div>
-              </div>
-              <div className="rounded-xl border border-slate-200 p-3">
-                <div className="text-xs uppercase tracking-widest text-[var(--slate-500)]">
-                  Active quote requests
-                </div>
-                <div className="mt-2 text-2xl font-semibold">{requestSummary.open}</div>
-              </div>
+      {expandedPhoto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
+          <div className="max-w-3xl w-full rounded-2xl border border-white/10 bg-[#0b1118] p-4">
+            <div className="flex items-center justify-between">
+              <div className="text-xs uppercase tracking-[0.2em] text-white/50">Image preview</div>
+              <button
+                className="rounded-full border border-white/20 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70"
+                onClick={() => setExpandedPhoto(null)}
+              >
+                Close
+              </button>
             </div>
-          </div>
-          <div className="card p-5 text-sm text-[var(--slate-500)]">
-            <div className="section-title">Customer guidance</div>
-            <p className="mt-3">
-              Encourage customers to include close-up and wide-angle photos. Offline submissions are
-              queued automatically and will sync once connectivity returns.
-            </p>
+            <div className="mt-3">
+              <img src={expandedPhoto} alt="Snag preview" className="w-full rounded-xl" />
+            </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
