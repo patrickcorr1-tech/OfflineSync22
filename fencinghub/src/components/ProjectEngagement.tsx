@@ -50,7 +50,6 @@ export default function ProjectEngagement({
   const [requestFiles, setRequestFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [snagNotice, setSnagNotice] = useState<string | null>(null);
-  const [expandedPhoto, setExpandedPhoto] = useState<string | null>(null);
 
   const load = async () => {
     try {
@@ -502,15 +501,6 @@ export default function ProjectEngagement({
                             <span className="text-white/70">Photo {idx + 1}</span>
                             <div className="flex gap-2">
                               {photo.url && (
-                                <button
-                                  type="button"
-                                  className="rounded-full border border-white/20 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70"
-                                  onClick={() => setExpandedPhoto(photo.url)}
-                                >
-                                  Expand image
-                                </button>
-                              )}
-                              {photo.url && (
                                 <a
                                   href={photo.url}
                                   download
@@ -673,25 +663,6 @@ export default function ProjectEngagement({
           </div>
         )}
       </div>
-
-      {expandedPhoto && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
-          <div className="max-w-3xl w-full rounded-2xl border border-white/10 bg-[#0b1118] p-4">
-            <div className="flex items-center justify-between">
-              <div className="text-xs uppercase tracking-[0.2em] text-white/50">Image preview</div>
-              <button
-                className="rounded-full border border-white/20 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70"
-                onClick={() => setExpandedPhoto(null)}
-              >
-                Close
-              </button>
-            </div>
-            <div className="mt-3">
-              <img src={expandedPhoto} alt="Snag preview" className="w-full rounded-xl" />
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
