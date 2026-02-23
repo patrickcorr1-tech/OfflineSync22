@@ -75,7 +75,7 @@ export default function QuotesPage() {
       return;
     }
 
-    const res = await fetch("/api/customer/quotes");
+    const res = await fetch("/api/customer/quotes", { cache: "no-store" });
     const payload = await res.json();
     const withUrls = payload?.quotes || [];
 

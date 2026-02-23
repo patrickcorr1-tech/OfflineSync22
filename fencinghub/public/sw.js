@@ -30,6 +30,10 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.origin === self.location.origin) {
+    if (url.pathname.startsWith("/api/")) {
+      event.respondWith(fetch(request));
+      return;
+    }
     event.respondWith(staleWhileRevalidate(request));
   }
 });
