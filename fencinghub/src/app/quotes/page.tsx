@@ -5,6 +5,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabaseClient";
 import { getSignedUrl } from "@/lib/storage";
 import DashboardShell from "@/components/DashboardShell";
 import CobrowseWidget from "@/components/CobrowseWidget";
+import PushSubscribe from "@/components/PushSubscribe";
 import { useProfile } from "@/lib/useProfile";
 import { canEdit } from "@/lib/roles";
 
@@ -27,6 +28,9 @@ export default function QuotesPage() {
   const [discountPercent, setDiscountPercent] = useState<string>("");
   const [discountMsg, setDiscountMsg] = useState<string | null>(null);
   const [discountPdf, setDiscountPdf] = useState<string | null>(null);
+  const [customerTab, setCustomerTab] = useState<"pending" | "accepted" | "declined">("pending");
+  const [quoteDiscounts, setQuoteDiscounts] = useState<Record<string, string>>({});
+  const [discountRequests, setDiscountRequests] = useState<Record<string, string>>({});
   const [pendingDiscounts, setPendingDiscounts] = useState<any[]>([]);
   const [remindId, setRemindId] = useState<string | null>(null);
   const [approvedCompanies, setApprovedCompanies] = useState<any[]>([]);
@@ -90,16 +94,28 @@ export default function QuotesPage() {
       const first = withUrls?.find((q) => q.url);
       if (first?.id) setSelectedId(first.id);
     }
+
+    const { data: customerDiscounts } = await supabase
+      .from("quote_discounts")
+      .select("quote_id,status")
+      .order("created_at", { ascending: false });
+    const map: Record<string, string> = {};
+    (customerDiscounts || []).forEach((d: any) => {
+      map[d.quote_id] = d.status;
+    });
+    setDiscountRequests(map);
   };
 
-  const requestDiscount = async () => {
-    if (!selectedId || !discountPercent) return;
+  const requestDiscount = async (quoteId?: string) => {
+    const targetId = quoteId || selectedId;
+    const percent = quoteId ? quoteDiscounts[quoteId] : discountPercent;
+    if (!targetId || !percent) return;
     setDiscountMsg(null);
     setDiscountPdf(null);
     const res = await fetch("/api/quotes/discount", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quoteId: selectedId, percent: Number(discountPercent) }),
+      body: JSON.stringify({ quoteId: targetId, percent: Number(percent) }),
     });
     const data = await res.json();
     if (res.ok) {
@@ -110,6 +126,8 @@ export default function QuotesPage() {
       } else {
         setDiscountMsg("Discount request sent for approval.");
       }
+      setQuoteDiscounts((prev) => ({ ...prev, [targetId]: "" }));
+      setDiscountRequests((prev) => ({ ...prev, [targetId]: data.status || "pending" }));
     } else {
       setDiscountMsg(`Request failed: ${data?.error || "Unknown error"}`);
     }
@@ -254,25 +272,44 @@ export default function QuotesPage() {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });
 
+  const customerQuotes = (quotes || [])
+    .filter((q) => !q.archived)
+    .filter((q) => {
+      const status =
+        q.status === "accepted" ? "accepted" : q.status === "rejected" ? "declined" : "pending";
+      return status === customerTab;
+    })
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
   return (
     <DashboardShell title="Quotes" subtitle="Upload and manage customer quotes">
       <CobrowseWidget label="Request help" />
       {!canEdit(profile?.role) && (
         <div className="card p-4 mb-4">
-          <div className="section-title">Apply discount</div>
+          <div className="section-title">Pending quotes</div>
           <div className="mt-2 text-sm text-white/60">
-            Enter your discount % and we’ll approve instantly if your company is approved.
+            New quotes appear here. Enable notifications to get lock-screen alerts.
           </div>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <input
-              className="rounded-2xl bg-[#0b1118] px-4 py-3 text-sm text-white/90"
-              placeholder="Discount %"
-              value={discountPercent}
-              onChange={(e) => setDiscountPercent(e.target.value)}
-            />
-            <button className="btn-primary" type="button" onClick={requestDiscount}>
-              Apply discount
-            </button>
+          <div className="mt-3">
+            <div className="inline-flex rounded-full border border-white/10 bg-white/5 p-1 text-xs">
+              {(["pending", "accepted", "declined"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  className={`rounded-full px-4 py-2 uppercase tracking-[0.2em] ${
+                    customerTab === tab
+                      ? "bg-white/10 text-white"
+                      : "text-white/50 hover:text-white"
+                  }`}
+                  onClick={() => setCustomerTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <CobrowseWidget label="Request help" />
+            <PushSubscribe />
           </div>
           {discountMsg && <div className="mt-2 text-sm text-white/60">{discountMsg}</div>}
           {discountPdf && (
@@ -545,177 +582,242 @@ export default function QuotesPage() {
             </select>
           </div>
         )}
-        <div className="mt-3 space-y-2">
-          {filteredQuotes.map((q) => (
-            <div key={q.id} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs">
-              <div className="flex flex-col gap-3">
-                <div className="min-w-0">
-                  <div className="truncate text-sm">
-                    {q.projects?.name || q.project_id}
-                    <span className="ml-2 text-white/50">v{q.version || 1}</span>
-                  </div>
-                  <div className="mt-3 grid gap-2 sm:flex sm:flex-wrap">
-                    {(() => {
-                      const label = getStatusLabel(q);
-                      return (
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] ${getStatusClass(label)}`}
-                        >
-                          {label}
+        {canEdit(profile?.role) ? (
+          <div className="mt-3 space-y-2">
+            {filteredQuotes.map((q) => (
+              <div key={q.id} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs">
+                <div className="flex flex-col gap-3">
+                  <div className="min-w-0">
+                    <div className="truncate text-sm">
+                      {q.projects?.name || q.project_id}
+                      <span className="ml-2 text-white/50">v{q.version || 1}</span>
+                    </div>
+                    <div className="mt-3 grid gap-2 sm:flex sm:flex-wrap">
+                      {(() => {
+                        const label = getStatusLabel(q);
+                        return (
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[10px] ${getStatusClass(label)}`}
+                          >
+                            {label}
+                          </span>
+                        );
+                      })()}
+                      {q.pinned && (
+                        <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] text-purple-300">
+                          Pinned
                         </span>
-                      );
-                    })()}
-                    {q.pinned && (
-                      <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] text-purple-300">
-                        Pinned
-                      </span>
+                      )}
+                    </div>
+                    {q.expires_at && (
+                      <div className="mt-2 text-[10px] text-white/50">
+                        Expires in {daysUntil(q.expires_at)} days
+                      </div>
+                    )}
+                    {profile?.role !== "customer" && (
+                      <div className="mt-2 flex items-center gap-2 text-[10px] text-white/50">
+                        <span>Set expiry</span>
+                        <input
+                          type="date"
+                          className="rounded-lg bg-[#0b1118] px-2 py-1 text-xs text-white/80"
+                          defaultValue={q.expires_at ? q.expires_at.slice(0, 10) : ""}
+                          onChange={async (e) => {
+                            const value = e.target.value;
+                            await fetch("/api/quotes/update", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                quoteId: q.id,
+                                expires_at: value ? new Date(value).toISOString() : null,
+                              }),
+                            });
+                            load();
+                          }}
+                        />
+                      </div>
                     )}
                   </div>
-                  {q.expires_at && (
-                    <div className="mt-2 text-[10px] text-white/50">
-                      Expires in {daysUntil(q.expires_at)} days
+                  <div className="text-[10px] text-white/50">
+                    <div>Sent {formatDate(q.sent_at || q.created_at)}</div>
+                    <div>Viewed {formatDate(q.viewed_at)}</div>
+                    <div>
+                      Responded{" "}
+                      {q.responded_at ? `${formatDate(q.responded_at)} (${q.status})` : "—"}
                     </div>
+                    <div className={isExpiringSoon(q.expires_at) ? "text-orange-200" : ""}>
+                      Expires {q.expires_at ? formatDate(q.expires_at) : "—"}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 grid gap-2 sm:flex sm:flex-wrap">
+                  {q.url && (
+                    <a
+                      className="rounded-lg border border-white/20 px-3 py-2 text-center"
+                      href={q.url}
+                      target="_blank"
+                    >
+                      Download
+                    </a>
                   )}
-                  {profile?.role !== "customer" && (
-                    <div className="mt-2 flex items-center gap-2 text-[10px] text-white/50">
-                      <span>Set expiry</span>
-                      <input
-                        type="date"
-                        className="rounded-lg bg-[#0b1118] px-2 py-1 text-xs text-white/80"
-                        defaultValue={q.expires_at ? q.expires_at.slice(0, 10) : ""}
-                        onChange={async (e) => {
-                          const value = e.target.value;
-                          await fetch("/api/quotes/update", {
+                  {q.url && profile?.role !== "customer" && (
+                    <button
+                      className="rounded-lg border border-white/20 px-3 py-2"
+                      onClick={() => {
+                        setSelectedId(q.id);
+                        if (profile?.role === "customer") {
+                          fetch("/api/notifications/quote-viewed", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                              quoteId: q.id,
-                              expires_at: value ? new Date(value).toISOString() : null,
-                            }),
+                            body: JSON.stringify({ quoteId: q.id, projectId: q.project_id }),
                           });
-                          load();
-                        }}
+                        }
+                      }}
+                    >
+                      Preview
+                    </button>
+                  )}
+                  {canEdit(profile?.role) && (
+                    <button
+                      className="rounded-lg border border-white/20 px-3 py-2"
+                      onClick={() => updateQuote(q.id, { pinned: !q.pinned })}
+                    >
+                      {q.pinned ? "Unpin" : "Pin"}
+                    </button>
+                  )}
+                  {canEdit(profile?.role) && (
+                    <button
+                      className="rounded-lg border border-white/20 px-3 py-2"
+                      onClick={() => updateQuote(q.id, { archived: !q.archived })}
+                    >
+                      {q.archived ? "Unarchive" : "Archive"}
+                    </button>
+                  )}
+                  {canEdit(profile?.role) && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <input
+                        type="date"
+                        className="rounded-lg border border-white/20 bg-transparent px-2 py-1"
+                        value={formatDateInput(q.expires_at)}
+                        onChange={(e) =>
+                          updateQuote(q.id, {
+                            expires_at: e.target.value ? `${e.target.value}T17:00:00` : null,
+                          })
+                        }
                       />
+                      {q.expires_at && (
+                        <button
+                          className="rounded-lg border border-white/20 px-3 py-2"
+                          onClick={() => sendExpiryReminder(q.id)}
+                          disabled={!!q.reminder_sent_at || remindId === q.id}
+                        >
+                          {q.reminder_sent_at ? "Reminder sent" : "Send reminder"}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  {canEdit(profile?.role) && (
+                    <button
+                      className={`rounded-lg border border-white/20 px-3 py-2 ${resendId === q.id ? "opacity-50" : ""}`}
+                      onClick={() => resendQuote(q.id)}
+                    >
+                      Resend email
+                    </button>
+                  )}
+                  {canEdit(profile?.role) && (
+                    <button
+                      className="rounded-lg border border-red-400/40 text-red-200 px-3 py-1"
+                      onClick={() => deleteQuote(q.id)}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+                {canEdit(profile?.role) && (
+                  <div className="mt-3">
+                    <label className="text-[10px] uppercase tracking-wide text-white/40">
+                      Internal notes
+                    </label>
+                    <textarea
+                      className="mt-1 w-full rounded-lg bg-white/10 px-3 py-2 text-xs"
+                      rows={2}
+                      value={noteDrafts[q.id] ?? q.internal_notes ?? ""}
+                      onChange={(e) =>
+                        setNoteDrafts((prev) => ({ ...prev, [q.id]: e.target.value }))
+                      }
+                      onBlur={(e) => {
+                        const next = e.target.value;
+                        if ((q.internal_notes || "") !== next)
+                          updateQuote(q.id, { internal_notes: next });
+                      }}
+                      placeholder="Add private notes for the team"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+            {!filteredQuotes.length && <div className="text-white/50 text-xs">No quotes yet.</div>}
+          </div>
+        ) : (
+          <div className="mt-3 space-y-2">
+            {customerQuotes.map((q: any) => (
+              <div key={q.id} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs">
+                <div className="flex flex-col gap-3">
+                  <div className="min-w-0">
+                    <div className="truncate text-sm">
+                      {q.projects?.name || q.project_id}
+                      <span className="ml-2 text-white/50">v{q.version || 1}</span>
+                    </div>
+                    <div className="mt-2 text-[10px] text-white/50">
+                      Sent {formatDate(q.sent_at || q.created_at)}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {q.url && (
+                      <a
+                        className="rounded-lg border border-white/20 px-3 py-2 text-center"
+                        href={q.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View quote
+                      </a>
+                    )}
+                  </div>
+                  {customerTab === "pending" && (
+                    <div className="mt-2 rounded-xl border border-white/10 bg-white/5 p-3">
+                      <div className="text-xs uppercase tracking-[0.2em] text-white/50">
+                        Request a discount (max 15%)
+                      </div>
+                      <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <input
+                          className="rounded-2xl bg-[#0b1118] px-4 py-2 text-xs text-white/90"
+                          placeholder="Discount %"
+                          value={quoteDiscounts[q.id] || ""}
+                          onChange={(e) =>
+                            setQuoteDiscounts((prev) => ({ ...prev, [q.id]: e.target.value }))
+                          }
+                          disabled={!!discountRequests[q.id]}
+                        />
+                        <button
+                          className="btn-primary"
+                          type="button"
+                          disabled={!!discountRequests[q.id]}
+                          onClick={() => requestDiscount(q.id)}
+                        >
+                          {discountRequests[q.id] ? "Requested" : "Apply discount"}
+                        </button>
+                      </div>
+                      <div className="mt-2 text-[10px] text-white/50">
+                        Discounts auto-approve for approved companies.
+                      </div>
                     </div>
                   )}
                 </div>
-                <div className="text-[10px] text-white/50">
-                  <div>Sent {formatDate(q.sent_at || q.created_at)}</div>
-                  <div>Viewed {formatDate(q.viewed_at)}</div>
-                  <div>
-                    Responded {q.responded_at ? `${formatDate(q.responded_at)} (${q.status})` : "—"}
-                  </div>
-                  <div className={isExpiringSoon(q.expires_at) ? "text-orange-200" : ""}>
-                    Expires {q.expires_at ? formatDate(q.expires_at) : "—"}
-                  </div>
-                </div>
               </div>
-              <div className="mt-3 grid gap-2 sm:flex sm:flex-wrap">
-                {q.url && (
-                  <a
-                    className="rounded-lg border border-white/20 px-3 py-2 text-center"
-                    href={q.url}
-                    target="_blank"
-                  >
-                    Download
-                  </a>
-                )}
-                {q.url && profile?.role !== "customer" && (
-                  <button
-                    className="rounded-lg border border-white/20 px-3 py-2"
-                    onClick={() => {
-                      setSelectedId(q.id);
-                      if (profile?.role === "customer") {
-                        fetch("/api/notifications/quote-viewed", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ quoteId: q.id, projectId: q.project_id }),
-                        });
-                      }
-                    }}
-                  >
-                    Preview
-                  </button>
-                )}
-                {canEdit(profile?.role) && (
-                  <button
-                    className="rounded-lg border border-white/20 px-3 py-2"
-                    onClick={() => updateQuote(q.id, { pinned: !q.pinned })}
-                  >
-                    {q.pinned ? "Unpin" : "Pin"}
-                  </button>
-                )}
-                {canEdit(profile?.role) && (
-                  <button
-                    className="rounded-lg border border-white/20 px-3 py-2"
-                    onClick={() => updateQuote(q.id, { archived: !q.archived })}
-                  >
-                    {q.archived ? "Unarchive" : "Archive"}
-                  </button>
-                )}
-                {canEdit(profile?.role) && (
-                  <div className="flex flex-wrap items-center gap-2">
-                    <input
-                      type="date"
-                      className="rounded-lg border border-white/20 bg-transparent px-2 py-1"
-                      value={formatDateInput(q.expires_at)}
-                      onChange={(e) =>
-                        updateQuote(q.id, {
-                          expires_at: e.target.value ? `${e.target.value}T17:00:00` : null,
-                        })
-                      }
-                    />
-                    {q.expires_at && (
-                      <button
-                        className="rounded-lg border border-white/20 px-3 py-2"
-                        onClick={() => sendExpiryReminder(q.id)}
-                        disabled={!!q.reminder_sent_at || remindId === q.id}
-                      >
-                        {q.reminder_sent_at ? "Reminder sent" : "Send reminder"}
-                      </button>
-                    )}
-                  </div>
-                )}
-                {canEdit(profile?.role) && (
-                  <button
-                    className={`rounded-lg border border-white/20 px-3 py-2 ${resendId === q.id ? "opacity-50" : ""}`}
-                    onClick={() => resendQuote(q.id)}
-                  >
-                    Resend email
-                  </button>
-                )}
-                {canEdit(profile?.role) && (
-                  <button
-                    className="rounded-lg border border-red-400/40 text-red-200 px-3 py-1"
-                    onClick={() => deleteQuote(q.id)}
-                  >
-                    Delete
-                  </button>
-                )}
-              </div>
-              {canEdit(profile?.role) && (
-                <div className="mt-3">
-                  <label className="text-[10px] uppercase tracking-wide text-white/40">
-                    Internal notes
-                  </label>
-                  <textarea
-                    className="mt-1 w-full rounded-lg bg-white/10 px-3 py-2 text-xs"
-                    rows={2}
-                    value={noteDrafts[q.id] ?? q.internal_notes ?? ""}
-                    onChange={(e) => setNoteDrafts((prev) => ({ ...prev, [q.id]: e.target.value }))}
-                    onBlur={(e) => {
-                      const next = e.target.value;
-                      if ((q.internal_notes || "") !== next)
-                        updateQuote(q.id, { internal_notes: next });
-                    }}
-                    placeholder="Add private notes for the team"
-                  />
-                </div>
-              )}
-            </div>
-          ))}
-          {!filteredQuotes.length && <div className="text-white/50 text-xs">No quotes yet.</div>}
-        </div>
+            ))}
+            {!customerQuotes.length && <div className="text-white/50 text-xs">No quotes yet.</div>}
+          </div>
+        )}
       </div>
 
       {profile?.role !== "customer" && (

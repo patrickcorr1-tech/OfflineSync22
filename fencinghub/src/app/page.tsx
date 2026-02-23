@@ -266,9 +266,8 @@ export default function Home() {
                 <div className="text-xs text-white/50">No downloads yet.</div>
               )}
               {downloads.map((d) => (
-                <a
+                <div
                   key={d.id}
-                  href={d.url || "#"}
                   className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
                 >
                   <div>
@@ -278,8 +277,22 @@ export default function Home() {
                       {d.type === "job_pack" && !isOnline ? " • Available offline" : ""}
                     </div>
                   </div>
-                  <span className="text-white/50">Download</span>
-                </a>
+                  <div className="flex items-center gap-2 text-xs">
+                    {d.type === "quote" && (
+                      <a href="/quotes" className="rounded-full border border-white/20 px-3 py-1">
+                        View
+                      </a>
+                    )}
+                    {d.url && (
+                      <a
+                        href={d.url}
+                        className="rounded-full border border-white/20 px-3 py-1 text-white/70"
+                      >
+                        Download
+                      </a>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           </div>

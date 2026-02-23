@@ -76,6 +76,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing company" }, { status: 400 });
   }
 
+  const { data: existing } = await supabase
+    .from("quote_discounts")
+    .select("id")
+    .eq("quote_id", quoteId)
+    .maybeSingle();
+  if (existing?.id) {
+    return NextResponse.json({ error: "Discount already requested" }, { status: 400 });
+  }
+
+  const { data: company } = await supabase
+    .from("companies")
+    .select("name")
+    .eq("id", companyId)
+    .single();
+  const isWildcare = (company?.name || "").toLowerCase().includes("wildcare");
+  if (!isWildcare) {
+    return NextResponse.json(
+      { error: "Discounts are not enabled for this company" },
+      { status: 403 },
+    );
+  }
+  if (percent > 15) {
+    return NextResponse.json({ error: "Max discount is 15%" }, { status: 400 });
+  }
+
   const { data: approved } = await supabase
     .from("discount_approved_companies")
     .select("id")
@@ -117,6 +142,19 @@ export async function POST(req: NextRequest) {
         body: `Your ${percent}% discount has been approved.`,
         audience: "customers",
         push: true,
+      }),
+    });
+
+    await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notifications/project-update`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        projectId: quote.project_id,
+        type: "discount_auto_approved",
+        title: "Discount auto-approved",
+        body: `${percent}% discount auto-approved for ${projectName}.`,
+        audience: "admins",
+        push: false,
       }),
     });
 
