@@ -267,16 +267,18 @@ export default function CobrowseWidget({
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
-            <div className="text-xs uppercase tracking-[0.3em] text-slate-500">Live co-browse</div>
-            <h3 className="mt-3 text-lg font-semibold">Share your screen with support</h3>
-            <p className="mt-2 text-sm text-slate-500">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0b1118] p-6 text-white shadow-[0_18px_60px_rgba(0,0,0,0.65)]">
+            <div className="text-xs uppercase tracking-[0.3em] text-white/50">Live co-browse</div>
+            <h3 className="mt-3 text-lg font-semibold text-white">
+              Share your screen with support
+            </h3>
+            <p className="mt-2 text-sm text-white/70">
               You&apos;ll share this tab for up to 15 minutes. Your support teammate can view only
               unless you enable control.
             </p>
-            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">
-              <div className="font-semibold">GDPR consent (FencingHub by StowAg)</div>
+            <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-white/70">
+              <div className="font-semibold text-white">GDPR consent (FencingHub by StowAg)</div>
               <p className="mt-1">
                 By starting a session you consent to share your screen with support for this session
                 only. We do not access other tabs or apps. You can end the session anytime.
@@ -288,12 +290,12 @@ export default function CobrowseWidget({
             </div>
 
             {session && (
-              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                  Session code
+              <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-4">
+                <div className="text-xs uppercase tracking-[0.2em] text-white/50">Session code</div>
+                <div className="mt-2 text-2xl font-semibold tracking-[0.4em] text-white">
+                  {session.code}
                 </div>
-                <div className="mt-2 text-2xl font-semibold tracking-[0.4em]">{session.code}</div>
-                <div className="mt-2 text-xs text-slate-500">Expires in {timeLeft || "15:00"}</div>
+                <div className="mt-2 text-xs text-white/60">Expires in {timeLeft || "15:00"}</div>
                 <button
                   className="btn-ghost mt-3"
                   type="button"
@@ -304,7 +306,7 @@ export default function CobrowseWidget({
               </div>
             )}
 
-            <div className="mt-4 space-y-2 text-sm">
+            <div className="mt-4 space-y-2 text-sm text-white/80">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -335,13 +337,13 @@ export default function CobrowseWidget({
               {bugReport && (
                 <div className="space-y-2">
                   <textarea
-                    className="w-full rounded-xl bg-[#f1f5f9] px-3 py-2 text-xs"
+                    className="w-full rounded-xl bg-white/10 px-3 py-2 text-xs text-white"
                     rows={3}
                     placeholder="Briefly describe the bug (optional)"
                     value={bugNotes}
                     onChange={(e) => setBugNotes(e.target.value)}
                   />
-                  <label className="flex items-center gap-2 text-xs text-slate-600">
+                  <label className="flex items-center gap-2 text-xs text-white/60">
                     <input
                       type="checkbox"
                       checked={recordConsent}
@@ -353,8 +355,8 @@ export default function CobrowseWidget({
               )}
             </div>
 
-            {notice && <div className="mt-3 text-sm text-emerald-600">{notice}</div>}
-            {error && <div className="mt-3 text-sm text-red-500">{error}</div>}
+            {notice && <div className="mt-3 text-sm text-emerald-300">{notice}</div>}
+            {error && <div className="mt-3 text-sm text-red-300">{error}</div>}
 
             <div className="mt-6 flex flex-wrap gap-2">
               {!sharing ? (
