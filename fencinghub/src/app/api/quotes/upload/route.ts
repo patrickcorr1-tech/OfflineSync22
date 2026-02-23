@@ -47,5 +47,21 @@ export async function POST(req: NextRequest) {
   });
   if (insErr) return NextResponse.json({ error: insErr.message }, { status: 500 });
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+  if (appUrl) {
+    await fetch(`${appUrl}/api/notifications/project-update`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        projectId,
+        type: "quote_uploaded",
+        title: "New quote uploaded",
+        body: `A new quote is ready for ${projectName}.`,
+        audience: "customer",
+        push: true,
+      }),
+    });
+  }
+
   return NextResponse.json({ ok: true, path });
 }
