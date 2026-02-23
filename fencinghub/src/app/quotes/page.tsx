@@ -75,23 +75,13 @@ export default function QuotesPage() {
       return;
     }
 
-    const { data } = await supabase
-      .from("quotes")
-      .select(
-        "id,status,file_path,project_id,version,pinned,archived,sent_at,viewed_at,responded_at,response_comment,expires_at,response_due_at,reminder_sent_at,projects(name),created_at",
-      )
-      .order("created_at", { ascending: false });
-
-    const withUrls = await Promise.all(
-      (data || []).map(async (q: any) => ({
-        ...q,
-        url: q.file_path ? await getSignedUrl("quotes", q.file_path) : null,
-      })),
-    );
+    const res = await fetch("/api/customer/quotes");
+    const payload = await res.json();
+    const withUrls = payload?.quotes || [];
 
     setQuotes(withUrls);
     if (!selectedId) {
-      const first = withUrls?.find((q) => q.url);
+      const first = withUrls?.find((q: any) => q.url);
       if (first?.id) setSelectedId(first.id);
     }
 
