@@ -64,10 +64,7 @@ export async function POST(req: NextRequest) {
   if (adminUrl && serviceKey) {
     const { createClient } = await import("@supabase/supabase-js");
     const admin = createClient(adminUrl, serviceKey, { auth: { persistSession: false } });
-    const { data: staff } = await admin
-      .from("profiles")
-      .select("id")
-      .in("role", ["admin", "sales"]);
+    const { data: staff } = await admin.from("profiles").select("id").eq("role", "admin");
     const payload = { title, projectId: project.id, link };
     if (staff?.length) {
       await admin.from("notifications").insert(
@@ -75,6 +72,17 @@ export async function POST(req: NextRequest) {
           user_id: s.id,
           type: "customer_project",
           payload,
+        })),
+      );
+      await admin.from("inbox_messages").insert(
+        staff.map((s: any) => ({
+          channel: "system",
+          from_name: "FencingHub",
+          subject: `New customer project — ${title}`,
+          body: `New project submitted. Open: ${link}`,
+          status: "new",
+          priority: "normal",
+          assigned_to: null,
         })),
       );
     }
