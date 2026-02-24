@@ -67,8 +67,8 @@ export default function NotificationsBell({ compact = false }: { compact?: boole
       <button
         className={
           compact
-            ? "rounded-full border border-white/20 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-white/80"
-            : "rounded-full border border-white/20 px-3 py-2 text-xs uppercase tracking-[0.3em] text-white/80"
+            ? "rounded-full border border-white/20 bg-white/5 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-white/80"
+            : "rounded-full border border-white/20 bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.3em] text-white/80"
         }
         onClick={() => {
           setOpen(!open);

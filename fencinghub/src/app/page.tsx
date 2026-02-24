@@ -35,6 +35,8 @@ export default function Home() {
   const [inviteRole, setInviteRole] = useState<"customer" | "sales">("customer");
   const [inviteMsg, setInviteMsg] = useState<string | null>(null);
   const [pulseMsg, setPulseMsg] = useState<string | null>(null);
+  const [noticeOpen, setNoticeOpen] = useState(false);
+  const [noticeItem, setNoticeItem] = useState<any | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<null | { message: string; level: string }>(
     null,
   );
@@ -62,7 +64,21 @@ export default function Home() {
         open: open || 0,
       });
     };
+    const loadNotice = async () => {
+      if (profile?.role !== "customer") return;
+      const { data } = await supabase
+        .from("notifications")
+        .select("id,type,payload,read")
+        .eq("read", false)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (data?.[0]) {
+        setNoticeItem(data[0]);
+        setNoticeOpen(true);
+      }
+    };
     loadMetrics();
+    loadNotice();
   }, [profile?.id]);
 
   useEffect(() => {
@@ -192,6 +208,37 @@ export default function Home() {
   if (profile?.role === "customer") {
     return (
       <DashboardShell title="Customer Portal" subtitle="Everything for your project, in one place">
+        {noticeOpen && noticeItem && (
+          <div className="mb-4 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-sm text-emerald-100">
+            <div className="text-xs uppercase tracking-[0.2em] text-emerald-200">New update</div>
+            <div className="mt-2 font-semibold">
+              {noticeItem.payload?.title || "You have a new notification"}
+            </div>
+            {noticeItem.payload?.body && (
+              <div className="mt-1 text-emerald-100/80">{noticeItem.payload.body}</div>
+            )}
+            <div className="mt-3 flex flex-wrap gap-2">
+              <a
+                href={noticeItem.payload?.link || "/quotes"}
+                className="rounded-full border border-emerald-200/40 px-3 py-1 text-xs uppercase tracking-[0.2em]"
+              >
+                Open
+              </a>
+              <button
+                className="rounded-full border border-emerald-200/40 px-3 py-1 text-xs uppercase tracking-[0.2em]"
+                onClick={async () => {
+                  await supabase
+                    .from("notifications")
+                    .update({ read: true })
+                    .eq("id", noticeItem.id);
+                  setNoticeOpen(false);
+                }}
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
         <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr]">
           <div className="card p-5 sm:p-6">
             <div className="section-title">Mission control</div>
