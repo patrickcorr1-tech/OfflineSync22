@@ -385,30 +385,15 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
               setSavingNotes(true);
               try {
                 if (quoteFile) {
-                  const path = `${Date.now()}-${quoteFile.name}`;
-                  const { error } = await supabase.storage.from("quotes").upload(path, quoteFile);
-                  if (!error) {
-                    await supabase.from("quotes").insert({
-                      project_id: projectId,
-                      file_path: path,
-                      status: "sent",
-                      sent_at: new Date().toISOString(),
-                    });
-                    await fetch("/api/notifications/project-update", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        projectId,
-                        type: "quote_uploaded",
-                        title: "Quote uploaded",
-                        body: quoteFile.name,
-                        audience: "customers",
-                        push: true,
-                      }),
-                    });
+                  const form = new FormData();
+                  form.append("projectId", projectId);
+                  form.append("file", quoteFile);
+                  const res = await fetch("/api/quotes/upload", { method: "POST", body: form });
+                  const data = await res.json();
+                  if (res.ok) {
                     setQuoteUploadMsg("Quote submitted.");
                   } else {
-                    setQuoteUploadMsg("Upload failed.");
+                    setQuoteUploadMsg(`Upload failed: ${data?.error || "Unknown error"}`);
                   }
                   setQuoteFile(null);
                   setQuoteUploadKey((k) => k + 1);
