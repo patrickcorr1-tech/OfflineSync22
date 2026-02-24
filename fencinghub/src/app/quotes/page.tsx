@@ -31,6 +31,7 @@ export default function QuotesPage() {
   const [customerTab, setCustomerTab] = useState<"pending" | "accepted" | "declined">("pending");
   const [quoteDiscounts, setQuoteDiscounts] = useState<Record<string, string>>({});
   const [discountRequests, setDiscountRequests] = useState<Record<string, string>>({});
+  const [customerPreviewUrl, setCustomerPreviewUrl] = useState<string | null>(null);
   const [pendingDiscounts, setPendingDiscounts] = useState<any[]>([]);
   const [remindId, setRemindId] = useState<string | null>(null);
   const [approvedCompanies, setApprovedCompanies] = useState<any[]>([]);
@@ -798,16 +799,22 @@ export default function QuotesPage() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {q.url && (
-                      <a
+                      <button
+                        type="button"
                         className="rounded-lg border border-white/20 px-3 py-2 text-center"
-                        href={q.url}
-                        target="_blank"
-                        rel="noreferrer"
+                        onClick={() => setCustomerPreviewUrl(q.url)}
                       >
                         View quote
-                      </a>
+                      </button>
                     )}
                   </div>
+                  {customerPreviewUrl && (
+                    <iframe
+                      title="Quote preview"
+                      src={customerPreviewUrl}
+                      className="mt-3 h-[520px] w-full rounded-xl border border-white/10 bg-white/5"
+                    />
+                  )}
                   {customerTab === "pending" && (
                     <div className="mt-2 rounded-xl border border-white/10 bg-white/5 p-3">
                       <div className="text-xs uppercase tracking-[0.2em] text-white/50">
