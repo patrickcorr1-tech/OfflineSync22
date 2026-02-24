@@ -210,36 +210,50 @@ export default function QuotesPage() {
   }, [profile]);
 
   const uploadQuote = async (file: File) => {
-    if (!projectId) return;
-    setUploading(true);
-    setUploadMsg(null);
-
-    const form = new FormData();
-    form.append("projectId", projectId);
-    form.append("file", file);
-
-    const res = await fetch("/api/quotes/upload", { method: "POST", body: form });
-    const data = await res.json();
-
-    if (res.ok) {
-      await fetch("/api/notify/event", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId, title: "Quote sent", body: "A new quote is available." }),
-      });
-      if (data?.path) {
-        // refresh list so we can select by id
-        await load();
-      }
-      setUploadMsg("Quote submitted.");
-      if (fileRef.current) fileRef.current.value = "";
-      setUploadKey((k) => k + 1);
-    } else {
-      setUploadMsg(`Upload failed: ${data?.error || "Unknown error"}`);
+    if (!projectId) {
+      setUploadMsg("Select a project first.");
+      return;
     }
+    if (!file) {
+      setUploadMsg("Choose a PDF file first.");
+      return;
+    }
+    setUploading(true);
+    setUploadMsg("Uploading...");
 
-    setUploading(false);
-    load();
+    try {
+      const form = new FormData();
+      form.append("projectId", projectId);
+      form.append("file", file);
+
+      const res = await fetch("/api/quotes/upload", { method: "POST", body: form });
+      const data = await res.json();
+
+      if (res.ok) {
+        await fetch("/api/notify/event", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectId,
+            title: "Quote sent",
+            body: "A new quote is available.",
+          }),
+        });
+        if (data?.path) {
+          await load();
+        }
+        setUploadMsg("Quote submitted.");
+        if (fileRef.current) fileRef.current.value = "";
+        setUploadKey((k) => k + 1);
+      } else {
+        setUploadMsg(`Upload failed: ${data?.error || "Unknown error"}`);
+      }
+    } catch (err: any) {
+      setUploadMsg(`Upload failed: ${err?.message || "Unknown error"}`);
+    } finally {
+      setUploading(false);
+      load();
+    }
   };
 
   const deleteQuote = async (quoteId: string) => {
