@@ -14,6 +14,8 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
   const [snagPhotos, setSnagPhotos] = useState<{ id: string; url: string | null }[]>([]);
   const [quotes, setQuotes] = useState<any[]>([]);
   const [quoteFile, setQuoteFile] = useState<File | null>(null);
+  const [quoteUploadKey, setQuoteUploadKey] = useState(0);
+  const [quoteUploadMsg, setQuoteUploadMsg] = useState<string | null>(null);
   const [internalNotes, setInternalNotes] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
   const [primaryContact, setPrimaryContact] = useState<any | null>(null);
@@ -346,9 +348,19 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
                 Quote upload
               </div>
               <div className="mt-2 rounded-xl border border-slate-200 p-3">
-                <input type="file" onChange={(e) => setQuoteFile(e.target.files?.[0] || null)} />
+                <input
+                  key={quoteUploadKey}
+                  type="file"
+                  onChange={(e) => {
+                    setQuoteUploadMsg(null);
+                    setQuoteFile(e.target.files?.[0] || null);
+                  }}
+                />
                 {quoteFile && (
                   <p className="mt-2 text-xs text-[var(--slate-500)]">Selected: {quoteFile.name}</p>
+                )}
+                {quoteUploadMsg && (
+                  <p className="mt-2 text-xs text-emerald-600">{quoteUploadMsg}</p>
                 )}
               </div>
             </div>
@@ -394,8 +406,12 @@ export default function ProjectDetails({ projectId }: { projectId: string }) {
                         push: true,
                       }),
                     });
+                    setQuoteUploadMsg("Quote submitted.");
+                  } else {
+                    setQuoteUploadMsg("Upload failed.");
                   }
                   setQuoteFile(null);
+                  setQuoteUploadKey((k) => k + 1);
                 }
                 await supabase
                   .from("projects")
