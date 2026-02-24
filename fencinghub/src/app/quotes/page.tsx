@@ -77,8 +77,25 @@ export default function QuotesPage() {
     }
 
     const res = await fetch("/api/customer/quotes", { cache: "no-store" });
-    const payload = await res.json();
-    const withUrls = payload?.quotes || [];
+    let withUrls: any[] = [];
+    if (res.ok) {
+      const payload = await res.json();
+      withUrls = payload?.quotes || [];
+    } else {
+      const { data } = await supabase
+        .from("quotes")
+        .select(
+          "id,status,file_path,project_id,version,pinned,archived,sent_at,viewed_at,responded_at,response_comment,expires_at,response_due_at,reminder_sent_at,projects(name),created_at",
+        )
+        .order("created_at", { ascending: false });
+
+      withUrls = await Promise.all(
+        (data || []).map(async (q: any) => ({
+          ...q,
+          url: q.file_path ? await getSignedUrl("quotes", q.file_path) : null,
+        })),
+      );
+    }
 
     setQuotes(withUrls);
     if (!selectedId) {
