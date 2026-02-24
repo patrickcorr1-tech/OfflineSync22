@@ -49,6 +49,43 @@ export async function POST(req: NextRequest) {
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
   if (appUrl) {
+    const { data: proj } = await admin
+      .from("projects")
+      .select("company_id")
+      .eq("id", projectId)
+      .single();
+    const { data: customers } = await admin
+      .from("profiles")
+      .select("id")
+      .eq("company_id", proj?.company_id || "")
+      .eq("role", "customer");
+
+    if (customers?.length) {
+      await admin.from("notifications").insert(
+        customers.map((c: any) => ({
+          user_id: c.id,
+          type: "quote_uploaded",
+          payload: {
+            title: "New quote uploaded",
+            body: `A new quote is ready for ${projectName}.`,
+            link: `${appUrl}/quotes`,
+          },
+        })),
+      );
+
+      await admin.from("inbox_messages").insert(
+        customers.map((c: any) => ({
+          channel: "system",
+          from_name: "FencingHub",
+          subject: "New quote uploaded",
+          body: `A new quote is ready for ${projectName}.\nOpen: ${appUrl}/quotes`,
+          status: "new",
+          priority: "normal",
+          assigned_to: null,
+        })),
+      );
+    }
+
     await fetch(`${appUrl}/api/notifications/project-update`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -57,7 +94,7 @@ export async function POST(req: NextRequest) {
         type: "quote_uploaded",
         title: "New quote uploaded",
         body: `A new quote is ready for ${projectName}.`,
-        audience: "customer",
+        audience: "customers",
         push: true,
       }),
     });
