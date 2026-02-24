@@ -230,7 +230,8 @@ export default function QuotesPage() {
         // refresh list so we can select by id
         await load();
       }
-      setUploadMsg("Quote uploaded successfully.");
+      setUploadMsg("Quote submitted.");
+      if (fileRef.current) fileRef.current.value = "";
     } else {
       setUploadMsg(`Upload failed: ${data?.error || "Unknown error"}`);
     }
