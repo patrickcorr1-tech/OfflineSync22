@@ -36,6 +36,7 @@ export default function QuotesPage() {
   const [approvedCompanies, setApprovedCompanies] = useState<any[]>([]);
   const [companyOptions, setCompanyOptions] = useState<any[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
+  const [uploadKey, setUploadKey] = useState(0);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const load = async () => {
@@ -232,6 +233,7 @@ export default function QuotesPage() {
       }
       setUploadMsg("Quote submitted.");
       if (fileRef.current) fileRef.current.value = "";
+      setUploadKey((k) => k + 1);
     } else {
       setUploadMsg(`Upload failed: ${data?.error || "Unknown error"}`);
     }
@@ -353,6 +355,7 @@ export default function QuotesPage() {
               </button>
               {/* download button removed */}
               <input
+                key={uploadKey}
                 ref={fileRef}
                 type="file"
                 accept="application/pdf"
