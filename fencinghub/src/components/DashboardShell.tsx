@@ -41,6 +41,7 @@ export default function DashboardShell({
           <Link href="/" className="btn-ghost">
             {isCustomer ? "Home" : "Dashboard"}
           </Link>
+          <NotificationsBell compact />
           <Link href="/projects" className="btn-ghost">
             Projects
           </Link>
@@ -68,7 +69,8 @@ export default function DashboardShell({
           </Link>
         </nav>
 
-        <div className="md:hidden">
+        <div className="flex items-center gap-2 md:hidden">
+          <NotificationsBell compact />
           <button
             type="button"
             onClick={() => setMobileOpen((v) => !v)}

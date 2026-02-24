@@ -60,7 +60,7 @@ export default function NotificationsBell({ compact = false }: { compact?: boole
     }
   };
 
-  if (!profile || !["admin", "sales"].includes(profile.role)) return null;
+  if (!profile) return null;
 
   return (
     <div className="relative">
